@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Pragathi P.U. College">
+  <rect width="64" height="64" rx="12" fill="#0c245c"/>
+  <circle cx="32" cy="32" r="26" fill="#f4d24a"/>
+  <circle cx="32" cy="32" r="26" fill="none" stroke="#0c245c" stroke-width="3"/>
+  <path fill="#141414" d="M32 12.5c-7.2 0-12.6 5.5-12.6 12.6 0 4.5 2.3 8.3 5.8 10.4V39h13.6v-3.5c3.5-2.1 5.8-5.9 5.8-10.4 0-7.1-5.4-12.6-12.6-12.6z"/>
+  <rect x="26.2" y="39" width="11.6" height="3.2" rx="1" fill="#141414"/>
+  <path fill="#f6f1e7" d="M32 16.8 27.2 34.2h9.6L32 16.8z"/>
+  <path fill="#c81e1e" d="M31.1 20.2h1.8L32 33.2h-1.8z"/>
+  <path fill="#141414" d="M15.5 46.2 32 41.2l16.5 5v2.2L32 53.6 15.5 48.4z"/>
+  <path fill="#c81e1e" d="M17.6 46.6 32 42.8v8.6L17.6 47.6z"/>
+  <path fill="#9b1818" d="M32 42.8 46.4 46.6v3.8L32 51.4z"/>
+  <path fill="#f4d24a" d="M30.7 42h2.6v10.2h-2.6z"/>
+</svg>
