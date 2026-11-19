@@ -6,8 +6,8 @@ map:"https://www.openstreetmap.org/export/embed.html?bbox=77.355%2C16.845%2C77.4
 const FAC=[["Chemistry",[["R. Shivkumar Reddy","Principal · Lecturer in Chemistry","M.Sc, B.Ed"],["Ambika Arsid","Lecturer in Chemistry","M.Sc, B.Ed"]]],
 ["Mathematics",[["Mahesh K. Dhore","Lecturer in Mathematics","M.Sc, B.Ed"],["Gopala Reddy","Lecturer in Mathematics","M.Sc, B.Ed"]]],
 ["Biology",[["Lakshman Dodla","Lecturer in Biology","M.Sc, B.Ed, K-SET"],["Akash Rathod","Lecturer in Biology","M.Sc, B.Ed, K-SET"]]],
-["Physics",[["Abhilash T.","Lecturer in Physics","M.Sc, B.Ed"],["Pradeep C.","Lecturer in Physics","M.A, M.P.Ed"]]],
-["Hindi",[["Balagopal","Lecturer in Hindi","M.A, B.Ed"]]],["Kannada",[["Ashappa","Lecturer in Kannada","M.A, B.Ed, K-SET"]]],
+["Physics",[["Abhilash T.","Lecturer in Physics","M.Sc, B.Ed"],["Pradeep C.","Lecturer in Physics","MSc, B.Ed"]]],
+["Hindi",[["Balagopal","Lecturer in Hindi","M.A, B.Ed"]]],["Kannada",[["Shamappa","Lecturer in Kannada","M.A, B.Ed, K-SET"]]],
 ["English",[["Madiha Taskeen","Lecturer in English","M.A, B.Ed"]]],["Urdu",[["Farhana Kousar","Lecturer in Urdu","M.A, B.Ed"]]]];
 const RES=[{id:"2026",t:"II PUC Science · 2025–26",img:"media/results-2026.jpg",s:[["Distinction","19"],["First class","48"],["Second class","11"]],
 lead:"Arpita & Priyanka — Taluka 1st rank, 575 / 600 (95.83%) each",top:[["Ummul Khair Fatima","559 / 600 · 93.16%"],["Jahnavi","555 / 600 · 92.50%"],["Sneha S.","552 / 600 · 92.00%"],["T. Narayana","544 / 600 · 90.67%"],["Vinod","542 / 600 · 90.33%"],["Ayesha Fathima","539 / 600 · 89.83%"],["Rithika Neerati","536 / 600 · 89.33%"],["Madiha Afsheen","534 / 600 · 89.00%"],["Tasmiya Begum","533 / 600 · 88.83%"]]},
