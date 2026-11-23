@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>College Login — Invigilator Online Exam Module | Pragathi P.U. College (KY0434)</title>
+  <link rel="icon" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Tinos:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Offline/CDN SheetJS (Excel Reader/Writer), JSZip (Diagram Extractor), jsPDF + AutoTable (Marklist PDF) -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+
+  <style>
+    :root {
+      --navy: #1F3864;
+      --maroon: #7B1E22;
+      --green: #0E9F48;
+      --gold: #F5D90A;
+      --bg: #f1f5f9;
+      --ink: #1B2433;
+      --muted: #566074;
+      --line: #D5DBE6;
+      --serif: "Tinos", "Times New Roman", Times, serif;
+      --sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; font-family: var(--sans); }
+    body { margin: 0; background: var(--bg); color: var(--ink); }
+
+    header {
+      background: linear-gradient(135deg, #1F3864 0%, #152644 100%);
+      color: #fff; padding: 14px 26px; display: flex; justify-content: space-between;
+      align-items: center; flex-wrap: wrap; gap: 14px; border-bottom: 4px solid var(--gold);
+    }
+    .hdr-left { display: flex; align-items: center; gap: 14px; }
+    .hdr-logo { width: 52px; height: 52px; background: #fff; border-radius: 50%; padding: 3px; object-fit: contain; }
+    .society { font-size: 11px; font-weight: 700; color: var(--gold); letter-spacing: 1.2px; font-family: var(--serif); }
+    .college { font-size: 21px; font-weight: 800; color: #fff; font-family: var(--serif); margin: 1px 0; }
+    .sub-hdr { font-size: 12.5px; color: #93c5fd; font-weight: 600; }
+
+    .nav-links { display: flex; gap: 10px; align-items: center; }
+    .nav-btn {
+      padding: 8px 14px; border-radius: 8px; text-decoration: none; font-weight: 700;
+      font-size: 13px; border: 1.5px solid rgba(255,255,255,0.25); color: #fff; background: rgba(255,255,255,0.08);
+    }
+    .nav-btn:hover { background: var(--maroon); border-color: var(--gold); }
+
+    .container { max-width: 1360px; margin: 22px auto; padding: 0 18px 50px; }
+
+    /* Login Card */
+    .login-card {
+      max-width: 460px; margin: 45px auto; background: #fff; border-radius: 16px;
+      padding: 28px 32px; box-shadow: 0 12px 32px rgba(0,0,0,0.1); border-top: 6px solid var(--maroon);
+      text-align: center;
+    }
+    .inp-group { text-align: left; margin-bottom: 14px; }
+    .inp-group label { display: block; font-size: 11.5px; font-weight: 800; color: var(--navy); text-transform: uppercase; margin-bottom: 5px; }
+    .inp-group input, .inp-group select, .inp-group textarea {
+      width: 100%; padding: 10px 12px; border: 1.5px solid #cbd5e1; border-radius: 9px;
+      font-size: 14px; font-weight: 600; color: var(--ink);
+    }
+    .inp-group input:focus, .inp-group select:focus { border-color: var(--navy); outline: none; background: #f8fafc; }
+
+    .btn {
+      padding: 11px 18px; border-radius: 9px; border: none; font-weight: 800;
+      font-size: 13.5px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
+    }
+    .btn-primary { background: var(--navy); color: #fff; }
+    .btn-primary:hover { background: #162847; }
+    .btn-green { background: var(--green); color: #fff; }
+    .btn-green:hover { background: #0b823b; }
+    .btn-red { background: #dc2626; color: #fff; }
+    .btn-red:hover { background: #b91c1c; }
+    .btn-blue { background: #2563eb; color: #fff; }
+    .btn-blue:hover { background: #1d4ed8; }
+    .btn-gold { background: var(--gold); color: #1e293b; }
+
+    /* Invigilator Module Tabs */
+    .module-tabs { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+    .m-tab {
+      padding: 11px 20px; border-radius: 10px; border: 1.5px solid #cbd5e1;
+      background: #fff; color: var(--navy); font-weight: 800; font-size: 14px; cursor: pointer;
+    }
+    .m-tab.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+    .panel-card {
+      background: #fff; border: 1px solid #e2e8f0; border-radius: 14px;
+      padding: 22px 26px; box-shadow: 0 4px 14px rgba(0,0,0,0.05); margin-bottom: 20px;
+    }
+    .setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 820px) { .setup-grid { grid-template-columns: 1fr; } }
+
+    .ip-banner {
+      background: #eff6ff; border: 2px solid #3b82f6; border-radius: 12px;
+      padding: 14px 18px; margin-bottom: 18px; display: flex; justify-content: space-between;
+      align-items: center; flex-wrap: wrap; gap: 12px;
+    }
+
+    /* Dashboard Table & Stats */
+    .stats-bar { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 18px; }
+    @media (max-width: 820px) { .stats-bar { grid-template-columns: repeat(2, 1fr); } }
+    .stat-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px 16px; }
+    .stat-card .lbl { font-size: 11px; color: #64748b; font-weight: 800; text-transform: uppercase; }
+    .stat-card .val { font-size: 21px; font-weight: 900; color: var(--navy); margin-top: 4px; }
+
+    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; }
+    th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 13px; }
+    th { background: #e2e8f0; font-weight: 800; color: #1e293b; text-transform: uppercase; font-size: 11.5px; }
+    .pill-live { background: #dcfce7; color: #166534; padding: 3px 9px; border-radius: 999px; font-weight: 800; font-size: 11.5px; }
+    .pill-done { background: #dbeafe; color: #1e40af; padding: 3px 9px; border-radius: 999px; font-weight: 800; font-size: 11.5px; }
+    .timer-cell { font-family: monospace; font-size: 14px; font-weight: 900; color: #0369a1; }
+
+    /* KDE Connect Modal */
+    #kdeModal {
+      display: none; position: fixed; inset: 0; z-index: 9999;
+      background: rgba(15, 23, 42, 0.78); backdrop-filter: blur(4px);
+      align-items: center; justify-content: center; padding: 16px;
+    }
+    .modal-box {
+      background: #fff; width: 100%; max-width: 1020px; max-height: 92vh;
+      border-radius: 16px; overflow: hidden; display: flex; flex-direction: column;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.45);
+    }
+    .modal-hdr {
+      background: var(--navy); color: #fff; padding: 16px 22px;
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 3px solid var(--gold);
+    }
+    .modal-body { padding: 18px 22px; overflow-y: auto; flex: 1; }
+    .kde-config-grid { display: grid; grid-template-columns: 1.4fr 0.7fr 1.9fr; gap: 14px; margin-bottom: 14px; }
+    @media (max-width: 820px) { .kde-config-grid { grid-template-columns: 1fr; } }
+    .preview-box {
+      background: #f8fafc; border: 1px dashed #94a3b8; border-radius: 8px; padding: 10px 12px;
+      font-size: 12.5px; white-space: pre-wrap; color: #1e293b; margin-bottom: 14px;
+    }
+    .modal-footer {
+      background: #f8fafc; padding: 14px 22px; border-top: 1px solid #e2e8f0;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+    }
+    .phone-inp { width: 115px; padding: 4px 6px; border: 1px solid #cbd5e1; border-radius: 6px; font-weight: 700; font-size: 12.5px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-left">
+    <img src="media/logo-pragathi.png" alt="Logo" class="hdr-logo" onerror="this.style.display='none'" />
+    <div>
+      <div class="society">DECCAN EDUCATION SOCIETY (R.)</div>
+      <div class="college">PRAGATHI P.U. COLLEGE, GURUMATKAL (KY0434)</div>
+      <div class="sub-hdr">College Login — Invigilator Online Examination Control Panel</div>
+    </div>
+  </div>
+  <div class="nav-links">
+    <a href="college-login.html" class="nav-btn">← Back to College Login</a>
+    <a href="index.html" class="nav-btn">🏠 Home Page</a>
+    <a href="online-exam.html" class="nav-btn" style="background:var(--green); border-color:#86efac;">📝 Student Exam Portal</a>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- STEP 1: INVIGILATOR LOGIN -->
+  <div id="loginSection" class="login-card">
+    <div style="font-size:38px;">🔐</div>
+    <h2 style="margin:6px 0 4px 0; color:var(--navy); font-family:var(--serif);">College Invigilator Login</h2>
+    <p style="font-size:13px; color:var(--muted); margin-bottom:18px;">Sign in to configure Online Exams, set Allowed Internet IP, and monitor live results on Google Drive.</p>
+
+    <div class="inp-group">
+      <label>Google Apps Script Web App URL *</label>
+      <input type="text" id="apiUrlInput" placeholder="https://script.google.com/macros/s/.../exec" />
+    </div>
+
+    <div class="inp-group">
+      <label>Invigilator Passcode *</label>
+      <input type="password" id="passcodeInput" placeholder="Enter Invigilator Passcode"
+             onkeydown="if(event.key==='Enter'){ loginInvigilator(); }" />
+    </div>
+
+    <button type="button" id="loginBtn" class="btn btn-primary" style="width:100%; justify-content:center; padding:13px;" onclick="loginInvigilator()">
+      🔓 Login to Invigilator Module
+    </button>
+    <div id="loginMsg" style="margin-top:10px; font-size:13px; font-weight:700; color:#dc2626;"></div>
+
+    <div style="margin-top:18px; padding-top:14px; border-top:1px dashed #cbd5e1; text-align:center;">
+      <div style="font-size:11.5px; font-weight:800; color:var(--navy); text-transform:uppercase; margin-bottom:8px;">
+        📥 Question Paper Excel Templates (For Future Use)
+      </div>
+      <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+        <button type="button" class="btn btn-gold" style="padding:8px 12px; font-size:12px;" onclick="downloadQuestionTemplate('NEET')">
+          📥 NEET Template (180 Qs)
+        </button>
+        <button type="button" class="btn btn-blue" style="padding:8px 12px; font-size:12px;" onclick="downloadQuestionTemplate('KCET')">
+          📥 KCET Template (100 Qs)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: INVIGILATOR ONLINE EXAM MODULE -->
+  <div id="invigilatorSection" style="display:none;">
+    <div class="module-tabs">
+      <button type="button" id="tabSetupBtn" class="m-tab active" onclick="switchModuleTab('setup')">⚙️ 1. Online Exam Setup (Excel &amp; IP Lock)</button>
+      <button type="button" id="tabDashBtn" class="m-tab" onclick="switchModuleTab('dashboard')">📊 2. Live Invigilator Dashboard &amp; Results</button>
+    </div>
+
+    <!-- TAB 1: ONLINE EXAM SETUP -->
+    <div id="setupPanel" class="panel-card">
+      <div class="ip-banner">
+        <div>
+          <div style="font-size:11.5px; font-weight:800; color:#1e40af; text-transform:uppercase;">🌐 Auto-Detected College Internet IP Address:</div>
+          <div id="detectedIpDisplay" style="font-size:22px; font-weight:900; color:var(--navy); font-family:monospace; margin-top:2px;">Detecting IP...</div>
+          <div style="font-size:12px; color:#475569;">Only students connected to this Internet IP can enter the exam (unless you add remote IPs or enable Open Mode).</div>
+        </div>
+        <button type="button" class="btn btn-blue" onclick="autoFetchCollegeIP()">🔄 Re-Fetch My IP</button>
+      </div>
+
+      <div style="background:#fefce8; border:1.5px solid #eab308; border-radius:12px; padding:12px 16px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <div>
+          <div style="font-size:12px; font-weight:800; color:#854d0e; text-transform:uppercase;">📄 Download Blank Question Paper Excel Templates</div>
+          <div style="font-size:12px; color:#713f12;">Pre-formatted with Subject sheets, Columns 1–8, and A/B/C/D answer dropdowns.</div>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button type="button" class="btn btn-primary" style="padding:8px 14px; font-size:12.5px;" onclick="downloadQuestionTemplate('NEET')">📥 NEET 180 Qs (.xlsx)</button>
+          <button type="button" class="btn btn-green" style="padding:8px 14px; font-size:12.5px;" onclick="downloadQuestionTemplate('KCET')">📥 KCET 100 Qs (.xlsx)</button>
+        </div>
+      </div>
+
+      <div class="setup-grid">
+        <div class="inp-group">
+          <label>1. Question Paper Excel (.xlsx) * <small style="font-weight:500; color:#64748b;">(Sheets = Subjects, Cols 1-8)</small></label>
+          <input type="file" id="qExcelFile" accept=".xlsx,.xls" />
+          <div id="qFileStatus" style="font-size:12px; font-weight:700; color:var(--green); margin-top:4px;"></div>
+        </div>
+
+        <div class="inp-group">
+          <label>2. Student Master Database Excel (.xlsx) * <small style="font-weight:500; color:#64748b;">(2026-27 MASTER DATA BASE)</small></label>
+          <input type="file" id="mExcelFile" accept=".xlsx,.xls" />
+          <div id="mFileStatus" style="font-size:12px; font-weight:700; color:var(--green); margin-top:4px;"></div>
+        </div>
+
+        <div class="inp-group">
+          <label>3. Exam Name * <small style="font-weight:500; color:#64748b;">(Creates folder with this name in Google Drive)</small></label>
+          <input type="text" id="examNameInput" value="WEEKLY TEST - 06" placeholder="e.g. WEEKLY TEST - 06" />
+        </div>
+
+        <div class="inp-group">
+          <label>4. Select Exam Type *</label>
+          <select id="examTypeSelect" onchange="onExamTypeChange()">
+            <option value="NEET">NEET (180 Questions / 720 Marks | +4 Correct, -1 Wrong)</option>
+            <option value="KCET">KCET (100 Questions / 100 Marks | +1 Correct, 0 No Negative)</option>
+          </select>
+        </div>
+
+        <div class="inp-group">
+          <label>5. Exam Date *</label>
+          <input type="text" id="examDateInput" />
+        </div>
+
+        <div class="inp-group">
+          <label>6. Class *</label>
+          <select id="examClassSelect">
+            <option value="II PUC">II PUC</option>
+            <option value="I PUC">I PUC</option>
+            <option value="I & II PUC">I &amp; II PUC</option>
+          </select>
+        </div>
+
+        <div class="inp-group">
+          <label>7. Duration (Minutes) *</label>
+          <input type="number" id="durationInput" value="180" min="5" max="360" />
+        </div>
+
+        <div class="inp-group">
+          <label>8. Allowed Internet IP Address(es) * <small style="font-weight:500; color:#64748b;">(Comma-separated for remote IPs)</small></label>
+          <input type="text" id="allowedIpsInput" placeholder="e.g. 162.120.184.12" />
+          <label style="display:flex; align-items:center; gap:8px; margin-top:8px; font-size:12.5px; color:var(--maroon); cursor:pointer; text-transform:none;">
+            <input type="checkbox" id="remoteOpenChk" style="width:auto;" />
+            Allow Remote Students from Any Internet IP (Open Mode)
+          </label>
+        </div>
+      </div>
+
+      <div style="margin-top:16px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+        <button type="button" id="startExamBtn" class="btn btn-green" style="padding:14px 26px; font-size:15.5px;" onclick="processAndStartExam()">
+          🚀 Start Exam &amp; Save to Google Drive
+        </button>
+        <div id="setupProgressMsg" style="font-size:13.5px; font-weight:700; color:var(--navy);"></div>
+      </div>
+    </div>
+
+    <!-- TAB 2: LIVE INVIGILATOR DASHBOARD -->
+    <div id="dashboardPanel" style="display:none;">
+      <div class="panel-card" style="background:linear-gradient(135deg, #1F3864 0%, #152644 100%); color:#fff; border-bottom:4px solid var(--gold);">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;">
+          <div>
+            <div style="font-size:11px; color:var(--gold); font-weight:700; letter-spacing:1.2px;">PRAGATHI P.U. COLLEGE, GURUMATKAL (KY0434) — GOOGLE DRIVE LIVE SERVER</div>
+            <h2 id="dashExamTitle" style="margin:4px 0; font-family:var(--serif);">LIVE INVIGILATOR DASHBOARD</h2>
+            <div id="dashExamMeta" style="font-size:13px; color:#cbd5e1; font-weight:600;">Loading active exam details...</div>
+          </div>
+
+          <div style="display:flex; gap:9px; flex-wrap:wrap;">
+            <button type="button" class="btn btn-red" onclick="generateAndDownloadMarklistPDF()">📄 Download Result Sheet (PDF)</button>
+            <button type="button" class="btn btn-green" onclick="downloadResultsExcel()">📥 Download Excel (.xlsx)</button>
+            <button type="button" class="btn btn-blue" onclick="openKdeModal()">📱 Send Results to Parents (KDE Connect)</button>
+            <a id="driveFolderLink" href="#" target="_blank" class="btn btn-gold" style="display:none;">📁 Open Drive Folder</a>
+            <a id="driveSheetLink" href="#" target="_blank" class="btn btn-primary" style="display:none; border:1px solid #93c5fd;">📊 Open Result Sheet</a>
+          </div>
+        </div>
+
+        <!-- Live Remote IP Update Bar -->
+        <div style="margin-top:14px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.18); display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <span style="font-size:12px; font-weight:700; color:var(--gold);">🌐 Allowed Internet IP(s):</span>
+          <input type="text" id="dashAllowedIps" style="padding:6px 10px; border-radius:7px; border:none; font-weight:700; font-size:13px; width:260px;" />
+          <label style="font-size:12px; font-weight:700; display:flex; align-items:center; gap:5px; cursor:pointer;">
+            <input type="checkbox" id="dashRemoteOpenChk" /> Remote / Open Mode (All IPs)
+          </label>
+          <button type="button" class="btn btn-blue" style="padding:6px 12px; font-size:12px;" onclick="updateLiveAllowedIps()">💾 Update IP Rule</button>
+          <button type="button" class="btn btn-red" style="padding:6px 12px; font-size:12px; margin-left:auto;" onclick="endActiveExam()">🛑 End Exam</button>
+        </div>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat-card"><div class="lbl">Total Connected</div><div class="val" id="cntTotal">0</div></div>
+        <div class="stat-card"><div class="lbl">🟢 Currently Writing</div><div class="val" style="color:var(--green);" id="cntActive">0</div></div>
+        <div class="stat-card"><div class="lbl">✅ Submitted</div><div class="val" style="color:#2563eb;" id="cntSub">0</div></div>
+        <div class="stat-card"><div class="lbl">Duration</div><div class="val" id="dashDurationVal">—</div></div>
+        <div class="stat-card"><div class="lbl">Drive Sync</div><div class="val" style="font-size:15px;" id="lastUpd">—</div></div>
+      </div>
+
+      <div class="panel-card" style="padding:0; overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>SATS No</th>
+              <th>Roll No</th>
+              <th>Student Name</th>
+              <th>Father Name</th>
+              <th>Contact No</th>
+              <th>Status</th>
+              <th>Time Remaining</th>
+              <th>Answered</th>
+              <th>Warnings</th>
+              <th>Subject Scores</th>
+              <th>Total Score</th>
+            </tr>
+          </thead>
+          <tbody id="liveTableBody">
+            <tr><td colspan="12" style="text-align:center; padding:30px; color:#64748b;">Waiting for students to log in from the website...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- KDE Connect Parent SMS Modal -->
+<div id="kdeModal">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <div>
+        <div style="font-size:16px; font-weight:900;">📱 Send Exam Results to Parents via KDE Connect</div>
+        <div style="font-size:12px; color:#fde047;">Parent contact numbers are automatically pulled from the Student Master Excel Database</div>
+      </div>
+      <button type="button" onclick="closeKdeModal()" style="background:#ef4444; color:#fff; border:none; border-radius:8px; padding:6px 12px; font-weight:800; cursor:pointer;">✕ Close</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="kde-config-grid">
+        <div class="inp-group">
+          <label>KDE Connect Device ID *</label>
+          <div style="display:flex; gap:6px;">
+            <input type="text" id="kdeDeviceId" placeholder="Enter KDE Device ID" />
+            <button type="button" class="btn btn-blue" style="padding:8px 10px; white-space:nowrap;" onclick="detectKdeDevices()">🔍 Auto-Detect</button>
+          </div>
+          <div id="kdeDetectInfo" style="font-size:11px; color:var(--green); margin-top:4px; font-weight:700;"></div>
+        </div>
+
+        <div class="inp-group">
+          <label>Lag Between SMS (Sec)</label>
+          <input type="number" id="kdeLagSec" value="3" min="1" max="60" />
+        </div>
+
+        <div class="inp-group">
+          <label>Available Placeholders</label>
+          <div style="font-size:11.5px; color:#475569; background:#f1f5f9; padding:7px 9px; border-radius:8px; line-height:1.4;">
+            <code>{student_name}</code>, <code>{father_name}</code>, <code>{roll_no}</code>, <code>{sats_no}</code>, <code>{exam_name}</code>, <code>{exam_type}</code>, <code>{exam_date}</code>, <code>{subject_marks}</code>, <code>{total_marks}</code>, <code>{max_marks}</code>, <code>{percentage}</code>, <code>{rank}</code>
+          </div>
+        </div>
+      </div>
+
+      <div class="inp-group">
+        <label>Sample Message Template (Editable)</label>
+        <textarea id="kdeMsgTemplate" rows="4" oninput="updateSmsPreview()">PRAGATHI P.U. COLLEGE, GURUMATKAL (KY0434)
+Dear Parent ({father_name}), Result for {exam_name} ({exam_type}), Dt:{exam_date}:
+Student: {student_name} (Roll: {roll_no})
+{subject_marks}
+Total: {total_marks}/{max_marks} ({percentage}%) | Rank: {rank}</textarea>
+      </div>
+
+      <div style="font-size:11px; font-weight:800; color:#475569; text-transform:uppercase; margin-bottom:4px;">Live Sample Preview (Topper):</div>
+      <div class="preview-box" id="smsPreviewBox">No submitted students yet.</div>
+
+      <div style="max-height:250px; overflow-y:auto; border:1px solid #cbd5e1; border-radius:10px;">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:36px;"><input type="checkbox" id="chkAllStudents" checked onchange="toggleAllCheckboxes(this.checked)" /></th>
+              <th>Rank</th>
+              <th>Roll No</th>
+              <th>Student Name</th>
+              <th>Parent Contact (From Excel)</th>
+              <th>Total Score</th>
+              <th>SMS Status</th>
+            </tr>
+          </thead>
+          <tbody id="kdeStudentsTbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <div id="kdeProgressText" style="font-size:13px; font-weight:800; color:#334155;">Select students and click Send.</div>
+      <button type="button" id="btnSendAllSms" class="btn btn-green" style="padding:11px 22px; font-size:14px;" onclick="sendSelectedSms()">🚀 Send SMS via KDE Connect</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ============================================================================
+  // PASTE YOUR DEPLOYED GOOGLE APPS SCRIPT WEB APP URL BELOW:
+  // ============================================================================
+  const DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbxpc6cTq78vPJ37zL05SMysrn4B6bnAPzxfOoz6iOTYV9muJWmZOqTd1qCUTEnaWAO0/exec";
+  const NEET_TEMPLATE_B64 = "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";
+  const KCET_TEMPLATE_B64 = "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";
+
+  function downloadQuestionTemplate(type) {
+    const isNeet = type === "NEET";
+    const b64 = isNeet ? NEET_TEMPLATE_B64 : KCET_TEMPLATE_B64;
+    const fileName = isNeet ? "NEET_180_Questions_Template.xlsx" : "KCET_100_Questions_Template.xlsx";
+    const binStr = atob(b64);
+    const bytes = new Uint8Array(binStr.length);
+    for (let i = 0; i < binStr.length; i++) {
+      bytes[i] = binStr.charCodeAt(i);
+    }
+    const blob = new Blob([bytes], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+  const KDE_BRIDGE_URL = "http://127.0.0.1:5005";
+
+  let ADMIN_PASSCODE = "";
+  let ACTIVE_CONFIG = null;
+  let CACHED_LIVE_STUDENTS = [];
+  let CACHED_RANKED_RESULTS = [];
+  let dashPollTimer = null;
+
+  window.addEventListener("DOMContentLoaded", () => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("embed") === "1") {
+      const hdr = document.querySelector("header");
+      if (hdr) hdr.style.display = "none";
+      const cont = document.querySelector(".container");
+      if (cont) { cont.style.marginTop = "12px"; cont.style.paddingBottom = "24px"; }
+    }
+
+    const savedUrl = localStorage.getItem("PRAGATHI_EXAM_API_URL");
+    const validSaved = (savedUrl && savedUrl.startsWith("https://script.google.com/")) ? savedUrl : "";
+    document.getElementById("apiUrlInput").value = DEFAULT_API_URL || validSaved;
+
+    // Format today's date as DD-MMM-YY
+    const d = new Date();
+    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const dtStr = `${String(d.getDate()).padStart(2,'0')}-${months[d.getMonth()]}-${String(d.getFullYear()).slice(-2)}`;
+    document.getElementById("examDateInput").value = dtStr;
+
+    // Single Sign-On: if already signed into College Login, automatically unlock Invigilator Module
+    try {
+      if (sessionStorage.getItem("pragathi-reg-key")) {
+        ADMIN_PASSCODE = "PRAGATHI@KY0434";
+        document.getElementById("loginSection").style.display = "none";
+        document.getElementById("invigilatorSection").style.display = "block";
+        autoFetchCollegeIP();
+        refreshDashboardData();
+      }
+    } catch (e) {}
+  });
+
+  function getApiUrl() {
+    const val = document.getElementById("apiUrlInput").value.trim();
+    if (val) localStorage.setItem("PRAGATHI_EXAM_API_URL", val);
+    return val;
+  }
+
+  async function callBackend(payload) {
+    const url = getApiUrl();
+    if (!url) throw new Error("Please enter your Google Apps Script Web App URL.");
+    const resp = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    });
+    return await resp.json();
+  }
+
+  async function autoFetchCollegeIP() {
+    const disp = document.getElementById("detectedIpDisplay");
+    const inp = document.getElementById("allowedIpsInput");
+    disp.innerText = "Fetching public internet IP...";
+    const endpoints = [
+      "https://api.ipify.org?format=json",
+      "https://api64.ipify.org?format=json",
+      "https://ipwho.is/"
+    ];
+    for (const url of endpoints) {
+      try {
+        const r = await fetch(url, { cache: "no-store" });
+        const d = await r.json();
+        if (d && d.ip) {
+          disp.innerText = d.ip;
+          inp.value = d.ip;
+          return d.ip;
+        }
+      } catch (e) {}
+    }
+    disp.innerText = "Could not auto-detect (Enter IP manually)";
+    return "";
+  }
+
+  async function loginInvigilator() {
+    const pass = document.getElementById("passcodeInput").value.trim();
+    const msgEl = document.getElementById("loginMsg");
+    const btn = document.getElementById("loginBtn");
+    msgEl.innerText = "";
+
+    if (!getApiUrl() || !pass) {
+      msgEl.innerText = "⚠️ Please enter both the Apps Script URL and Invigilator Passcode.";
+      return;
+    }
+
+    btn.disabled = true;
+    btn.innerText = "⏳ Verifying...";
+
+    try {
+      const res = await callBackend({ action: "verifyAdmin", passcode: pass });
+      btn.disabled = false;
+      btn.innerText = "🔓 Login to Invigilator Module";
+
+      if (res.ok) {
+        ADMIN_PASSCODE = pass;
+        document.getElementById("loginSection").style.display = "none";
+        document.getElementById("invigilatorSection").style.display = "block";
+        autoFetchCollegeIP();
+        refreshDashboardData();
+      } else {
+        msgEl.innerText = "❌ " + (res.error || "Invalid Passcode");
+      }
+    } catch (e) {
+      btn.disabled = false;
+      btn.innerText = "🔓 Login to Invigilator Module";
+      msgEl.innerText = "⚠️ Connection Error: " + e.message;
+    }
+  }
+
+  function switchModuleTab(tab) {
+    if (tab === "setup") {
+      document.getElementById("setupPanel").style.display = "block";
+      document.getElementById("dashboardPanel").style.display = "none";
+      document.getElementById("tabSetupBtn").classList.add("active");
+      document.getElementById("tabDashBtn").classList.remove("active");
+    } else {
+      document.getElementById("setupPanel").style.display = "none";
+      document.getElementById("dashboardPanel").style.display = "block";
+      document.getElementById("tabSetupBtn").classList.remove("active");
+      document.getElementById("tabDashBtn").classList.add("active");
+      refreshDashboardData();
+    }
+  }
+
+  function onExamTypeChange() {
+    const val = document.getElementById("examTypeSelect").value;
+    document.getElementById("durationInput").value = val === "NEET" ? "180" : "120";
+  }
+
+  // ============================================================================
+  // MS WORD EQUATION FORMATTER (Matches Python Engine)
+  // ============================================================================
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function _parseBraceJs(text, pos) {
+    if (pos >= text.length || text[pos] !== "{") return [null, pos];
+    let depth = 0, start = pos + 1;
+    for (let i = pos; i < text.length; i++) {
+      if (text[i] === "{") depth++;
+      else if (text[i] === "}") {
+        depth--;
+        if (depth === 0) return [text.slice(start, i), i + 1];
+      }
+    }
+    return [null, pos];
+  }
+
+  function _wrapTallBracketsJs(text, openCh, closeCh) {
+    let out = "", i = 0, n = text.length;
+    while (i < n) {
+      if (text[i] === openCh) {
+        let depth = 0, match = -1;
+        for (let j = i; j < n; j++) {
+          if (text[j] === openCh) depth++;
+          else if (text[j] === closeCh) {
+            depth--;
+            if (depth === 0) { match = j; break; }
+          }
+        }
+        if (match !== -1 && text.slice(i, match).includes("m-frac")) {
+          const inner = _wrapTallBracketsJs(text.slice(i + 1, match), openCh, closeCh);
+          out += `<span class="m-grp"><span class="m-brk">${openCh}</span><span class="m-in">${inner}</span><span class="m-brk">${closeCh}</span></span>`;
+          i = match + 1;
+          continue;
+        }
+      }
+      out += text[i];
+      i++;
+    }
+    return out;
+  }
+
+  function formatScientificHtml(text) {
+    if (text === null || text === undefined) return "";
+    let s = escapeHtml(String(text).trim());
+
+    // 1. Optional LaTeX support (\frac, \sqrt, symbols)
+    s = s.replace(/\$([^$]+)\$/g, "$1");
+    const symMap = {
+      "\\pi":"π","\\theta":"θ","\\alpha":"α","\\beta":"β","\\gamma":"γ","\\delta":"δ",
+      "\\Delta":"Δ","\\infty":"∞","\\pm":"±","\\times":"×","\\cdot":"·","\\leq":"≤",
+      "\\le":"≤","\\geq":"≥","\\ge":"≥","\\neq":"≠","\\ne":"≠","\\to":"→",
+      "\\rightarrow":"→","\\Rightarrow":"⇒","\\int":"∫","\\sum":"∑","\\sin":"sin",
+      "\\cos":"cos","\\tan":"tan","\\cot":"cot","\\sec":"sec","\\cosec":"cosec",
+      "\\csc":"cosec","\\log":"log","\\ln":"ln","\\left":"","\\right":""
+    };
+    for (const [k, v] of Object.entries(symMap)) {
+      const escK = k.replace(/\\/g, "\\\\");
+      s = s.replace(new RegExp(escK + "(?![a-zA-Z])", "g"), v);
+    }
+    while (s.includes("\\frac{")) {
+      const idx = s.indexOf("\\frac{");
+      const [num, p1] = _parseBraceJs(s, idx + 5);
+      if (num === null) break;
+      const [den, p2] = _parseBraceJs(s, p1);
+      if (den === null) break;
+      s = s.slice(0, idx) + `<span class="m-frac"><span class="m-num">${num}</span><span class="m-den">${den}</span></span>` + s.slice(p2);
+    }
+    while (s.includes("\\sqrt{")) {
+      const idx = s.indexOf("\\sqrt{");
+      const [rad, p1] = _parseBraceJs(s, idx + 5);
+      if (rad === null) break;
+      s = s.slice(0, idx) + `<span class="m-sqrt"><span class="m-rad">√</span><span class="m-over">${rad}</span></span>` + s.slice(p1);
+    }
+
+    // 2. Protect dates
+    const dates = [];
+    s = s.replace(/\b\d{1,2}\/\d{1,2}\/\d{2,4}\b/g, m => {
+      dates.push(m);
+      return `@@DATE${dates.length - 1}@@`;
+    });
+
+    // 3. Vulgar fractions
+    s = s.replace(/½/g, "1/2").replace(/¼/g, "1/4").replace(/¾/g, "3/4").replace(/⅓/g, "1/3").replace(/⅔/g, "2/3");
+
+    // 4. Unicode subscripts & superscripts
+    const subMap = {"₀":"0","₁":"1","₂":"2","₃":"3","₄":"4","₅":"5","₆":"6","₇":"7","₈":"8","₉":"9","₊":"+","₋":"-","ₙ":"n","ₓ":"x","ₚ":"p","ᵥ":"v"};
+    s = s.replace(/[₀₁₂₃₄₅₆₇₈₉₊₋ₙₓₚᵥ]+/g, m => `<sub>${m.split('').map(c => subMap[c] || c).join('')}</sub>`);
+
+    const supMap = {"⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9","⁺":"+","⁻":"-","ⁿ":"n","ˣ":"x"};
+    s = s.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻ⁿˣ]+/g, m => `<sup>${m.split('').map(c => supMap[c] || c).join('')}</sup>`);
+
+    // 5. Caret powers
+    s = s.replace(/\^\(([^)]+)\)/g, "<sup>$1</sup>");
+    s = s.replace(/\^([a-zA-Z0-9−+-]+)/g, "<sup>$1</sup>");
+    s = s.replace(/pKb/g, "p<i>K</i><sub>b</sub>").replace(/pKa/g, "p<i>K</i><sub>a</sub>");
+
+    // 6. Convert math slash fractions into stacked Word-style fractions (multi-pass for nested expressions)
+    for (let pass = 0; pass < 3; pass++) {
+      s = s.replace(/(\([^()]+\)|\|[^|]+\||∣[^∣]+∣|[A-Za-z0-9πθ√Δ]+(?:<sup>[^<]+<\/sup>|<sub>[^<]+<\/sub>)?)\s*\/\s*(\([^()]+\)(?:<sup>[^<]+<\/sup>)?|[A-Za-z0-9πθ√Δ]+(?:<sup>[^<]+<\/sup>|<sub>[^<]+<\/sub>)?)/g, (match, num, den) => {
+        const nc = num.replace(/<[^>]+>/g, "").trim();
+        const dc = den.replace(/<[^>]+>/g, "").trim();
+        if (/^[A-Za-z]{3,}$/.test(nc) && /^[A-Za-z]{3,}$/.test(dc) && !["sin","cos","tan","cot","sec","cosec","log"].includes(nc.toLowerCase())) {
+          return match;
+        }
+        if (["and","or","km","cm","mm","kg","gm","ml","hr","min","sec","rs"].includes(nc.toLowerCase()) && ["or","hr","h","s","min","sec","l","kg","mol"].includes(dc.toLowerCase())) {
+          return match;
+        }
+        const nDisp = (num.startsWith("(") && num.endsWith(")")) ? num.slice(1, -1) : num;
+        const dDisp = (den.startsWith("(") && den.endsWith(")")) ? den.slice(1, -1) : den;
+        return `<span class="m-frac"><span class="m-num">${nDisp}</span><span class="m-den">${dDisp}</span></span>`;
+      });
+    }
+
+    // 7. Square roots with horizontal overbar
+    while (s.includes("√(")) {
+      const idx = s.indexOf("√(");
+      let depth = 0, matchEnd = -1;
+      for (let j = idx + 1; j < s.length; j++) {
+        if (s[j] === "(") depth++;
+        else if (s[j] === ")") {
+          depth--;
+          if (depth === 0) { matchEnd = j; break; }
+        }
+      }
+      if (matchEnd !== -1) {
+        const inner = s.slice(idx + 2, matchEnd);
+        s = s.slice(0, idx) + `<span class="m-sqrt"><span class="m-rad">√</span><span class="m-over">${inner}</span></span>` + s.slice(matchEnd + 1);
+      } else break;
+    }
+    s = s.replace(/(?<!m-rad">)√([A-Za-z0-9πθ]+(?:<sup>[^<]+<\/sup>|<sub>[^<]+<\/sub>)?)/g, `<span class="m-sqrt"><span class="m-rad">√</span><span class="m-over">$1</span></span>`);
+
+    // 8. Auto-stretch tall brackets around fractions
+    s = _wrapTallBracketsJs(s, "(", ")");
+    s = _wrapTallBracketsJs(s, "[", "]");
+
+    dates.forEach((d, i) => { s = s.replace(`@@DATE${i}@@`, d); });
+    s = s.replace(/\n/g, "<br>");
+    return s;
+  }
+
+  // ============================================================================
+  // CLIENT-SIDE EXCEL PARSER + EMBEDDED DIAGRAM EXTRACTOR (JSZip + SheetJS)
+  // ============================================================================
+  function resolveZipPath(baseFile, target) {
+    if (!target) return "";
+    if (target.startsWith("/")) return target.replace(/^\/+/, "");
+    const parts = baseFile.split("/");
+    parts.pop();
+    for (const seg of target.split("/")) {
+      if (seg === "..") parts.pop();
+      else if (seg !== ".") parts.push(seg);
+    }
+    return parts.join("/");
+  }
+
+  async function extractEmbeddedImagesFromXlsx(arrayBuffer) {
+    const sheetRowImages = {};
+    try {
+      const zip = await JSZip.loadAsync(arrayBuffer);
+      const wbFile = zip.file("xl/workbook.xml");
+      const wbRelsFile = zip.file("xl/_rels/workbook.xml.rels");
+      if (!wbFile || !wbRelsFile) return sheetRowImages;
+
+      const parser = new DOMParser();
+      const wbDoc = parser.parseFromString(await wbFile.async("string"), "text/xml");
+      const wbRelsDoc = parser.parseFromString(await wbRelsFile.async("string"), "text/xml");
+
+      const ridToSheet = {};
+      Array.from(wbRelsDoc.getElementsByTagName("Relationship")).forEach(rel => {
+        ridToSheet[rel.getAttribute("Id")] = resolveZipPath("xl/workbook.xml", rel.getAttribute("Target"));
+      });
+
+      // Support Excel 365 "Place in Cell" images (richData / vm attribute)
+      const richVmToB64 = {};
+      const richRelCand = zip.file("xl/richData/_rels/richValueRel.xml.rels") || zip.file("xl/richData/_rels/rdbRichValueRel.xml.rels");
+      if (richRelCand) {
+        try {
+          const rrDoc = parser.parseFromString(await richRelCand.async("string"), "text/xml");
+          const richBase = richRelCand.name.replace("/_rels/", "/").replace(".rels", "");
+          let vmIdx = 1;
+          for (const rel of Array.from(rrDoc.getElementsByTagName("Relationship"))) {
+            const mPath = resolveZipPath(richBase, rel.getAttribute("Target"));
+            const mFile = mPath ? zip.file(mPath) : null;
+            if (mFile) {
+              const ext = mPath.split(".").pop().toLowerCase();
+              const mime = (ext === "jpg" || ext === "jpeg") ? "jpeg" : (ext || "png");
+              const b64 = await mFile.async("base64");
+              richVmToB64[String(vmIdx)] = `data:image/${mime};base64,${b64}`;
+              vmIdx++;
+            }
+          }
+        } catch (eRich) {}
+      }
+
+      const sheets = Array.from(wbDoc.getElementsByTagNameNS("*", "sheet"));
+      for (const sh of sheets) {
+        const sName = sh.getAttribute("name");
+        const sRid = sh.getAttribute("r:id") || sh.getAttributeNS("http://schemas.openxmlformats.org/officeDocument/2006/relationships", "id");
+        const sPath = ridToSheet[sRid];
+        if (!sPath) continue;
+
+        // Check Excel 365 "Place in Cell" (vm attribute on <c>)
+        if (Object.keys(richVmToB64).length > 0 && zip.file(sPath)) {
+          try {
+            const sDoc = parser.parseFromString(await zip.file(sPath).async("string"), "text/xml");
+            for (const cEl of Array.from(sDoc.getElementsByTagNameNS("*", "c"))) {
+              const vm = cEl.getAttribute("vm");
+              if (vm && richVmToB64[vm]) {
+                const ref = cEl.getAttribute("r") || "";
+                const mRow = ref.match(/(\d+)$/);
+                if (mRow) {
+                  const row0 = parseInt(mRow[1], 10) - 1;
+                  sheetRowImages[`${sName}__${row0}`] = richVmToB64[vm];
+                }
+              }
+            }
+          } catch (eVm) {}
+        }
+
+        const dir = sPath.substring(0, sPath.lastIndexOf("/"));
+        const fname = sPath.substring(sPath.lastIndexOf("/") + 1);
+        const sRelsPath = `${dir}/_rels/${fname}.rels`;
+        const sRelsFile = zip.file(sRelsPath);
+        if (!sRelsFile) continue;
+
+        const sRelsDoc = parser.parseFromString(await sRelsFile.async("string"), "text/xml");
+        for (const rel of Array.from(sRelsDoc.getElementsByTagName("Relationship"))) {
+          if ((rel.getAttribute("Type") || "").includes("drawing")) {
+            const drawPath = resolveZipPath(sPath, rel.getAttribute("Target"));
+            const drawFile = zip.file(drawPath);
+            if (!drawFile) continue;
+
+            const dDir = drawPath.substring(0, drawPath.lastIndexOf("/"));
+            const dName = drawPath.substring(drawPath.lastIndexOf("/") + 1);
+            const dRelsPath = `${dDir}/_rels/${dName}.rels`;
+            const dRelsFile = zip.file(dRelsPath);
+            if (!dRelsFile) continue;
+
+            const dRelsDoc = parser.parseFromString(await dRelsFile.async("string"), "text/xml");
+            const blipMap = {};
+            Array.from(dRelsDoc.getElementsByTagName("Relationship")).forEach(dr => {
+              blipMap[dr.getAttribute("Id")] = resolveZipPath(drawPath, dr.getAttribute("Target"));
+            });
+
+            const drawDoc = parser.parseFromString(await drawFile.async("string"), "text/xml");
+            const anchors = [
+              ...Array.from(drawDoc.getElementsByTagNameNS("*", "oneCellAnchor")),
+              ...Array.from(drawDoc.getElementsByTagNameNS("*", "twoCellAnchor"))
+            ];
+            for (const anc of anchors) {
+              const fromEl = anc.getElementsByTagNameNS("*", "from")[0];
+              const picEl = anc.getElementsByTagNameNS("*", "pic")[0];
+              if (!fromEl || !picEl) continue;
+              const rowEl = fromEl.getElementsByTagNameNS("*", "row")[0];
+              const blipEl = picEl.getElementsByTagNameNS("*", "blip")[0];
+              if (!rowEl || !blipEl) continue;
+
+              const rowIdx = parseInt(rowEl.textContent, 10);
+              const embedId = blipEl.getAttribute("r:embed") || blipEl.getAttributeNS("http://schemas.openxmlformats.org/officeDocument/2006/relationships", "embed");
+              const mediaPath = blipMap[embedId];
+              const mediaFile = mediaPath ? zip.file(mediaPath) : null;
+              if (mediaFile) {
+                const ext = mediaPath.split(".").pop().toLowerCase();
+                const mime = (ext === "jpg" || ext === "jpeg") ? "jpeg" : (ext || "png");
+                const b64 = await mediaFile.async("base64");
+                sheetRowImages[`${sName}__${rowIdx}`] = `data:image/${mime};base64,${b64}`;
+              }
+            }
+          }
+        }
+      }
+    } catch (e) {
+      console.warn("Diagram extraction note:", e);
+    }
+    return sheetRowImages;
+  }
+
+  async function parseQuestionPaperExcel(file) {
+    const buf = await file.arrayBuffer();
+    const embeddedImages = await extractEmbeddedImagesFromXlsx(buf);
+    const wb = XLSX.read(buf, { type: "array" });
+
+    const questions = [];
+    const imagesDict = {};
+    const subjects = [];
+    const subjectCounts = {};
+    let qCounter = 0;
+
+    for (const sheetName of wb.SheetNames) {
+      const ws = wb.Sheets[sheetName];
+      const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" });
+      if (rows.length < 2) continue;
+
+      const subjName = String(sheetName).trim();
+      let subjCount = 0;
+
+      for (let r = 1; r < rows.length; r++) {
+        const row = rows[r];
+        if (!row || row.length < 8) continue;
+
+        const qNoOrig = String(row[0] || "").trim();
+        const rawQ = String(row[1] || "").trim();
+        const rawA = String(row[2] || "").trim();
+        const rawB = String(row[3] || "").trim();
+        const rawC = String(row[4] || "").trim();
+        const rawD = String(row[5] || "").trim();
+        const diagCell = String(row[6] || "").trim();
+        const ansLetter = String(row[7] || "").trim().toUpperCase();
+
+        if (!rawQ || !["A", "B", "C", "D"].includes(ansLetter)) continue;
+
+        qCounter++;
+        subjCount++;
+        const qId = "Q" + qCounter;
+        let imgKey = null;
+
+        if (embeddedImages[`${sheetName}__${r}`]) {
+          imgKey = "img_" + qCounter;
+          imagesDict[imgKey] = embeddedImages[`${sheetName}__${r}`];
+        } else if (diagCell && diagCell.startsWith("data:image")) {
+          imgKey = "img_" + qCounter;
+          imagesDict[imgKey] = diagCell;
+        }
+
+        questions.push({
+          paper_qno: qCounter,
+          id: qId,
+          orig_qno: qNoOrig || String(subjCount),
+          subject: subjName,
+          q_html: formatScientificHtml(rawQ),
+          ans_letter: ansLetter,
+          options: [
+            { key: "A", text: rawA, html: formatScientificHtml(rawA) },
+            { key: "B", text: rawB, html: formatScientificHtml(rawB) },
+            { key: "C", text: rawC, html: formatScientificHtml(rawC) },
+            { key: "D", text: rawD, html: formatScientificHtml(rawD) }
+          ],
+          img: imgKey
+        });
+      }
+
+      if (subjCount > 0) {
+        subjects.push(subjName);
+        subjectCounts[subjName] = subjCount;
+      }
+    }
+
+    if (!questions.length) {
+      throw new Error("No valid questions found! Ensure Sheet Name = Subject and Columns 1-8 are: Q.No, Question, Opt A, Opt B, Opt C, Opt D, Diagram, Correct Answer.");
+    }
+    return { questions, imagesDict, subjects, subjectCounts };
+  }
+
+  async function parseMasterDatabaseExcel(file, defaultClass) {
+    const buf = await file.arrayBuffer();
+    const wb = XLSX.read(buf, { type: "array" });
+    const ws = wb.Sheets[wb.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" });
+
+    let headerIdx = 0;
+    for (let i = 0; i < Math.min(15, rows.length); i++) {
+      const upper = rows[i].map(c => String(c || "").trim().toUpperCase());
+      if (upper.some(v => v.includes("SATS")) && upper.some(v => v.includes("NAME"))) {
+        headerIdx = i;
+        break;
+      }
+    }
+
+    const hdrs = rows[headerIdx].map(c => String(c || "").trim().toUpperCase());
+    const idxSats = hdrs.findIndex(h => h.includes("SATS"));
+    const idxReg = hdrs.findIndex(h => h.includes("REGISTER") || h.includes("ROLL"));
+    const idxName = hdrs.findIndex(h => h.includes("STUDENT NAME") || h === "NAME");
+    const idxFather = hdrs.findIndex(h => h.includes("FATHER NAME"));
+    const idxMobile = hdrs.findIndex(h => h.includes("MOBILE") || h.includes("CONTACT") || h.includes("PHONE"));
+    const idxClass = hdrs.findIndex(h => h.includes("CLASS"));
+    const idxSec = hdrs.findIndex(h => h.includes("SECTION"));
+
+    if (idxSats === -1 || idxName === -1) {
+      throw new Error("Master Database Excel must have 'SATS NO' and 'STUDENT NAME' columns.");
+    }
+
+    const students = [];
+    for (let r = headerIdx + 1; r < rows.length; r++) {
+      const row = rows[r];
+      const rawSats = String(row[idxSats] || "").trim().replace(/\.0$/, "");
+      const name = String(row[idxName] || "").trim();
+      if (!rawSats || !name) continue;
+
+      const regNo = idxReg !== -1 ? String(row[idxReg] || "").trim().replace(/\.0$/, "") : "";
+      const father = idxFather !== -1 ? String(row[idxFather] || "").trim() : "";
+      const mobile = idxMobile !== -1 ? String(row[idxMobile] || "").trim().replace(/\.0$/, "") : "";
+      const cls = idxClass !== -1 ? String(row[idxClass] || "").trim() : defaultClass;
+      const sec = idxSec !== -1 ? String(row[idxSec] || "").trim() : "";
+
+      students.push({
+        sats_no: rawSats,
+        reg_no: regNo,
+        student_name: name,
+        father_name: father,
+        contact_no: mobile,
+        class: cls,
+        section: sec,
+        group: cls ? cls.replace("PUC", "PU").trim() : defaultClass,
+        batch: sec ? `${cls} (${sec})` : cls
+      });
+    }
+
+    if (!students.length) {
+      throw new Error("No student records found in Master Database Excel.");
+    }
+    return students;
+  }
+
+  async function processAndStartExam() {
+    const qFile = document.getElementById("qExcelFile").files[0];
+    const mFile = document.getElementById("mExcelFile").files[0];
+    const examName = document.getElementById("examNameInput").value.trim();
+    const examType = document.getElementById("examTypeSelect").value;
+    const examDate = document.getElementById("examDateInput").value.trim();
+    const examClass = document.getElementById("examClassSelect").value;
+    const durationMin = parseInt(document.getElementById("durationInput").value || "120", 10);
+    const allowedIps = document.getElementById("allowedIpsInput").value.trim();
+    const remoteOpen = document.getElementById("remoteOpenChk").checked;
+
+    const statusEl = document.getElementById("setupProgressMsg");
+    const btn = document.getElementById("startExamBtn");
+
+    if (!qFile) { alert("⚠️ Please select the Question Paper Excel (.xlsx) file!"); return; }
+    if (!mFile) { alert("⚠️ Please select the Student Master Database Excel (.xlsx) file!"); return; }
+    if (!examName) { alert("⚠️ Please enter an Exam Name!"); return; }
+    if (!remoteOpen && !allowedIps) {
+      alert("⚠️ Please enter the College Internet IP Address (or check 'Allow Remote Students').");
+      return;
+    }
+
+    btn.disabled = true;
+    btn.innerText = "⏳ Parsing Excel & Uploading to Google Drive...";
+    statusEl.innerText = "Reading Question Paper & Extracting Diagrams...";
+
+    try {
+      const qData = await parseQuestionPaperExcel(qFile);
+      document.getElementById("qFileStatus").innerText =
+        `✅ Loaded ${qData.questions.length} MCQs across [${qData.subjects.join(", ")}] (${Object.keys(qData.imagesDict).length} diagrams)`;
+
+      statusEl.innerText = "Reading Student Master Database...";
+      const students = await parseMasterDatabaseExcel(mFile, examClass);
+      document.getElementById("mFileStatus").innerText = `✅ Loaded ${students.length} Students from Master DB`;
+
+      statusEl.innerText = "Creating Exam Folder & Saving to Google Drive...";
+      const res = await callBackend({
+        action: "startExam",
+        passcode: ADMIN_PASSCODE,
+        exam_id: String(Date.now()),
+        exam_name: examName,
+        exam_type: examType,
+        exam_date: examDate,
+        exam_class: examClass,
+        duration_min: durationMin,
+        correct_marks: examType === "NEET" ? 4 : 1,
+        wrong_marks: examType === "NEET" ? -1 : 0,
+        allowed_ips: allowedIps,
+        remote_open_mode: remoteOpen,
+        subjects: qData.subjects,
+        subject_counts: qData.subjectCounts,
+        questions: qData.questions,
+        images: qData.imagesDict,
+        students: students
+      });
+
+      btn.disabled = false;
+      btn.innerText = "🚀 Start Exam & Save to Google Drive";
+
+      if (res.ok) {
+        ACTIVE_CONFIG = res.config;
+        statusEl.style.color = "#0E9F48";
+        statusEl.innerText = `✅ Exam '${examName}' is LIVE on Google Drive! Switching to Live Dashboard...`;
+        setTimeout(() => switchModuleTab("dashboard"), 900);
+      } else {
+        throw new Error(res.error || "Failed to start exam on Google Drive");
+      }
+    } catch (err) {
+      btn.disabled = false;
+      btn.innerText = "🚀 Start Exam & Save to Google Drive";
+      statusEl.style.color = "#dc2626";
+      statusEl.innerText = "❌ Error: " + err.message;
+      alert("❌ Error: " + err.message);
+    }
+  }
+
+  // ============================================================================
+  // LIVE INVIGILATOR DASHBOARD
+  // ============================================================================
+  function fmtSec(sec) {
+    if (sec === null || sec === undefined) return "—";
+    sec = Math.max(0, Math.floor(sec));
+    const h = String(Math.floor(sec / 3600)).padStart(2, '0');
+    const m = String(Math.floor((sec % 3600) / 60)).padStart(2, '0');
+    const s = String(sec % 60).padStart(2, '0');
+    return `${h}:${m}:${s}`;
+  }
+
+  async function refreshDashboardData() {
+    if (!ADMIN_PASSCODE) return;
+    try {
+      const res = await callBackend({ action: "getDashboardData" });
+      if (!res.ok) return;
+
+      ACTIVE_CONFIG = res.config;
+      CACHED_LIVE_STUDENTS = res.students || [];
+      CACHED_RANKED_RESULTS = res.ranked_results || [];
+
+      document.getElementById("dashExamTitle").innerText =
+        `${ACTIVE_CONFIG.exam_name} (${ACTIVE_CONFIG.exam_type}) — LIVE INVIGILATOR DASHBOARD`;
+      document.getElementById("dashExamMeta").innerText =
+        `Class: ${ACTIVE_CONFIG.exam_class} | Date: ${ACTIVE_CONFIG.exam_date} | Questions: ${ACTIVE_CONFIG.total_questions} (${ACTIVE_CONFIG.max_marks} Marks) | Marking: +${ACTIVE_CONFIG.correct_marks} / ${ACTIVE_CONFIG.wrong_marks}`;
+      document.getElementById("dashDurationVal").innerText = `${ACTIVE_CONFIG.duration_min} Mins`;
+      document.getElementById("lastUpd").innerText = new Date().toLocaleTimeString();
+
+      if (ACTIVE_CONFIG.folder_url) {
+        const link = document.getElementById("driveFolderLink");
+        link.href = ACTIVE_CONFIG.folder_url;
+        link.style.display = "inline-flex";
+      }
+      if (ACTIVE_CONFIG.sheet_url) {
+        const sLink = document.getElementById("driveSheetLink");
+        sLink.href = ACTIVE_CONFIG.sheet_url;
+        sLink.style.display = "inline-flex";
+      }
+
+      if (document.activeElement !== document.getElementById("dashAllowedIps")) {
+        document.getElementById("dashAllowedIps").value = ACTIVE_CONFIG.allowed_ips || "";
+        document.getElementById("dashRemoteOpenChk").checked = Boolean(ACTIVE_CONFIG.remote_open_mode);
+      }
+
+      document.getElementById("cntTotal").innerText = CACHED_LIVE_STUDENTS.length;
+      document.getElementById("cntActive").innerText = CACHED_LIVE_STUDENTS.filter(r => r.status === "In Progress").length;
+      document.getElementById("cntSub").innerText = CACHED_LIVE_STUDENTS.filter(r => r.status === "Submitted").length;
+
+      const tbody = document.getElementById("liveTableBody");
+      if (!CACHED_LIVE_STUDENTS.length) {
+        tbody.innerHTML = '<tr><td colspan="12" style="text-align:center; padding:30px; color:#64748b;">Waiting for students to log in from the website...</td></tr>';
+        return;
+      }
+
+      let rowsHtml = "";
+      CACHED_LIVE_STUDENTS.forEach((st, idx) => {
+        const badge = st.status === "Submitted"
+          ? '<span class="pill-done">✅ Submitted</span>'
+          : '<span class="pill-live">🟢 In Progress</span>';
+        const remTime = st.status === "Submitted" ? "Finished" : fmtSec(st.remaining_seconds);
+        const warnColor = (st.violations || 0) > 0 ? "#dc2626" : "#64748b";
+        rowsHtml += `
+          <tr>
+            <td>${idx + 1}</td>
+            <td><strong>${st.sats_no}</strong></td>
+            <td>${st.reg_no || "—"}</td>
+            <td><strong>${st.student_name}</strong></td>
+            <td>${st.father_name || "—"}</td>
+            <td>${st.contact_no || "—"}</td>
+            <td>${badge}</td>
+            <td class="timer-cell">${remTime}</td>
+            <td>${st.answered || 0} / ${ACTIVE_CONFIG.total_questions}</td>
+            <td style="color:${warnColor}; font-weight:800;">${st.violations || 0}</td>
+            <td style="font-size:12px;">${st.subject_summary || "—"}</td>
+            <td style="background:#eef2ff; font-weight:900; color:#1F3864; font-size:14.5px;">${st.total_score_display || "—"}</td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = rowsHtml;
+    } catch (e) {}
+  }
+
+  setInterval(() => {
+    if (document.getElementById("dashboardPanel").style.display === "block") {
+      refreshDashboardData();
+    }
+  }, 5000);
+
+  async function updateLiveAllowedIps() {
+    const ips = document.getElementById("dashAllowedIps").value.trim();
+    const remoteOpen = document.getElementById("dashRemoteOpenChk").checked;
+    try {
+      const res = await callBackend({
+        action: "updateAllowedIps",
+        passcode: ADMIN_PASSCODE,
+        allowed_ips: ips,
+        remote_open_mode: remoteOpen
+      });
+      if (res.ok) alert("✅ Network IP Access Rule Updated on Google Drive!");
+    } catch (e) {
+      alert("❌ Error: " + e.message);
+    }
+  }
+
+  async function endActiveExam() {
+    if (!confirm("Are you sure you want to close/end this examination for all students?")) return;
+    try {
+      const res = await callBackend({ action: "endExam", passcode: ADMIN_PASSCODE });
+      if (res.ok) alert("🛑 Examination closed.");
+    } catch (e) {}
+  }
+
+  // ============================================================================
+  // RESULT SHEET PDF GENERATOR (Matches WEEKLY TEST - 5.pdf + Saves to Drive)
+  // ============================================================================
+  async function generateAndDownloadMarklistPDF() {
+    if (!ACTIVE_CONFIG) { alert("No active exam loaded."); return; }
+    await refreshDashboardData();
+
+    const { jsPDF } = window.jspdf;
+    // Legal Landscape: 14" x 8.5" = 1008 x 612 pt (exact match to WEEKLY TEST - 5.pdf)
+    const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "legal" });
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const marginX = 18;
+
+    const subjects = ACTIVE_CONFIG.subjects || ["PHYSICS", "CHEMISTRY", "BOTANY", "ZOOLOGY"];
+    const cMark = Number(ACTIVE_CONFIG.correct_marks || 1);
+
+    const headRow1 = [
+      { content: "ROLL NO", rowSpan: 2 },
+      { content: "CANDIDATE NAME", rowSpan: 2 },
+      { content: "GROUP", rowSpan: 2 }
+    ];
+    const headRow2 = [];
+
+    subjects.forEach(s => {
+      const sMax = (ACTIVE_CONFIG.subject_counts[s] || 0) * cMark;
+      headRow1.push({ content: `${s.toUpperCase()} (${sMax}:0)`, colSpan: 5 });
+      headRow2.push("R", "W", "L", "C", "MK");
+    });
+
+    headRow1.push(
+      { content: "TOTAL", rowSpan: 2 },
+      { content: "%", rowSpan: 2 },
+      { content: "RANK", colSpan: 2 },
+      { content: "RATE", colSpan: 2 }
+    );
+    headRow2.push("GROUP", "TEST", "STRIKE", "SCORE");
+
+    const bodyRows = CACHED_RANKED_RESULTS.map(s => {
+      const row = [
+        s.reg_no || s.sats_no || "",
+        String(s.student_name || "").slice(0, 24),
+        String(s.group || ACTIVE_CONFIG.exam_class || "").slice(0, 8)
+      ];
+      subjects.forEach(subj => {
+        const st = (s.subj_stats && s.subj_stats[subj]) || { correct: 0, wrong: 0, unattempted: 0, marks: 0 };
+        row.push(String(st.correct), String(st.wrong), String(st.unattempted), "0", Number(st.marks).toFixed(2));
+      });
+      const strike = s.attempted > 0 ? ((s.total_correct / s.attempted) * 100).toFixed(1) : "0";
+      row.push(
+        Number(s.total_score).toFixed(2),
+        Number(s.percentage).toFixed(2),
+        String(s.group_rank || 1),
+        String(s.test_rank || 1),
+        String(strike),
+        "0"
+      );
+      return row;
+    });
+
+    if (!bodyRows.length) {
+      bodyRows.push(["-", "No submissions recorded yet", "-"]);
+    }
+
+    const subjBanner = subjects.map(s => `${s.toUpperCase()}-`).join(", ") + ", -";
+    const leftBanner = `${ACTIVE_CONFIG.exam_class} ${ACTIVE_CONFIG.exam_name} (${ACTIVE_CONFIG.exam_type}), Dt:${ACTIVE_CONFIG.exam_date}`;
+
+    doc.autoTable({
+      head: [headRow1, headRow2],
+      body: bodyRows,
+      startY: 64,
+      margin: { left: marginX, right: marginX, top: 64, bottom: 26 },
+      theme: "grid",
+      styles: {
+        font: "helvetica",
+        fontSize: 7.4,
+        cellPadding: 2.2,
+        halign: "center",
+        valign: "middle",
+        lineColor: [0, 0, 0],
+        lineWidth: 0.45,
+        textColor: [0, 0, 0]
+      },
+      headStyles: {
+        fillColor: [241, 245, 249],
+        textColor: [0, 0, 0],
+        fontStyle: "bold",
+        fontSize: 7.5
+      },
+      columnStyles: {
+        1: { halign: "left", cellWidth: 135 }
+      },
+      didDrawPage: function (data) {
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(13);
+        doc.text("PRAGATHI P.U. COLLEGE, GURUMATKAL (KY0434)", pageW / 2, 26, { align: "center" });
+
+        doc.setFontSize(10);
+        doc.text("SUBJECT WISE MARKLIST", pageW / 2, 41, { align: "center" });
+
+        doc.setFontSize(8.8);
+        doc.text(leftBanner, marginX, 56);
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8.2);
+        doc.text(subjBanner, pageW - marginX, 56, { align: "right" });
+
+        doc.setFontSize(7.5);
+        doc.text(`PRAGATHI P.U. COLLEGE, GURUMATKAL (KY0434) | ${ACTIVE_CONFIG.exam_name}`, marginX, pageH - 12);
+        doc.text(`Page ${doc.internal.getNumberOfPages()}`, pageW - marginX, pageH - 12, { align: "right" });
+      }
+    });
+
+    const safeName = `${ACTIVE_CONFIG.exam_class}_${ACTIVE_CONFIG.exam_name}_${ACTIVE_CONFIG.exam_date}`.replace(/[^A-Za-z0-9_-]+/g, "_");
+    const fileName = `${safeName}_Marklist.pdf`;
+    doc.save(fileName);
+
+    // Also upload PDF directly to the Exam Name folder in Google Drive
+    try {
+      const pdfBase64 = doc.output("datauristring").split(",")[1];
+      await callBackend({
+        action: "savePdfToDrive",
+        file_name: fileName,
+        pdf_base64: pdfBase64
+      });
+    } catch (e) {}
+  }
+
+  function downloadResultsExcel() {
+    if (!ACTIVE_CONFIG) return;
+    const subjects = ACTIVE_CONFIG.subjects || [];
+    const rows = CACHED_RANKED_RESULTS.map(s => {
+      const obj = {
+        "Test Rank": s.test_rank,
+        "Group Rank": s.group_rank,
+        "SATS No": s.sats_no,
+        "Roll / Reg No": s.reg_no,
+        "Student Name": s.student_name,
+        "Father Name": s.father_name,
+        "Contact No": s.contact_no,
+        "Class": s.batch,
+        "Attempted": s.attempted,
+        "Correct": s.total_correct,
+        "Wrong": s.total_wrong,
+        "Total Score": s.total_score,
+        "Max Marks": s.max_marks,
+        "Percentage %": s.percentage
+      };
+      subjects.forEach(subj => {
+        const st = (s.subj_stats && s.subj_stats[subj]) || { marks: 0 };
+        obj[subj] = st.marks;
+      });
+      return obj;
+    });
+
+    const ws = XLSX.utils.json_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Marklist");
+    const safeName = `${ACTIVE_CONFIG.exam_name}_${ACTIVE_CONFIG.exam_type}`.replace(/[^A-Za-z0-9_-]+/g, "_");
+    const fileName = `Results_${safeName}.xlsx`;
+    XLSX.writeFile(wb, fileName);
+
+    // Also save Excel result sheet into the Exam folder inside ONLINE EXAM on Google Drive
+    try {
+      const wbBase64 = XLSX.write(wb, { bookType: "xlsx", type: "base64" });
+      callBackend({
+        action: "saveExcelToDrive",
+        file_name: fileName,
+        excel_base64: wbBase64
+      });
+    } catch (e) {}
+  }
+
+  // ============================================================================
+  // KDE CONNECT PARENT SMS POPUP
+  // ============================================================================
+  function openKdeModal() {
+    document.getElementById("kdeModal").style.display = "flex";
+    const tbody = document.getElementById("kdeStudentsTbody");
+
+    if (!CACHED_RANKED_RESULTS.length) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:20px; color:#64748b;">No students have submitted yet.</td></tr>';
+      document.getElementById("smsPreviewBox").innerText = "Waiting for submitted students...";
+      return;
+    }
+
+    let html = "";
+    CACHED_RANKED_RESULTS.forEach((st, i) => {
+      html += `
+        <tr>
+          <td><input type="checkbox" class="st-chk" data-idx="${i}" checked /></td>
+          <td><strong>#${st.test_rank}</strong></td>
+          <td>${st.reg_no || st.sats_no}</td>
+          <td><strong>${st.student_name}</strong></td>
+          <td><input type="text" class="phone-inp" id="phone_${i}" value="${st.contact_no || ''}" /></td>
+          <td><strong>${st.total_score} / ${st.max_marks}</strong> (${st.percentage}%)</td>
+          <td id="sms_status_${i}" style="font-weight:700; color:#64748b;">Pending</td>
+        </tr>
+      `;
+    });
+    tbody.innerHTML = html;
+    updateSmsPreview();
+  }
+
+  function closeKdeModal() {
+    document.getElementById("kdeModal").style.display = "none";
+  }
+
+  function toggleAllCheckboxes(checked) {
+    document.querySelectorAll(".st-chk").forEach(cb => cb.checked = checked);
+  }
+
+  function buildMessageForStudent(st) {
+    const tpl = document.getElementById("kdeMsgTemplate").value;
+    return tpl
+      .replaceAll("{student_name}", st.student_name || "")
+      .replaceAll("{father_name}", st.father_name || "Parent")
+      .replaceAll("{roll_no}", st.reg_no || st.sats_no || "")
+      .replaceAll("{sats_no}", st.sats_no || "")
+      .replaceAll("{exam_name}", (ACTIVE_CONFIG && ACTIVE_CONFIG.exam_name) || "")
+      .replaceAll("{exam_type}", (ACTIVE_CONFIG && ACTIVE_CONFIG.exam_type) || "")
+      .replaceAll("{exam_date}", (ACTIVE_CONFIG && ACTIVE_CONFIG.exam_date) || "")
+      .replaceAll("{subject_marks}", st.subject_summary || "")
+      .replaceAll("{total_marks}", String(st.total_score))
+      .replaceAll("{max_marks}", String(st.max_marks))
+      .replaceAll("{percentage}", String(st.percentage))
+      .replaceAll("{rank}", String(st.test_rank));
+  }
+
+  function updateSmsPreview() {
+    if (CACHED_RANKED_RESULTS.length > 0) {
+      document.getElementById("smsPreviewBox").innerText = buildMessageForStudent(CACHED_RANKED_RESULTS[0]);
+    }
+  }
+
+  async function detectKdeDevices() {
+    const infoEl = document.getElementById("kdeDetectInfo");
+    infoEl.innerText = "Scanning KDE Connect via local bridge (127.0.0.1:5005)...";
+    try {
+      const resp = await fetch(`${KDE_BRIDGE_URL}/devices`);
+      const data = await resp.json();
+      if (data.devices && data.devices.length > 0) {
+        document.getElementById("kdeDeviceId").value = data.devices[0].id;
+        infoEl.innerText = `✅ Found: ${data.devices[0].name} (${data.devices[0].id})`;
+      } else {
+        infoEl.innerText = "⚠️ No reachable phone found. Check KDE Connect app on phone.";
+      }
+    } catch (e) {
+      infoEl.innerText = "⚠️ Start kde_sms_bridge.py on your PC first, or enter KDE ID manually.";
+    }
+  }
+
+  async function sendSelectedSms() {
+    const kdeId = document.getElementById("kdeDeviceId").value.trim();
+    const lagSec = Math.max(1, parseInt(document.getElementById("kdeLagSec").value || "3", 10));
+    if (!kdeId) {
+      alert("⚠️ Please enter your KDE Connect Device ID (or run kde_sms_bridge.py & click Auto-Detect).");
+      return;
+    }
+
+    const selected = [];
+    document.querySelectorAll(".st-chk:checked").forEach(cb => {
+      const idx = parseInt(cb.dataset.idx, 10);
+      const phone = document.getElementById("phone_" + idx).value.trim();
+      selected.push({ idx, st: CACHED_RANKED_RESULTS[idx], phone });
+    });
+
+    if (!selected.length) {
+      alert("⚠️ Please select at least one student.");
+      return;
+    }
+
+    const btn = document.getElementById("btnSendAllSms");
+    btn.disabled = true;
+    btn.innerText = "⏳ Sending Messages...";
+
+    let sentCount = 0;
+    for (let k = 0; k < selected.length; k++) {
+      const item = selected[k];
+      const statusCell = document.getElementById("sms_status_" + item.idx);
+      if (!item.phone) {
+        statusCell.innerText = "❌ No Phone";
+        statusCell.style.color = "#dc2626";
+        continue;
+      }
+
+      statusCell.innerText = "⏳ Sending...";
+      statusCell.style.color = "#2563eb";
+      document.getElementById("kdeProgressText").innerText = `Sending ${k + 1} of ${selected.length} (${item.st.student_name})...`;
+
+      const msgText = buildMessageForStudent(item.st);
+      try {
+        const resp = await fetch(`${KDE_BRIDGE_URL}/send_sms`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ kde_id: kdeId, phone: item.phone, message: msgText })
+        });
+        const res = await resp.json();
+        if (res.status === "sent") {
+          statusCell.innerText = "✅ Sent";
+          statusCell.style.color = "#059669";
+          sentCount++;
+        } else {
+          statusCell.innerText = "❌ Failed: " + (res.error || "");
+          statusCell.style.color = "#dc2626";
+        }
+      } catch (e) {
+        statusCell.innerText = "❌ Bridge Offline";
+        statusCell.style.color = "#dc2626";
+      }
+
+      if (k < selected.length - 1) {
+        await new Promise(r => setTimeout(r, lagSec * 1000));
+      }
+    }
+
+    document.getElementById("kdeProgressText").innerText = `✅ Completed! Sent ${sentCount} of ${selected.length} messages.`;
+    btn.disabled = false;
+    btn.innerText = "🚀 Send SMS via KDE Connect";
+  }
+</script>
+</body>
+</html>

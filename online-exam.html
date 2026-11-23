@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Online Examination | Pragathi P.U. College, Gurumatkal (KY0434)</title>
+  <link rel="icon" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Tinos:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #1F3864;
+      --maroon: #7B1E22;
+      --green: #0E9F48;
+      --gold: #F5D90A;
+      --bg: #f1f5f9;
+      --ink: #1B2433;
+      --muted: #566074;
+      --line: #D5DBE6;
+      --serif: "Tinos", "Times New Roman", Times, serif;
+      --sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; font-family: var(--sans); user-select: none; -webkit-user-select: none; }
+    body { margin: 0; background: var(--bg); color: var(--ink); overflow-x: hidden; }
+    sub, sup { font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; }
+    sup { top: -0.45em; }
+    sub { bottom: -0.25em; }
+
+    /* MS Word Equation Editor (Cambria Math) Typography */
+    .q-text, .opt-label span {
+      font-family: 'Cambria Math', 'Cambria', 'Times New Roman', serif;
+    }
+    .m-frac {
+      display: inline-flex; flex-direction: column; align-items: center;
+      vertical-align: middle; margin: 0 3px; line-height: 1.12;
+      font-family: 'Cambria Math', 'Cambria', 'Times New Roman', serif; font-size: 0.94em;
+    }
+    .m-num { display: block; padding: 0 4px 1px 4px; border-bottom: 1.5px solid currentColor; text-align: center; width: 100%; }
+    .m-den { display: block; padding: 2px 4px 0 4px; text-align: center; width: 100%; }
+    .m-sqrt { display: inline-flex; align-items: stretch; vertical-align: middle; margin: 0 2px; font-family: 'Cambria Math', 'Cambria', 'Times New Roman', serif; }
+    .m-rad { font-size: 1.18em; line-height: 1; margin-right: -1px; display: inline-flex; align-items: center; }
+    .m-over { border-top: 1.5px solid currentColor; padding: 1px 4px 0 3px; display: inline-flex; align-items: center; }
+    .m-grp { display: inline-flex; align-items: center; vertical-align: middle; margin: 0 1px; }
+    .m-brk { font-family: 'Cambria Math', 'Cambria', 'Times New Roman', serif; font-size: 1.75em; font-weight: 300; line-height: 1; transform: scaleY(1.12); display: inline-block; margin: 0 1px; }
+    .m-in { display: inline-flex; align-items: center; gap: 2px; }
+
+    /* Top Sticky Header */
+    header {
+      background: linear-gradient(135deg, #1F3864 0%, #162847 100%);
+      color: #fff; padding: 10px 22px; position: sticky; top: 0; z-index: 50;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.28); border-bottom: 4px solid var(--gold);
+    }
+    .hdr-brand { display: flex; align-items: center; gap: 12px; }
+    .hdr-logo { width: 44px; height: 44px; object-fit: contain; background: #fff; border-radius: 50%; padding: 2px; }
+    .society-title { font-size: 10.5px; font-weight: 700; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; font-family: var(--serif); }
+    .college-title { font-size: 19px; font-weight: 800; color: #ffffff; margin: 1px 0; font-family: var(--serif); }
+    .exam-meta-line { font-size: 12px; color: #93c5fd; font-weight: 600; }
+
+    .hdr-right-group { display: flex; align-items: center; gap: 12px; }
+    .student-header-pill {
+      background: rgba(14, 159, 72, 0.18); border: 1.5px solid #22c55e;
+      padding: 6px 14px; border-radius: 10px; text-align: right;
+    }
+    .st-hdr-name { font-size: 14.5px; font-weight: 800; color: #ffffff; text-transform: uppercase; }
+    .st-hdr-sats { font-size: 11.5px; font-weight: 700; color: #86efac; }
+
+    .timer-box {
+      background: #0f172a; border: 1.5px solid var(--gold); padding: 6px 14px;
+      border-radius: 10px; text-align: center; min-width: 132px;
+    }
+    .timer-label { font-size: 10px; color: #cbd5e1; text-transform: uppercase; font-weight: 700; }
+    .timer-val { font-size: 20px; font-weight: 800; color: var(--gold); font-family: monospace; }
+    .timer-danger { color: #f43f5e !important; animation: blink 1s infinite; }
+    @keyframes blink { 50% { opacity: 0.45; } }
+    @media (max-width: 760px) {
+      header { flex-direction: column; align-items: flex-start; padding: 8px 14px; gap: 8px; }
+      .college-title { font-size: 15.5px; }
+      .hdr-right-group { width: 100%; justify-content: space-between; }
+    }
+
+    /* Fullscreen Gate (Network IP Verification + SATS Login) */
+    #satsGate {
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center; padding: 18px;
+    }
+    .gate-card {
+      background: #ffffff; color: var(--ink); max-width: 550px; width: 100%;
+      border-radius: 16px; padding: 26px 30px; text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.55); border-top: 6px solid var(--maroon);
+    }
+    .net-checking {
+      padding: 22px 16px; background: #f8fafc; border: 1.5px solid #cbd5e1;
+      border-radius: 12px; margin-top: 16px; font-weight: 700; color: var(--navy);
+    }
+    .net-blocked {
+      display: none; padding: 24px 18px; background: #fef2f2; border: 2px solid #dc2626;
+      border-radius: 12px; margin-top: 16px; color: #991b1b;
+    }
+    .net-blocked h3 { margin: 8px 0; font-size: 19px; color: #b91c1c; line-height: 1.4; }
+    .sats-input-row { display: flex; gap: 10px; margin-top: 12px; }
+    .sats-input {
+      flex: 1; padding: 12px 14px; font-size: 17px; font-weight: 800;
+      border: 2px solid #94a3b8; border-radius: 10px; outline: none;
+      user-select: text; -webkit-user-select: text; letter-spacing: 1px;
+    }
+    .sats-input:focus { border-color: var(--navy); background: #eff6ff; }
+    .verify-btn {
+      padding: 12px 18px; font-size: 14.5px; font-weight: 700;
+      background: var(--navy); color: #fff; border: none; border-radius: 10px; cursor: pointer;
+    }
+    .verify-btn:hover { background: var(--maroon); }
+    #satsErrorMsg { color: #dc2626; font-size: 13px; font-weight: 700; margin-top: 8px; display: none; }
+
+    #verifiedBox {
+      display: none; margin-top: 16px; text-align: left;
+      background: #f0fdf4; border: 2px solid var(--green); border-radius: 12px; padding: 14px 16px;
+    }
+    .v-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px dashed #bbf7d0; font-size: 13.5px; }
+    .v-row:last-child { border-bottom: none; }
+    .v-lbl { color: #475569; font-weight: 600; }
+    .v-val { color: #0f172a; font-weight: 800; }
+
+    .start-btn {
+      width: 100%; padding: 14px 20px; font-size: 15.5px; font-weight: 800; margin-top: 14px;
+      background: var(--green); color: #ffffff; border: none; border-radius: 10px; cursor: pointer;
+    }
+
+    #violationModal {
+      display: none; position: fixed; inset: 0; z-index: 10000;
+      background: rgba(127, 29, 29, 0.94); align-items: center; justify-content: center; padding: 20px;
+    }
+    .violation-card { background: #fff; max-width: 460px; width: 100%; border-radius: 16px; padding: 26px; text-align: center; border: 4px solid #dc2626; }
+
+    /* Main Exam Layout */
+    .main-layout {
+      max-width: 1380px; margin: 16px auto; padding: 0 16px;
+      display: grid; grid-template-columns: 1fr 320px; gap: 20px; align-items: start;
+    }
+    @media (max-width: 960px) { .main-layout { grid-template-columns: 1fr; } }
+
+    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px 20px; margin-bottom: 16px; }
+    .tabs-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .subj-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tab-btn { padding: 9px 15px; border-radius: 10px; border: 1px solid #cbd5e1; background: #fff; color: #334155; font-weight: 700; font-size: 13px; cursor: pointer; }
+    .tab-btn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+    .q-card { background: #fff; border: 1px solid #e2e8f0; border-left: 5px solid #cbd5e1; border-radius: 12px; padding: 16px 18px; margin-bottom: 14px; }
+    .q-card.answered { border-left-color: var(--green); background: #f0fdf433; }
+    .q-meta { display: flex; justify-content: space-between; font-size: 11px; color: #64748b; font-weight: 700; margin-bottom: 8px; }
+    .q-subj-tag { padding: 2px 8px; border-radius: 6px; font-weight: 800; text-transform: uppercase; background: #e0e7ff; color: var(--navy); }
+    .q-text { font-size: 16px; font-weight: 700; color: #0f172a; line-height: 1.55; margin-bottom: 12px; }
+    .q-diagram { margin: 10px 0 14px 0; padding: 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; text-align: center; }
+    .q-diagram img { max-height: 240px; max-width: 100%; border-radius: 6px; }
+    .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    @media (max-width: 640px) { .options-grid { grid-template-columns: 1fr; } }
+    .opt-label { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border: 1.5px solid #e2e8f0; border-radius: 10px; cursor: pointer; font-size: 14.5px; background: #f8fafc; line-height: 1.45; }
+    .opt-label.selected-opt { border-color: var(--navy); background: #eff6ff; font-weight: 700; color: var(--navy); }
+    .clear-btn { margin-top: 8px; background: none; border: none; color: #64748b; font-size: 11px; font-weight: 700; cursor: pointer; text-decoration: underline; }
+
+    .sidebar { position: sticky; top: 88px; }
+    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; text-align: center; }
+    .stat-box { padding: 8px; border-radius: 8px; background: #f8fafc; border: 1px solid #e2e8f0; }
+    .stat-num { font-size: 18px; font-weight: 800; }
+    .stat-lbl { font-size: 10px; color: #64748b; text-transform: uppercase; font-weight: 700; }
+    .palette-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; max-height: 330px; overflow-y: auto; padding: 4px; }
+    .pal-btn { padding: 7px 0; font-size: 12px; font-weight: 700; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; cursor: pointer; }
+    .pal-btn.pal-done { background: var(--green); color: #fff; border-color: #0b823b; }
+    .submit-btn { width: 100%; padding: 14px; background: var(--green); color: #fff; font-size: 15.5px; font-weight: 800; border: none; border-radius: 10px; cursor: pointer; margin-top: 14px; }
+
+    #resultScreen { display: none; max-width: 800px; margin: 40px auto; padding: 30px; background: #fff; border-radius: 16px; text-align: center; border: 2px solid var(--green); }
+    .score-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 20px 0; }
+    .score-tile { padding: 14px; border-radius: 12px; background: #f8fafc; border: 1px solid #e2e8f0; }
+    .score-tile .big { font-size: 24px; font-weight: 800; margin-top: 4px; }
+  </style>
+</head>
+<body oncontextmenu="return false;" oncopy="return false;" oncut="return false;" onpaste="return false;">
+
+<!-- Step 1: Network IP Gate + SATS Verification -->
+<div id="satsGate">
+  <div class="gate-card">
+    <div style="font-size:11px; font-weight:700; color:var(--navy); letter-spacing:1.2px; font-family:var(--serif);">DECCAN EDUCATION SOCIETY (R.)</div>
+    <div style="font-size:22px; font-weight:800; color:var(--maroon); margin:3px 0; font-family:var(--serif);">PRAGATHI P.U. COLLEGE, GURUMATKAL</div>
+    <div style="font-size:13px; font-weight:700; color:var(--navy);">ONLINE EXAMINATION PORTAL (KY0434)</div>
+
+    <!-- Checking Network IP Spinner -->
+    <div id="netCheckingBox" class="net-checking">
+      <div>🔄 Verifying College Network &amp; Internet IP Address...</div>
+      <div style="font-size:12px; color:#64748b; font-weight:500; margin-top:6px;">Please wait a moment while we verify your connection.</div>
+    </div>
+
+    <!-- Blocked Outside Network Screen -->
+    <div id="netBlockedBox" class="net-blocked">
+      <div style="font-size:40px;">🚫</div>
+      <h3>Your not a registered student of Pragathi contact administrator</h3>
+      <p id="blockedDetailText" style="font-size:13px; color:#7f1d1d; margin:8px 0 14px 0;"></p>
+      <a href="index.html" style="display:inline-block; padding:10px 18px; background:var(--navy); color:#fff; text-decoration:none; border-radius:8px; font-weight:700; font-size:13.5px;">← Return to College Home Page</a>
+    </div>
+
+    <!-- Allowed Network: SATS Entry Form -->
+    <div id="satsEntrySection" style="display:none;">
+      <div id="examBannerInfo" style="margin-top:10px; padding:8px 12px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; font-size:12.5px; font-weight:700; color:var(--navy);"></div>
+
+      <div style="margin-top:16px; text-align:left;">
+        <label style="font-size:12px; font-weight:800; color:#334155; text-transform:uppercase;">Enter Your Student SATS Number *</label>
+        <div class="sats-input-row">
+          <input type="text" id="satsInput" class="sats-input" placeholder="e.g. 179937017"
+                 onkeydown="if(event.key==='Enter'){ verifySatsNumber(); }" />
+          <button type="button" id="checkSatsBtn" class="verify-btn" onclick="verifySatsNumber()">🔍 Check SATS</button>
+        </div>
+        <div id="satsErrorMsg"></div>
+      </div>
+
+      <div id="verifiedBox">
+        <div style="font-size:12px; font-weight:800; color:var(--green); text-transform:uppercase; margin-bottom:8px;">
+          ✅ Student Record Verified — Confirm Your Details:
+        </div>
+        <div class="v-row"><span class="v-lbl">Student Name:</span><span class="v-val" id="vName">—</span></div>
+        <div class="v-row"><span class="v-lbl">Father Name:</span><span class="v-val" id="vFather">—</span></div>
+        <div class="v-row"><span class="v-lbl">Roll / Register No:</span><span class="v-val" id="vReg">—</span></div>
+        <div class="v-row"><span class="v-lbl">SATS Number:</span><span class="v-val" id="vSats">—</span></div>
+        <div class="v-row"><span class="v-lbl">Class &amp; Contact:</span><span class="v-val" id="vClassContact">—</span></div>
+
+        <div id="resumeBanner" style="display:none; margin-top:10px; padding:10px 12px; background:#eff6ff; border:1.5px solid #2563eb; border-radius:8px; color:#1e40af; font-size:13px; font-weight:800;"></div>
+        <button type="button" id="gateStartBtn" class="start-btn" onclick="enterFullScreenAndStart()">
+          ✅ Verify &amp; Enter Examination
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Security Violation Modal -->
+<div id="violationModal">
+  <div class="violation-card">
+    <div style="font-size:44px;">⚠️</div>
+    <h2 style="margin:6px 0; color:#dc2626;">SECURITY WARNING!</h2>
+    <p id="violationText" style="font-size:14.5px; color:#334155; font-weight:600;"></p>
+    <div style="background:#fef2f2; border:1px solid #fecaca; color:#991b1b; font-weight:800; padding:10px; border-radius:8px; margin:14px 0;">
+      Violation Count: <span id="violationModalCount">1</span> / 3
+    </div>
+    <button type="button" class="start-btn" style="background:#dc2626;" onclick="resumeFullScreenAfterViolation()">
+      🔒 Return to Full-Screen Immediately
+    </button>
+  </div>
+</div>
+
+<!-- Sticky Top Bar -->
+<header>
+  <div class="hdr-brand">
+    <img src="media/logo-pragathi.png" alt="Logo" class="hdr-logo" onerror="this.style.display='none'" />
+    <div>
+      <div class="society-title">DECCAN EDUCATION SOCIETY (R.)</div>
+      <div class="college-title">PRAGATHI P.U. COLLEGE, GURUMATKAL (KY0434)</div>
+      <div class="exam-meta-line" id="hdrExamMeta">Online Examination Portal</div>
+    </div>
+  </div>
+
+  <div class="hdr-right-group">
+    <div class="student-header-pill">
+      <div class="st-hdr-name" id="hdrStudentName">STUDENT NAME</div>
+      <div class="st-hdr-sats">SATS: <span id="hdrStudentSats">—</span> &nbsp;|&nbsp; Roll: <span id="hdrStudentReg">—</span></div>
+    </div>
+    <div class="timer-box">
+      <div class="timer-label">Time Remaining</div>
+      <div id="timerDisplay" class="timer-val">00:00:00</div>
+    </div>
+  </div>
+</header>
+
+<div id="examScreen" class="main-layout">
+  <div>
+    <div class="tabs-bar">
+      <div class="subj-tabs" id="subjectTabsContainer"></div>
+      <div style="font-size:12px; color:#475569; font-weight:700;">
+        Showing: <span id="visibleCountLbl">0</span> MCQs &nbsp;|&nbsp;
+        <span style="color:#dc2626;">Warnings: <span id="topViolationBadge">0</span>/3</span>
+      </div>
+    </div>
+    <div id="questionsContainer"></div>
+  </div>
+
+  <div class="sidebar">
+    <div class="card">
+      <div style="font-size:14px; font-weight:800; margin-bottom:10px; display:flex; justify-content:space-between;">
+        <span>Question Palette</span>
+        <span id="palMarkingBadge" style="font-size:11px; color:var(--green);">+1 / 0</span>
+      </div>
+      <div class="stats-row">
+        <div class="stat-box"><div id="statTotal" class="stat-num">0</div><div class="stat-lbl">Total</div></div>
+        <div class="stat-box"><div id="statAnswered" class="stat-num" style="color:var(--green);">0</div><div class="stat-lbl">Answered</div></div>
+        <div class="stat-box"><div id="statPending" class="stat-num" style="color:#e11d48;">0</div><div class="stat-lbl">Remaining</div></div>
+      </div>
+      <div id="paletteGrid" class="palette-grid"></div>
+      <button type="button" id="submitExamBtn" class="submit-btn" onclick="submitExamination(false)">✅ Submit Final Examination</button>
+    </div>
+  </div>
+</div>
+
+<!-- Post-Submission Result Box -->
+<div id="resultScreen">
+  <div style="font-size:12px; font-weight:800; color:var(--navy); font-family:var(--serif);">DECCAN EDUCATION SOCIETY (R.)</div>
+  <div style="font-size:22px; font-weight:900; color:var(--maroon); margin-bottom:8px; font-family:var(--serif);">PRAGATHI P.U. COLLEGE, GURUMATKAL</div>
+  <div style="font-size:42px;">🎉</div>
+  <h2 style="margin:6px 0 4px 0; color:var(--green);">Examination Submitted Successfully!</h2>
+  <p id="resStudentLine" style="color:#475569; font-weight:700;"></p>
+
+  <div class="score-grid">
+    <div class="score-tile"><div class="stat-lbl">Attempted</div><div id="resAttempted" class="big" style="color:var(--navy);">0</div></div>
+    <div class="score-tile"><div class="stat-lbl">Correct</div><div id="resCorrect" class="big" style="color:var(--green);">0</div></div>
+    <div class="score-tile"><div class="stat-lbl">Wrong</div><div id="resWrong" class="big" style="color:#e11d48;">0</div></div>
+    <div class="score-tile" style="background:#eef2ff; border-color:#818cf8;">
+      <div class="stat-lbl" style="color:#3730a3;">Total Score</div>
+      <div id="resTotalScore" class="big" style="color:#3730a3;">0</div>
+    </div>
+  </div>
+
+  <div id="resSubjBreakdown" style="background:#f8fafc; padding:14px; border-radius:10px; border:1px solid #e2e8f0; font-size:14px; font-weight:700; color:#334155; margin-bottom:18px;"></div>
+  <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+    <a href="index.html" style="padding:10px 20px; border-radius:8px; background:var(--navy); color:#fff; text-decoration:none; font-weight:700;">🏠 Back to Home Page</a>
+    <button type="button" onclick="resetForNextStudent()" style="padding:10px 20px; border-radius:8px; border:1px solid #cbd5e1; background:#f1f5f9; font-weight:700; cursor:pointer;">🔄 Next Student on This PC</button>
+  </div>
+</div>
+
+<script>
+  // ============================================================================
+  // PASTE YOUR DEPLOYED GOOGLE APPS SCRIPT WEB APP URL BELOW:
+  // ============================================================================
+  const EXAM_API_URL = "https://script.google.com/macros/s/AKfycbxpc6cTq78vPJ37zL05SMysrn4B6bnAPzxfOoz6iOTYV9muJWmZOqTd1qCUTEnaWAO0/exec";
+
+  let EXAM_CFG = null;
+  let MASTER_QUESTIONS = [];
+  let IMAGES = {};
+  let verifiedStudent = null;
+  let savedServerSession = null;
+  let examState = null;
+  let currentSubjFilter = "ALL";
+  let examActive = false;
+  let violationLock = false;
+
+  async function callBackend(payload) {
+    if (!EXAM_API_URL || EXAM_API_URL.startsWith("PASTE_")) {
+      throw new Error("Google Apps Script Web App URL is not configured yet.");
+    }
+    const resp = await fetch(EXAM_API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    });
+    return await resp.json();
+  }
+
+  async function getClientPublicIP() {
+    const endpoints = [
+      "https://api.ipify.org?format=json",
+      "https://api64.ipify.org?format=json",
+      "https://ipwho.is/"
+    ];
+    for (const url of endpoints) {
+      try {
+        const r = await fetch(url, { cache: "no-store" });
+        const d = await r.json();
+        if (d && d.ip) return String(d.ip).trim();
+      } catch (e) {}
+    }
+    return "";
+  }
+
+  // Step 1: Verify Student Internet IP on Page Load
+  window.addEventListener("DOMContentLoaded", async () => {
+    const chkBox = document.getElementById("netCheckingBox");
+    const blkBox = document.getElementById("netBlockedBox");
+    const satsSec = document.getElementById("satsEntrySection");
+
+    try {
+      const clientIp = await getClientPublicIP();
+      const res = await callBackend({ action: "checkStudentAccess", client_ip: clientIp });
+
+      chkBox.style.display = "none";
+      if (!res.ok) {
+        blkBox.style.display = "block";
+        blkBox.querySelector("h3").innerText = res.message || "Your not a registered student of Pragathi contact administrator";
+        if (res.detected_ip) {
+          document.getElementById("blockedDetailText").innerText =
+            "Detected Network IP: " + res.detected_ip + " (Outside Authorized College Network)";
+        }
+        return;
+      }
+
+      EXAM_CFG = res.config;
+      document.getElementById("examBannerInfo").innerText =
+        `${EXAM_CFG.exam_name} (${EXAM_CFG.exam_type})  |  Class: ${EXAM_CFG.exam_class}  |  Dt: ${EXAM_CFG.exam_date}  |  ${EXAM_CFG.total_questions} MCQs (${EXAM_CFG.max_marks} Marks)`;
+      satsSec.style.display = "block";
+      document.getElementById("satsInput").focus();
+    } catch (err) {
+      chkBox.style.display = "none";
+      blkBox.style.display = "block";
+      blkBox.querySelector("h3").innerText = "Your not a registered student of Pragathi contact administrator";
+      document.getElementById("blockedDetailText").innerText = err.message;
+    }
+  });
+
+  function shuffleArray(arr) {
+    const copy = [...arr];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  }
+
+  function formatTime(sec) {
+    sec = Math.max(0, Math.floor(sec));
+    const h = String(Math.floor(sec / 3600)).padStart(2, '0');
+    const m = String(Math.floor((sec % 3600) / 60)).padStart(2, '0');
+    const s = String(sec % 60).padStart(2, '0');
+    return `${h}:${m}:${s}`;
+  }
+
+  async function verifySatsNumber() {
+    const rawSats = document.getElementById("satsInput").value.trim();
+    const errEl = document.getElementById("satsErrorMsg");
+    const boxEl = document.getElementById("verifiedBox");
+    const resumeEl = document.getElementById("resumeBanner");
+    const startBtn = document.getElementById("gateStartBtn");
+    const chkBtn = document.getElementById("checkSatsBtn");
+
+    errEl.style.display = "none";
+    boxEl.style.display = "none";
+    resumeEl.style.display = "none";
+    verifiedStudent = null;
+    savedServerSession = null;
+
+    if (!rawSats) {
+      errEl.innerText = "⚠️ Please enter your SATS Number first.";
+      errEl.style.display = "block";
+      return;
+    }
+
+    chkBtn.disabled = true;
+    chkBtn.innerText = "⏳ Checking...";
+
+    try {
+      const data = await callBackend({ action: "verifySats", sats: rawSats });
+      chkBtn.disabled = false;
+      chkBtn.innerText = "🔍 Check SATS";
+
+      if (data.status === "already_submitted") {
+        errEl.innerText = `✅ ${data.student.student_name} (SATS: ${data.student.sats_no}) has ALREADY submitted this exam. Score: ${data.total_score}/${data.max_marks}.`;
+        errEl.style.display = "block";
+        return;
+      }
+
+      if (data.ok && data.status === "found") {
+        verifiedStudent = data.student;
+        MASTER_QUESTIONS = data.questions || [];
+        IMAGES = data.images || {};
+
+        document.getElementById("vName").innerText = verifiedStudent.student_name;
+        document.getElementById("vFather").innerText = verifiedStudent.father_name || "—";
+        document.getElementById("vReg").innerText = verifiedStudent.reg_no || "—";
+        document.getElementById("vSats").innerText = verifiedStudent.sats_no;
+        document.getElementById("vClassContact").innerText =
+          `${verifiedStudent.batch || verifiedStudent.class}  |  📞 ${verifiedStudent.contact_no || "—"}`;
+
+        if (data.saved_session) {
+          savedServerSession = data.saved_session;
+          const ansCnt = Object.keys(savedServerSession.responses || {}).length;
+          const remStr = formatTime(savedServerSession.remaining_seconds);
+          resumeEl.innerText = `🔄 Previous Session Restored! Answered: ${ansCnt}/${MASTER_QUESTIONS.length} | Time Left: ${remStr}`;
+          resumeEl.style.display = "block";
+          startBtn.innerText = "🔄 Resume Examination From Where You Stopped";
+          startBtn.style.background = "#1F3864";
+        } else {
+          startBtn.innerText = "✅ Verify & Enter Examination";
+          startBtn.style.background = "#0E9F48";
+        }
+        boxEl.style.display = "block";
+      } else {
+        errEl.innerText = "❌ SATS Number not found in Pragathi Master Database. Please check and try again.";
+        errEl.style.display = "block";
+      }
+    } catch (e) {
+      chkBtn.disabled = false;
+      chkBtn.innerText = "🔍 Check SATS";
+      errEl.innerText = "⚠️ Server error: " + e.message;
+      errEl.style.display = "block";
+    }
+  }
+
+  function getStorageKey() {
+    return "PRAGATHI_WEB_EXAM_" + (EXAM_CFG ? EXAM_CFG.exam_id : "ACTIVE");
+  }
+
+  function rebuildOrderFromCompact(compactOrder) {
+    const qMap = {};
+    MASTER_QUESTIONS.forEach(q => { qMap[q.id] = q; });
+    const rebuilt = [];
+    compactOrder.forEach((entry, idx) => {
+      const q = qMap[entry[0]];
+      if (!q) return;
+      const optMap = {};
+      q.options.forEach(o => { optMap[o.key] = o; });
+      const orderedOpts = (entry[1] || ["A", "B", "C", "D"]).map(k => optMap[k]).filter(Boolean);
+      rebuilt.push({
+        displayNo: idx + 1,
+        id: q.id,
+        paper_qno: q.paper_qno,
+        orig_qno: q.orig_qno,
+        subject: q.subject,
+        q_html: q.q_html,
+        img: q.img,
+        shuffledOptions: orderedOpts.length === 4 ? orderedOpts : q.options
+      });
+    });
+    return rebuilt.length === MASTER_QUESTIONS.length ? rebuilt : null;
+  }
+
+  function getCompactOrder(shuffledOrder) {
+    return shuffledOrder.map(item => [item.id, item.shuffledOptions.map(o => o.key)]);
+  }
+
+  function initOrRestoreExamState(student) {
+    const durationSec = Number(EXAM_CFG.duration_min || 120) * 60;
+
+    // 1. Priority: Restore from Google Drive Server Session (works after PC shutdown or switching systems)
+    if (savedServerSession) {
+      let restoredOrder = null;
+      if (savedServerSession.compact_order && savedServerSession.compact_order.length === MASTER_QUESTIONS.length) {
+        restoredOrder = rebuildOrderFromCompact(savedServerSession.compact_order);
+      }
+      if (!restoredOrder) {
+        restoredOrder = shuffleArray(MASTER_QUESTIONS).map((q, idx) => ({
+          displayNo: idx + 1,
+          id: q.id, paper_qno: q.paper_qno, orig_qno: q.orig_qno,
+          subject: q.subject, q_html: q.q_html, img: q.img,
+          shuffledOptions: shuffleArray(q.options)
+        }));
+      }
+      examState = {
+        student: student,
+        remainingSeconds: savedServerSession.remaining_seconds,
+        violations: savedServerSession.violations || 0,
+        shuffledOrder: restoredOrder,
+        responses: savedServerSession.responses || {}
+      };
+      saveLocalState();
+      return;
+    }
+
+    // 2. Fallback: Restore from browser localStorage
+    const saved = localStorage.getItem(getStorageKey());
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.student && parsed.student.sats_no === student.sats_no &&
+            parsed.shuffledOrder && parsed.shuffledOrder.length === MASTER_QUESTIONS.length) {
+          examState = parsed;
+          return;
+        }
+      } catch (e) {}
+    }
+
+    // 3. Brand new exam session (Unique Question + Option Shuffling per student)
+    const shuffled = shuffleArray(MASTER_QUESTIONS).map((q, idx) => ({
+      displayNo: idx + 1,
+      id: q.id,
+      paper_qno: q.paper_qno,
+      orig_qno: q.orig_qno,
+      subject: q.subject,
+      q_html: q.q_html,
+      img: q.img,
+      shuffledOptions: shuffleArray(q.options)
+    }));
+
+    examState = {
+      student: student,
+      remainingSeconds: durationSec,
+      violations: 0,
+      shuffledOrder: shuffled,
+      responses: {}
+    };
+    saveLocalState();
+  }
+
+  function saveLocalState() {
+    if (examState) localStorage.setItem(getStorageKey(), JSON.stringify(examState));
+  }
+
+  async function requestBrowserFullScreen() {
+    const el = document.documentElement;
+    try {
+      if (el.requestFullscreen) await el.requestFullscreen();
+      else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
+    } catch (e) {}
+  }
+
+  function buildSubjectTabs() {
+    const container = document.getElementById("subjectTabsContainer");
+    container.innerHTML = `<button type="button" class="tab-btn active" onclick="filterSubject('ALL', this)">All (${MASTER_QUESTIONS.length})</button>`;
+    (EXAM_CFG.subjects || []).forEach(s => {
+      const cnt = (EXAM_CFG.subject_counts && EXAM_CFG.subject_counts[s]) || 0;
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "tab-btn";
+      btn.innerText = `${s} (${cnt})`;
+      btn.onclick = function() { filterSubject(s, btn); };
+      container.appendChild(btn);
+    });
+  }
+
+  async function enterFullScreenAndStart() {
+    if (!verifiedStudent || !EXAM_CFG) {
+      alert("⚠️ Please verify your SATS Number first.");
+      return;
+    }
+    initOrRestoreExamState(verifiedStudent);
+    buildSubjectTabs();
+
+    document.getElementById("hdrExamMeta").innerText =
+      `${EXAM_CFG.exam_name} (${EXAM_CFG.exam_type}) | ${EXAM_CFG.exam_class} | Dt: ${EXAM_CFG.exam_date} | Marking: +${EXAM_CFG.correct_marks} / ${EXAM_CFG.wrong_marks}`;
+    document.getElementById("hdrStudentName").innerText = examState.student.student_name;
+    document.getElementById("hdrStudentSats").innerText = examState.student.sats_no;
+    document.getElementById("hdrStudentReg").innerText = examState.student.reg_no || "—";
+    document.getElementById("topViolationBadge").innerText = examState.violations || 0;
+    document.getElementById("timerDisplay").innerText = formatTime(examState.remainingSeconds);
+    document.getElementById("palMarkingBadge").innerText = `+${EXAM_CFG.correct_marks} / ${EXAM_CFG.wrong_marks}`;
+    document.getElementById("statTotal").innerText = MASTER_QUESTIONS.length;
+
+    await requestBrowserFullScreen();
+    document.getElementById("satsGate").style.display = "none";
+    examActive = true;
+    renderExam();
+    sendHeartbeat(true);
+  }
+
+  function recordViolation(reason) {
+    if (!examActive || violationLock) return;
+    violationLock = true;
+    setTimeout(() => { violationLock = false; }, 1200);
+    examState.violations = (examState.violations || 0) + 1;
+    saveLocalState();
+    document.getElementById("topViolationBadge").innerText = examState.violations;
+    sendHeartbeat(true);
+
+    if (examState.violations >= 3) {
+      alert("🚫 MAXIMUM SECURITY VIOLATIONS (3/3)! Auto-submitting your examination.");
+      submitExamination(true);
+      return;
+    }
+    document.getElementById("violationText").innerText = `You left the examination screen (${reason}).`;
+    document.getElementById("violationModalCount").innerText = examState.violations;
+    document.getElementById("violationModal").style.display = "flex";
+  }
+
+  async function resumeFullScreenAfterViolation() {
+    await requestBrowserFullScreen();
+    document.getElementById("violationModal").style.display = "none";
+  }
+
+  document.addEventListener("fullscreenchange", () => {
+    if (examActive && !document.fullscreenElement) recordViolation("Exited Full-Screen");
+  });
+  document.addEventListener("visibilitychange", () => {
+    if (examActive && document.hidden) recordViolation("Switched Tab / Minimized");
+  });
+
+  function renderExam() {
+    if (!examState) return;
+    const container = document.getElementById("questionsContainer");
+    container.innerHTML = "";
+    let visibleCount = 0;
+
+    examState.shuffledOrder.forEach(item => {
+      if (currentSubjFilter !== "ALL" && item.subject !== currentSubjFilter) return;
+      visibleCount++;
+
+      const savedResp = examState.responses[item.id];
+      const selectedKey = savedResp ? (savedResp.key || savedResp) : null;
+      const card = document.createElement("div");
+      card.className = "q-card" + (selectedKey ? " answered" : "");
+      card.id = "card_" + item.displayNo;
+
+      let imgHTML = "";
+      if (item.img && IMAGES[item.img]) {
+        imgHTML = `<div class="q-diagram"><img src="${IMAGES[item.img]}" alt="Question Diagram" /></div>`;
+      }
+
+      let optsHTML = "";
+      const displayLabels = ["(1)", "(2)", "(3)", "(4)"];
+      item.shuffledOptions.forEach((opt, oIdx) => {
+        const isChecked = selectedKey === opt.key;
+        optsHTML += `
+          <label class="opt-label ${isChecked ? 'selected-opt' : ''}">
+            <input type="radio" name="radio_${item.id}" value="${opt.key}" ${isChecked ? 'checked' : ''}
+              onchange="selectAnswer('${item.id}', '${opt.key}')" />
+            <span><strong>${displayLabels[oIdx]}</strong> ${opt.html}</span>
+          </label>
+        `;
+      });
+
+      card.innerHTML = `
+        <div class="q-meta">
+          <div><span class="q-subj-tag">${item.subject}</span></div>
+          <div>Ref: ${item.subject} #${item.orig_qno}</div>
+        </div>
+        <div class="q-text">Q${item.displayNo}. ${item.q_html}</div>
+        ${imgHTML}
+        <div class="options-grid">${optsHTML}</div>
+        ${selectedKey ? `<button type="button" class="clear-btn" onclick="clearAnswer('${item.id}')">✕ Clear Response</button>` : ''}
+      `;
+      container.appendChild(card);
+    });
+
+    document.getElementById("visibleCountLbl").innerText = visibleCount;
+    updatePaletteAndStats();
+  }
+
+  function selectAnswer(qId, optKey) {
+    const qObj = MASTER_QUESTIONS.find(q => q.id === qId);
+    const optObj = qObj ? qObj.options.find(o => o.key === optKey) : null;
+    examState.responses[qId] = { key: optKey, text: optObj ? optObj.text : "" };
+    saveLocalState();
+    renderExam();
+    sendHeartbeat(true);
+  }
+
+  function clearAnswer(qId) {
+    delete examState.responses[qId];
+    saveLocalState();
+    renderExam();
+    sendHeartbeat(true);
+  }
+
+  function updatePaletteAndStats() {
+    const pal = document.getElementById("paletteGrid");
+    pal.innerHTML = "";
+    let answeredCount = 0;
+
+    examState.shuffledOrder.forEach(item => {
+      const isDone = Boolean(examState.responses[item.id]);
+      if (isDone) answeredCount++;
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "pal-btn" + (isDone ? " pal-done" : "");
+      btn.innerText = item.displayNo;
+      btn.onclick = () => {
+        if (currentSubjFilter !== "ALL" && currentSubjFilter !== item.subject) {
+          document.querySelector(".tab-btn").click();
+        }
+        const target = document.getElementById("card_" + item.displayNo);
+        if (target) target.scrollIntoView({ behavior: "smooth", block: "center" });
+      };
+      pal.appendChild(btn);
+    });
+
+    document.getElementById("statAnswered").innerText = answeredCount;
+    document.getElementById("statPending").innerText = MASTER_QUESTIONS.length - answeredCount;
+  }
+
+  function filterSubject(subj, btnEl) {
+    currentSubjFilter = subj;
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    btnEl.classList.add("active");
+    renderExam();
+  }
+
+  let hbInFlight = false;
+  function sendHeartbeat(includeFullState = true) {
+    if (!examState || !examActive || hbInFlight) return;
+    hbInFlight = true;
+    const payload = {
+      action: "heartbeat",
+      sats_no: examState.student.sats_no,
+      reg_no: examState.student.reg_no,
+      student_name: examState.student.student_name,
+      father_name: examState.student.father_name,
+      contact_no: examState.student.contact_no,
+      batch: examState.student.batch,
+      group: examState.student.group,
+      remaining_seconds: examState.remainingSeconds,
+      answered: Object.keys(examState.responses).length,
+      violations: examState.violations || 0
+    };
+    if (includeFullState) {
+      payload.responses = examState.responses;
+      payload.compact_order = getCompactOrder(examState.shuffledOrder);
+    }
+    callBackend(payload).finally(() => { hbInFlight = false; });
+  }
+
+  setInterval(() => {
+    if (!examState || !examActive || document.getElementById("examScreen").style.display === "none") return;
+    if (examState.remainingSeconds > 0) {
+      examState.remainingSeconds--;
+      if (examState.remainingSeconds % 10 === 0) {
+        saveLocalState();
+        sendHeartbeat(true);
+      }
+    } else {
+      submitExamination(true);
+    }
+    const timerEl = document.getElementById("timerDisplay");
+    timerEl.innerText = formatTime(examState.remainingSeconds);
+    if (examState.remainingSeconds < 300) timerEl.classList.add("timer-danger");
+  }, 1000);
+
+  async function submitExamination(isAutoSubmit) {
+    if (!examState) return;
+    if (!isAutoSubmit) {
+      const answeredCount = Object.keys(examState.responses).length;
+      if (!confirm(`You have answered ${answeredCount} out of ${MASTER_QUESTIONS.length} questions.\n\nSubmit final examination to Google Drive now?`)) return;
+    }
+
+    examActive = false;
+    document.getElementById("violationModal").style.display = "none";
+    const submitBtn = document.getElementById("submitExamBtn");
+    submitBtn.disabled = true;
+    submitBtn.innerText = "⏳ Saving Result to Google Drive...";
+
+    const durationSec = Number(EXAM_CFG.duration_min || 120) * 60;
+    const payload = {
+      action: "submitExam",
+      sats_no: examState.student.sats_no,
+      reg_no: examState.student.reg_no,
+      student_name: examState.student.student_name,
+      father_name: examState.student.father_name,
+      contact_no: examState.student.contact_no,
+      batch: examState.student.batch,
+      group: examState.student.group,
+      violations: examState.violations || 0,
+      remaining_seconds: examState.remainingSeconds,
+      time_taken_min: Math.round((durationSec - examState.remainingSeconds) / 60),
+      responses: examState.responses
+    };
+
+    try {
+      const res = await callBackend(payload);
+      if (res.ok && res.status === "success") {
+        localStorage.removeItem(getStorageKey());
+        document.getElementById("examScreen").style.display = "none";
+        document.getElementById("resultScreen").style.display = "block";
+        document.getElementById("resStudentLine").innerText =
+          `${payload.student_name}  |  SATS: ${payload.sats_no}  |  Roll No: ${payload.reg_no}`;
+        document.getElementById("resAttempted").innerText = `${res.attempted} / ${MASTER_QUESTIONS.length}`;
+        document.getElementById("resCorrect").innerText = `${res.correct}`;
+        document.getElementById("resWrong").innerText = `${res.wrong}`;
+        document.getElementById("resTotalScore").innerText = `${res.total_score} / ${res.max_marks}`;
+
+        let breakdownParts = [];
+        for (const [subj, sc] of Object.entries(res.subject_scores)) {
+          breakdownParts.push(`${subj}: <span style="color:var(--navy);">${sc}</span>`);
+        }
+        document.getElementById("resSubjBreakdown").innerHTML = breakdownParts.join(" &nbsp;|&nbsp; ");
+      } else {
+        throw new Error(res.error || "Unknown submission error");
+      }
+    } catch (err) {
+      examActive = true;
+      alert("⚠️ Could not reach Google Drive server! Do NOT close this window. Call invigilator.\n" + err.message);
+      submitBtn.disabled = false;
+      submitBtn.innerText = "✅ Submit Final Examination";
+    }
+  }
+
+  function resetForNextStudent() {
+    const pin = prompt("Invigilator Confirmation: Type 'RESET' to clear this PC for the next student:");
+    if (pin && pin.toUpperCase() === "RESET") {
+      localStorage.removeItem(getStorageKey());
+      window.location.reload();
+    }
+  }
+</script>
+</body>
+</html>

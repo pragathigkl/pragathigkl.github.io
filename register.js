@@ -55,7 +55,7 @@ const app=$("#app");
 
 function gate(msg=""){
  if(!msg&&location.protocol==="file:")msg="This page is opened from a file on your computer, so the register cannot load. Publish the site (Cloudflare Pages / Netlify) and log in on the live address.";
- app.innerHTML=`<div class="gate"><header><h2>College Login</h2><p style="margin:6px 0 0;color:#cfdaf5;font-size:14px">Single office sign-in for Dashboard, Admission Register (with scanned register crops &amp; study certificates), PGTSE-2027 Complete Results, and Applications.</p></header>
+ app.innerHTML=`<div class="gate"><header><h2>College Login</h2><p style="margin:6px 0 0;color:#cfdaf5;font-size:14px">Single office sign-in for Dashboard, Admission Register, PGTSE-2027 Results &amp; Applications, and Online Exam Invigilator Module.</p></header>
 <form id="lf"><label>Username<input name="u" inputmode="numeric" autocomplete="username" placeholder="Enter coordinator username"></label><label>Password<input name="p" type="password" autocomplete="current-password" placeholder="Enter password"></label><button class="btn b3" style="width:100%;margin:16px 0 0" id="lb">Sign in</button>${msg?`<div class="msg" role="status">${msg}</div>`:""}</form></div>`;
  $("#lf").onsubmit=async e=>{
   e.preventDefault();
@@ -89,6 +89,7 @@ const tabs=a=>`<div class="tabs" id="vt">
  <button data-v="pgres" class="${a==="pgres"?"on":""}">🏆 PGTSE-2027 Complete Results</button>
  <button data-v="reg" class="${a==="reg"?"on":""}">📚 Admission Register (${ALL.length})</button>
  <button data-v="pg" class="${a==="pg"?"on":""}">📝 PGTSE-2027 Applications</button>
+ <button data-v="oexam" class="${a==="oexam"?"on":""}">🖥️ Online Exam (Invigilator)</button>
 </div>`;
 
 function bindTabs(){
@@ -101,6 +102,7 @@ function bindTabs(){
   else if(v==="pgres")pgResView();
   else if(v==="reg")regDash();
   else if(v==="pg")pgtse();
+  else if(v==="oexam")onlineExamView();
  };
 }
 
@@ -142,7 +144,7 @@ function homeDash(){
   usedCats.map(cat=>`<td class="c"><b><a href="#" class="cell" style="color:#fff" data-y="" data-c="" data-cat="${cat}">${grand[cat]}</a></b></td>`).join("")+
   `<td class="c" style="background:var(--gold);color:#000"><b><a href="#" class="cell" style="color:#000" data-y="" data-c="" data-cat="">${ALL.length}</a></b></td></tr>`;
 
- app.innerHTML=tabs("dash")+hd("College Dashboard & Overview",`<button class="btn b3 sm" id="goPgtseRes">🏆 Open PGTSE-2027 Results</button> <button class="btn b4 sm" id="goReg">📚 Open Admission Register</button>`)+`
+ app.innerHTML=tabs("dash")+hd("College Dashboard & Overview",`<button class="btn b3 sm" style="background:#0e9f48" id="goOnlineExam">🖥️ Online Exam Module</button> <button class="btn b3 sm" id="goPgtseRes">🏆 PGTSE-2027 Results</button> <button class="btn b4 sm" id="goReg">📚 Admission Register</button>`)+`
  <div class="kpi-grid">
   <div class="kpi-card"><small>Total Register Students</small><b>${ALL.length}</b><span>Across ${yrs.length} academic years (${yrs[0]} to ${yrs[yrs.length-1]})</span></div>
   <div class="kpi-card maroon"><small>Boys / Girls Strength</small><b>${boys} / ${girls}</b><span>Boys: ${boys} · Girls: ${girls}</span></div>
@@ -175,6 +177,7 @@ function homeDash(){
  $("#dashPgtseCard").style.cursor="pointer";
  $("#dashPgtseCard").onclick=pgResView;
  $("#goReg").onclick=regDash;
+ $("#goOnlineExam").onclick=onlineExamView;
  app.querySelectorAll("a.cell").forEach(a=>{
   a.onclick=e=>{
    e.preventDefault();
@@ -877,6 +880,18 @@ function pgPrint(){
  <h2>Pragathi P.U. College, Gurumatkal — PGTSE 2027 Applications (${r.length})</h2><table><tr><th>#</th><th>Application no.</th><th>Student</th><th>Father</th><th>DOB</th><th>SATS no.</th><th>Mobile</th><th>School</th><th>Address</th></tr>
  ${[...r].reverse().map(x=>`<tr><td>${x.n}</td><td>${esc(x.appId)}</td><td>${esc(x.studentName)}</td><td>${esc(x.fatherName)}</td><td>${esc(x.dob)}</td><td>${esc(x.satsNumber)}</td><td>${esc(x.mobile)}</td><td>${esc(x.schoolName)}</td><td>${esc(x.address)}</td></tr>`).join("")}</table>`);
  w.document.close();w.focus();setTimeout(()=>w.print(),300);
+}
+
+/* =========================================================================
+   6. ONLINE EXAM INVIGILATOR MODULE (EMBEDDED + FULL-SCREEN OPTION)
+   ========================================================================= */
+function onlineExamView(){
+ app.innerHTML=tabs("oexam")+hd("Online Exam — Invigilator Module",`<a class="btn b3 sm" href="online-exam-admin.html" target="_blank" rel="noopener">↗ Open Full Screen</a> <a class="btn b4 sm" href="online-exam.html" target="_blank" rel="noopener">📝 Student Exam Link</a>`)+`
+ <div style="background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.06)">
+  <iframe src="online-exam-admin.html?embed=1" title="Online Exam Invigilator Module" style="width:100%;height:88vh;min-height:780px;border:none;display:block"></iframe>
+ </div>`;
+ bindTabs();
+ $("#lo").onclick=out;
 }
 
 restore().then(ok=>ok?start():gate());
