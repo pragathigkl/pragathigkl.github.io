@@ -6,14 +6,14 @@ maps:"https://www.google.com/maps/search/?api=1&query=Near+Yashodha+Petroleums+H
 map:"https://www.openstreetmap.org/export/embed.html?bbox=77.355%2C16.845%2C77.425%2C16.895&layer=mapnik&marker=16.8678%2C77.3909"};
 
 const FAC=[
-["Chemistry",[["Mr. R. Shivkumar Reddy","Principal · Lecturer in Chemistry","M.Sc, B.Ed","media/faculty/shivkumar-reddy.jpg"],["Miss Ambika Arsid","Lecturer in Chemistry","M.Sc, B.Ed","media/faculty/ambika-arsid.jpg"]]],
-["Mathematics",[["Mr. Mahesh K. Dhore","Lecturer in Mathematics","M.Sc, B.Ed","media/faculty/mahesh-dhore.jpg"],["Mr. Gopala Reddy","Lecturer in Mathematics","M.Sc, B.Ed","media/faculty/gopala-reddy.jpg"]]],
-["Biology",[["Mr. Lakshman Dodla","Lecturer in Biology","M.Sc, B.Ed, K-SET","media/faculty/lakshman-dodla.jpg"],["Mr. Akash Rathod","Lecturer in Biology","M.Sc, B.Ed, K-SET","media/faculty/akash-rathod.jpg"]]],
-["Physics",[["Mr. Abhilash T.","Lecturer in Physics","M.Sc, B.Ed","media/faculty/abhilash-t.jpg"],["Mr. Pradeep C.","Lecturer in Physics","M.Sc, B.Ed","media/faculty/pradeep-c.jpg"]]],
-["Hindi",[["Mr. Balagopal","Lecturer in Hindi","M.A, B.Ed","media/faculty/balagopal.jpg"]]],
-["Kannada",[["Mr. Shamappa","Lecturer in Kannada","M.A, B.Ed, K-SET","media/faculty/shamappa.jpg"]]],
-["English",[["Miss Madiha Taskeen","Lecturer in English","M.A, B.Ed","media/faculty/madiha-taskeen.jpg"]]],
-["Urdu",[["Mrs. Farhana Kousar","Lecturer in Urdu","M.A, B.Ed","media/faculty/farhana-kousar.jpg"]]]
+["Chemistry",[["Mr. R. Shivkumar Reddy","Principal · Lecturer in Chemistry","M.Sc, B.Ed","media/shivkumar-reddy.jpg"],["Miss Ambika Arsid","Lecturer in Chemistry","M.Sc, B.Ed","media/ambika-arsid.jpg"]]],
+["Mathematics",[["Mr. Mahesh K. Dhore","Lecturer in Mathematics","M.Sc, B.Ed","media/mahesh-dhore.jpg"],["Mr. Gopala Reddy","Lecturer in Mathematics","M.Sc, B.Ed","media/gopala-reddy.jpg"]]],
+["Biology",[["Mr. Lakshman Dodla","Lecturer in Biology","M.Sc, B.Ed, K-SET","media/lakshman-dodla.jpg"],["Mr. Akash Rathod","Lecturer in Biology","M.Sc, B.Ed, K-SET","media/akash-rathod.jpg"]]],
+["Physics",[["Mr. Abhilash T.","Lecturer in Physics","M.Sc, B.Ed","media/abhilash-t.jpg"],["Mr. Pradeep C.","Lecturer in Physics","M.Sc, B.Ed","media/pradeep-c.jpg"]]],
+["Hindi",[["Mr. Balagopal","Lecturer in Hindi","M.A, B.Ed","media/balagopal.jpg"]]],
+["Kannada",[["Mr. Shamappa","Lecturer in Kannada","M.A, B.Ed, K-SET","media/shamappa.jpg"]]],
+["English",[["Miss Madiha Taskeen","Lecturer in English","M.A, B.Ed","media/madiha-taskeen.jpg"]]],
+["Urdu",[["Mrs. Farhana Kousar","Lecturer in Urdu","M.A, B.Ed","media/farhana-kousar.jpg"]]]
 ];
 
 const RES=[
