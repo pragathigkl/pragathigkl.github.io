@@ -13,7 +13,7 @@ h1,h2,h3{font-family:Merriweather,Georgia,serif;line-height:1.25;margin:0 0 .5em
 nav{background:var(--navy);position:sticky;top:0;z-index:20;box-shadow:0 2px 8px #0003}
 nav .wrap{display:flex;align-items:center;justify-content:space-between}
 nav ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap}
-nav a{display:block;padding:13px 15px;color:#fff;text-decoration:none;font-weight:600;font-size:15px}
+nav .wrap{max-width:1300px}nav a{display:block;padding:12px 10px;color:#fff;text-decoration:none;font-weight:600;font-size:14px;white-space:nowrap}
 nav a:hover,nav a.on{background:var(--maroon)}nav li.login a{background:var(--gold);color:var(--navy2)}
 #burger{display:none;background:none;border:0;color:#fff;font-size:26px;padding:8px 4px;cursor:pointer}
 .notice{background:#fff7d6;border-bottom:1px solid #ecd98a;font-size:15px}.notice .wrap{display:flex;gap:12px;align-items:center;padding:7px 18px}
@@ -110,8 +110,8 @@ tr.click{cursor:pointer}tr.click:hover td{background:#fff7d6}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 
 /* PGTSE 2027 */
-nav li.pgn a{background:var(--gold);color:var(--navy2);margin:6px 4px;padding:7px 14px;border-radius:20px;font-size:14px}nav li.pgn a:hover,nav li.pgn a.on{background:#fff;color:var(--maroon)}
-nav li.exm a{background:#0e9f48;color:#fff;margin:6px 4px;padding:7px 14px;border-radius:20px;font-size:14px}nav li.exm a:hover,nav li.exm a.on{background:#fff;color:#0e9f48}
+nav li.pgn a{background:var(--gold);color:var(--navy2);margin:6px 3px;padding:6px 11px;border-radius:20px;font-size:13.5px}nav li.pgn a:hover,nav li.pgn a.on{background:#fff;color:var(--maroon)}
+nav li.exm a{background:#0e9f48;color:#fff;margin:6px 3px;padding:6px 11px;border-radius:20px;font-size:13.5px}nav li.exm a:hover,nav li.exm a.on{background:#fff;color:#0e9f48}
 .pgband{background:linear-gradient(100deg,var(--navy2),var(--navy) 55%,var(--maroon));color:#fff;padding:34px 0}
 .pgband .wrap{display:flex;align-items:center;gap:22px;flex-wrap:wrap;justify-content:space-between}
 .pgband .pgt{flex:1;min-width:260px}.pgband .new{display:inline-block;background:var(--gold);color:var(--navy2);font-weight:700;font-size:13px;padding:2px 10px;border-radius:3px;margin-bottom:8px;letter-spacing:.5px}
@@ -142,3 +142,44 @@ nav li.sub:hover .dd,nav li.sub:focus-within .dd{display:flex}
 nav li.sub .dd a{margin:0;padding:11px 16px;border-radius:0;background:none;color:#fff;font-size:14px;white-space:nowrap}
 nav li.sub .dd a:hover{background:var(--maroon);color:#fff}
 @media(max-width:860px){nav li.sub .dd{display:flex;position:static;box-shadow:none;background:none;padding-left:26px}nav li.sub .dd a{display:block;margin:0;padding:10px 12px}}
+
+
+/* Faculty cropped portraits inside lecturer boxes */
+.fac .p{display:flex;align-items:center;gap:12px;padding:10px 12px}
+.fac .fac-img{width:64px;height:80px;object-fit:cover;object-position:top center;border-radius:8px;border:2px solid #d5dbe6;flex-shrink:0;background:#eef2f7;box-shadow:0 2px 6px rgba(0,0,0,.1)}
+.fac .fac-info{min-width:0;flex:1}
+.fac .fac-info b{display:block;font-size:15px;color:var(--navy);line-height:1.25}
+.fac .fac-info small{display:block;margin-top:3px;font-size:13px;line-height:1.35;color:var(--mut)}
+
+/* Three-Year Academic Performance Single-View Layout */
+.perf-all{display:flex;flex-direction:column;gap:20px}
+.perf-row{display:grid;grid-template-columns:1.18fr 0.82fr;gap:20px;align-items:center;background:#fff;border:1px solid var(--line);border-top:4px solid var(--navy);border-radius:8px;padding:16px 18px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.perf-left{text-transform:uppercase}
+.perf-hdr{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.perf-hdr h3{margin:0;font-size:17px;color:var(--navy);letter-spacing:.3px}
+.perf-pills{display:flex;flex-wrap:wrap;gap:6px}
+.perf-pills span{background:#f0f4fb;border:1px solid #cbd7ee;border-left:3px solid var(--gold);padding:3px 9px;border-radius:4px;font-size:12px;font-weight:700;color:var(--navy2)}
+.perf-pills b{color:var(--maroon);font-size:14px;margin-right:3px}
+.perf-lead{background:var(--navy);color:#fff;border-radius:6px;padding:9px 12px;font-size:12.5px;font-weight:700;line-height:1.4;margin-bottom:10px;letter-spacing:.2px}
+.perf-lead b{color:var(--gold)}
+.perf-toppers{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+.perf-toppers .t-item{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:6px 9px;font-size:12px;line-height:1.25}
+.perf-toppers .t-item b{color:var(--ink);font-weight:700}
+.perf-toppers .t-item span{color:var(--maroon);font-weight:700;white-space:nowrap;font-size:11.5px}
+.perf-right a{display:block;text-decoration:none;text-align:center}
+.perf-right img{width:100%;height:auto;border-radius:6px;border:1px solid var(--line);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.pamphlet-cap{display:block;margin-top:6px;font-size:11.5px;font-weight:700;color:var(--navy);letter-spacing:.4px}
+@media(max-width:900px){.perf-row{grid-template-columns:1fr}.perf-toppers{grid-template-columns:1fr}}
+
+/* Floating clickable PDF links in Notice bar & Notifications/Results pages */
+.notice a.notice-pdf{color:var(--maroon);text-decoration:none;font-weight:700;padding:1px 4px;border-radius:4px}
+.notice a.notice-pdf:hover{text-decoration:underline;background:#fde68a}
+.notice .n-badge{display:inline-block;background:#dc2626;color:#fff;font-size:10px;font-weight:800;padding:1px 5px;border-radius:3px;vertical-align:middle;margin-right:3px}
+.notice a.notice-all{color:var(--navy);font-weight:700;text-decoration:underline}
+.notif-toolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:14px}
+.notif-toolbar input{flex:1;min-width:220px}
+a.notif-link{color:var(--navy);text-decoration:none;font-size:15px}
+a.notif-link:hover{color:var(--maroon);text-decoration:underline}
+.empty-state{text-align:center;padding:34px 16px;color:var(--mut)}
+.empty-state h3{margin:8px 0 6px;color:var(--navy)}
+.empty-state code{background:#eef2f7;padding:2px 6px;border-radius:4px;color:var(--maroon);font-weight:700}
