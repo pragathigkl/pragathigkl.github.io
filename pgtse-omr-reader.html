@@ -1,0 +1,1909 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>PGTSE-2027 OMR Evaluation &amp; Generator · Pragathi P.U. College, Gurumatkal</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700;900&family=Libre+Baskerville:wght@700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js" defer></script>
+<style>
+:root{--navy:#0b2a5b;--navy2:#071c3f;--maroon:#8e1b2e;--gold:#f2b705;--green:#15803d;--ink:#1c2233;--mut:#5b6478;--line:#dfe3ec;--bg:#f5f6fa}
+*{box-sizing:border-box}
+body{margin:0;font:14.5px/1.55 "Lato","Segoe UI",Tahoma,Arial,sans-serif;color:var(--ink);background:var(--bg);padding-bottom:96px}
+.topbar{background:linear-gradient(120deg,var(--navy2),var(--navy));color:#fff;padding:14px 20px;border-bottom:4px solid var(--gold);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.topbar h1{margin:0;font:700 20px/1.2 "Times New Roman",Times,Georgia,serif;letter-spacing:.4px}
+.topbar small{display:block;color:#fde047;font-size:12.5px;margin-top:2px}
+.wrap{max-width:1360px;margin:0 auto;padding:16px 18px}
+.btn{display:inline-flex;align-items:center;gap:6px;border:0;border-radius:6px;padding:9px 15px;font:700 13.5px/1.2 inherit;cursor:pointer;text-decoration:none;transition:.15s}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.b-navy{background:var(--navy);color:#fff}.b-navy:hover{background:#123b7a}
+.b-maroon{background:var(--maroon);color:#fff}.b-maroon:hover{background:#a82037}
+.b-green{background:var(--green);color:#fff}.b-green:hover{background:#166534}
+.b-gold{background:var(--gold);color:var(--navy2)}.b-gold:hover{background:#e0a800}
+.b-out{background:#fff;color:var(--navy);border:1.5px solid #c3cde0}.b-out:hover{background:#eef3fb}
+.b-red-out{background:#fff;color:#b91c1c;border:1.5px solid #fecaca}.b-red-out:hover{background:#fef2f2}
+.btn.sm{padding:6px 11px;font-size:12.5px}
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;box-shadow:0 2px 8px rgba(0,0,0,.04);margin-bottom:16px}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:14px}
+.toolbar-grp{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.dropzone{border:2.5px dashed #8fa5cc;border-radius:12px;background:#f8fbff;padding:24px 18px;text-align:center;cursor:pointer;transition:.18s}
+.dropzone:hover,.dropzone.drag{border-color:var(--navy);background:#ebf2ff}
+.dropzone h3{margin:6px 0 4px;color:var(--navy);font-size:17px}
+.dropzone p{margin:0;color:var(--mut);font-size:13.5px}
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:14px 0}
+.kpi{background:#fff;border:1px solid var(--line);border-top:3.5px solid var(--navy);border-radius:8px;padding:10px 12px;text-align:center}
+.kpi.amber{border-top-color:#d97706}.kpi.blue{border-top-color:#2563eb}.kpi.green{border-top-color:var(--green)}.kpi.red{border-top-color:#dc2626}
+.kpi b{display:block;font-size:22px;color:var(--navy);line-height:1.15}
+.kpi.amber b{color:#b45309}.kpi.blue b{color:#1d4ed8}.kpi.green b{color:var(--green)}.kpi.red b{color:#b91c1c}
+.kpi span{font-size:11.5px;font-weight:700;text-transform:uppercase;color:var(--mut);letter-spacing:.3px}
+.filter-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;align-items:center}
+.fpill{border:1px solid #cbd5e1;background:#fff;color:var(--ink);border-radius:20px;padding:5px 13px;font:700 12.5px inherit;cursor:pointer}
+.fpill.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13.2px;background:#fff}
+th,td{padding:8px 10px;border:1px solid var(--line);text-align:left;vertical-align:middle}
+th{background:var(--navy);color:#fff;font-size:12px;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap}
+td.c,th.c{text-align:center}
+tr:nth-child(even) td{background:#fafbfd}
+tr:hover td{background:#fff9e6}
+.badge{display:inline-block;padding:3px 9px;border-radius:14px;font-size:11.5px;font-weight:700;white-space:nowrap}
+.bg-wait{background:#e2e8f0;color:#334155}
+.bg-read{background:#dbeafe;color:#1d4ed8}
+.bg-rev{background:#fef3c7;color:#92400e;border:1px solid #fcd34d}
+.bg-upq{background:#e0e7ff;color:#3730a3}
+.bg-done{background:#dcfce7;color:#166534;border:1px solid #86efac}
+.bg-err{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5}
+.cfg-banner{background:#eef4ff;border:1px solid #c7d7f7;border-radius:8px;padding:9px 14px;font-size:12.8px;color:var(--navy);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px}
+
+/* Bottom-Right Floating Corner Status Widget */
+#cornerStatus{position:fixed;right:16px;bottom:14px;z-index:9000;width:320px;max-width:calc(100vw - 24px);background:#0c2047;color:#fff;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.35);border:2px solid var(--gold);overflow:hidden;font-size:12.5px}
+.cs-hdr{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#071530;font-weight:700;color:var(--gold);cursor:pointer}
+.cs-body{padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.cs-body.collapsed{display:none}
+.cs-row{display:flex;flex-direction:column;gap:3px}
+.cs-line{display:flex;justify-content:space-between;align-items:center;gap:6px}
+.cs-bar{height:6px;background:#1e3a6d;border-radius:4px;overflow:hidden}
+.cs-fill{height:100%;border-radius:4px;transition:width .25s}
+.cs-fill.read{background:#38bdf8}.cs-fill.up{background:#4ade80}
+.cs-sub{font-size:11px;color:#cbd5e1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Modals (Review & Settings) */
+.modal{position:fixed;inset:0;z-index:9500;background:rgba(7,20,45,.82);display:none;overflow:auto;padding:12px}
+.modal.open{display:block}
+.mbox{background:#f5f7fc;max-width:1320px;margin:0 auto;border-radius:12px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.45);border:2px solid var(--navy)}
+.mhdr{background:var(--navy);color:#fff;padding:11px 18px;display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:3px solid var(--gold)}
+.mhdr h2{margin:0;font-size:16px}
+.mbody{padding:14px 16px}
+.strip-box{background:#fff;border:1px solid #cbd5e1;border-radius:8px;padding:6px;margin-bottom:12px;text-align:center}
+.strip-box img{max-width:100%;max-height:165px;margin:0 auto;display:block;border-radius:4px}
+.rev-grid{display:grid;grid-template-columns:460px 1fr;gap:14px;align-items:start}
+.omr-viewer{background:#334155;border-radius:8px;padding:8px;max-height:660px;overflow:auto;text-align:center}
+.omr-viewer img{width:100%;height:auto;border-radius:4px;cursor:zoom-in}
+.omr-viewer img.zoomed{width:950px;max-width:none;cursor:zoom-out}
+.rev-form{background:#fff;border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px}
+.fgrid .full{grid-column:1/-1}
+.fgrid label{display:block;font-size:11.5px;font-weight:700;color:var(--navy);text-transform:uppercase;margin-bottom:2px}
+.fgrid input,.fgrid select,.fgrid textarea{width:100%;padding:7px 9px;border:1.5px solid #cbd5e1;border-radius:6px;font:700 13.5px Consolas,monospace;color:var(--ink)}
+.fgrid input:focus{outline:none;border-color:var(--navy);background:#f0f6ff}
+.ans-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px 10px;margin-top:8px;background:#f8fafc;border:1px solid var(--line);border-radius:6px;padding:8px}
+.ans-col{display:flex;flex-direction:column;gap:3px}
+.ans-cell{display:flex;align-items:center;justify-content:space-between;gap:4px;font:700 12px Consolas,monospace}
+.ans-cell span{width:24px;text-align:right;color:var(--navy)}
+.ans-cell input{width:34px;padding:2px 0;text-align:center;border:1.5px solid #cbd5e1;border-radius:4px;font:700 12.5px Consolas,monospace;text-transform:uppercase}
+.ans-cell input.ok{background:#dcfce7;border-color:#16a34a;color:#14532d}
+.ans-cell input.bad{background:#fee2e2;border-color:#dc2626;color:#991b1b}
+.ans-cell input.blk{background:#fef9c3;border-color:#ca8a04;color:#854d0e}
+.score-bar{background:#e8f0fe;border:1.5px solid #93c5fd;border-radius:8px;padding:9px 12px;margin:10px 0;font-weight:700;color:var(--navy);font-size:13.5px}
+.ocr-note{font-size:12px;color:var(--maroon);margin:6px 0;font-weight:700}
+.sbox{max-width:740px}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sgrid .full{grid-column:1/-1}
+.sgrid label{display:block;font-size:12px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.sgrid input,.sgrid select,.sgrid textarea{width:100%;padding:8px 10px;border:1.5px solid #cbd5e1;border-radius:6px;font:600 13px inherit}
+@media(max-width:980px){.kpi-row{grid-template-columns:repeat(2,1fr)}.rev-grid{grid-template-columns:1fr}.ans-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.fgrid,.sgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="topbar" id="topHdr">
+  <div>
+    <h1>PRAGATHI P.U. COLLEGE, GURUMATKAL (KY0434)</h1>
+    <small>PGTSE-2027 OMR Evaluation Engine · Bulk Background Reader, Review Folder &amp; Async Google Sheets Uploader</small>
+  </div>
+  <div>
+    <a class="btn b-gold sm" href="college-login.html">← Back to College Login</a>
+  </div>
+</div>
+
+<div class="wrap">
+  <!-- Summary Config Strip -->
+  <div class="cfg-banner">
+    <div id="cfgSummary">Loading settings…</div>
+    <div class="toolbar-grp">
+      <button type="button" class="btn b-navy sm" id="btnGenPdf">🖨️ Generate Printable OMR (PDF)</button>
+      <button type="button" class="btn b-out sm" id="btnGenPng">🖼️ OMR PNG</button>
+      <button type="button" class="btn b-gold sm" id="btnSettings">⚙️ OCR &amp; Sheet Settings</button>
+    </div>
+  </div>
+
+  <!-- Step 1: Bulk Upload OMR Images -->
+  <div class="card">
+    <div class="dropzone" id="dropzone">
+      <div style="font-size:34px">📂</div>
+      <h3>Step 1: Bulk Upload Scanned OMR Images (Reads Automatically in Background)</h3>
+      <p>Click here or drag &amp; drop multiple OMR sheet images (<code>.jpg</code>, <code>.jpeg</code>, <code>.png</code>). Bubbles &amp; Gemini Handwriting OCR run automatically in the background and save finished sheets into your <b>Review Folder</b> below.</p>
+      <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+        <button type="button" class="btn b-maroon" id="btnPickFiles">📂 Select Multiple OMR Images</button>
+        <button type="button" class="btn b-out" id="btnPickFolder">📁 Select Entire OMR Folder</button>
+        <button type="button" class="btn b-out" id="btnSelfTest" title="Generates a filled sample OMR and runs it through the reader">🧪 Test With Sample OMR</button>
+      </div>
+      <input type="file" id="fileInput" accept="image/*" multiple hidden>
+      <input type="file" id="folderInput" accept="image/*" webkitdirectory directory multiple hidden>
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi"><b id="kTotal">0</b><span>Total Sheets</span></div>
+      <div class="kpi blue"><b id="kReading">0</b><span>Reading in Background</span></div>
+      <div class="kpi amber"><b id="kReview">0</b><span>Ready in Review Folder</span></div>
+      <div class="kpi green"><b id="kUploaded">0</b><span>Uploaded to Sheets</span></div>
+      <div class="kpi red"><b id="kFailed">0</b><span>Upload / Read Errors</span></div>
+    </div>
+  </div>
+
+  <!-- Step 2: Review Folder Queue -->
+  <div class="card">
+    <div class="toolbar">
+      <div>
+        <h2 style="margin:0;font-size:18px;color:var(--navy)">📁 Step 2: Review Folder (Edit if Needed &amp; Click OK → Uploads to Sheets in Background)</h2>
+        <small style="color:var(--mut)">You can start reviewing completed sheets right away even while remaining OMRs are still being read in the background.</small>
+      </div>
+      <div class="toolbar-grp">
+        <button type="button" class="btn b-green" id="btnReviewNext">👁️ Review Next Pending (<span id="revNextCnt">0</span>)</button>
+        <button type="button" class="btn b-navy sm" id="btnRetryUploads">☁️ Retry Failed Uploads</button>
+        <button type="button" class="btn b-out sm" id="btnExportXlsx">📥 Export Excel (.xlsx)</button>
+        <button type="button" class="btn b-out sm" id="btnExportCsv">📥 CSV</button>
+        <button type="button" class="btn b-red-out sm" id="btnClearUploaded">🗑️ Clear Uploaded</button>
+      </div>
+    </div>
+
+    <div class="filter-pills" id="filterPills">
+      <button type="button" class="fpill on" data-f="all">All</button>
+      <button type="button" class="fpill" data-f="reading">⏳ Reading</button>
+      <button type="button" class="fpill" data-f="ready_review">🟡 Ready for Review</button>
+      <button type="button" class="fpill" data-f="uploading">☁️ Uploading</button>
+      <button type="button" class="fpill" data-f="uploaded">✅ Uploaded to Sheets</button>
+      <button type="button" class="fpill" data-f="error">⚠️ Errors / Retry</button>
+      <input id="qSearch" type="search" placeholder="🔍 Filter by SATS, Name, File…" style="margin-left:auto;padding:5px 10px;border:1px solid #cbd5e1;border-radius:16px;font-size:13px;min-width:210px">
+    </div>
+
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr>
+            <th class="c">#</th>
+            <th>File</th>
+            <th>SATS No.</th>
+            <th class="c">Ver</th>
+            <th>Student Name</th>
+            <th>Father's Name</th>
+            <th>School Name</th>
+            <th>Date / Contact</th>
+            <th class="c">Score</th>
+            <th>Status</th>
+            <th class="c">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="queueTbody">
+          <tr><td colspan="11" class="c" style="padding:28px;color:var(--mut)">No OMR images uploaded yet. Click <b>Select Multiple OMR Images</b> above to start background reading.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Always-Visible Bottom-Right Corner Status Box -->
+<div id="cornerStatus">
+  <div class="cs-hdr" id="csToggle">
+    <span>⚡ OMR Background Status</span>
+    <span id="csCaret">▾</span>
+  </div>
+  <div class="cs-body" id="csBody">
+    <div class="cs-row">
+      <div class="cs-line"><span>📖 Read OMRs</span><b id="csReadTxt">Idle (0/0)</b></div>
+      <div class="cs-bar"><div class="cs-fill read" id="csReadBar" style="width:0%"></div></div>
+      <div class="cs-sub" id="csReadSub">Waiting for OMR images…</div>
+    </div>
+    <div class="cs-row">
+      <div class="cs-line"><span>🟡 Review Folder</span><b id="csRevTxt" style="color:#fde047">0 ready</b></div>
+    </div>
+    <div class="cs-row">
+      <div class="cs-line"><span>☁️ Upload to Sheets</span><b id="csUpTxt" style="color:#86efac">Idle (0/0)</b></div>
+      <div class="cs-bar"><div class="cs-fill up" id="csUpBar" style="width:0%"></div></div>
+      <div class="cs-sub" id="csUpSub">Confirm sheets in Review Folder to auto-upload</div>
+    </div>
+  </div>
+</div>
+
+<!-- Review & Edit Modal -->
+<div class="modal" id="reviewModal">
+  <div class="mbox">
+    <div class="mhdr">
+      <h2 id="revTitle">Review OMR Sheet</h2>
+      <div class="toolbar-grp">
+        <button type="button" class="btn b-out sm" id="btnToggleZoom">🔍 Zoom OMR</button>
+        <button type="button" class="btn b-red-out sm" id="btnCloseRev">✕ Close</button>
+      </div>
+    </div>
+    <div class="mbody">
+      <div class="strip-box">
+        <div style="font-size:11.5px;font-weight:700;color:var(--navy);margin-bottom:4px;text-align:left">Handwritten Candidate Details Strip (As Scanned):</div>
+        <img id="revStripImg" alt="Candidate Details Strip">
+      </div>
+      <div class="rev-grid">
+        <div class="omr-viewer">
+          <img id="revFullImg" alt="Annotated Graded OMR" title="Click to toggle zoom">
+        </div>
+        <div class="rev-form">
+          <div class="fgrid">
+            <div><label>SATS No. (9 Digits) *</label><input id="eSats" maxlength="9"></div>
+            <div><label>Paper Version (1–5) *</label>
+              <select id="eVer"><option value="1">Version 1</option><option value="2">Version 2</option><option value="3">Version 3</option><option value="4">Version 4</option><option value="5">Version 5</option></select>
+            </div>
+            <div class="full"><label>Student Full Name</label><input id="eName"></div>
+            <div class="full"><label>Father's Name</label><input id="eFather"></div>
+            <div class="full"><label>High School Name</label><input id="eSchool"></div>
+            <div><label>Exam Date (DD/MM/YYYY)</label><input id="eDate" placeholder="DD/MM/YYYY"></div>
+            <div><label>Contact No. (10 Digits)</label><input id="eContact" maxlength="12"></div>
+          </div>
+          <div class="ocr-note" id="eOcrNote"></div>
+          <div class="score-bar" id="eScoreBar">Score: 0 / 60</div>
+          <div style="font-size:11.5px;font-weight:700;color:var(--navy)">Answers Read (A / B / C / D, blank = Unattempted, M = Multiple):</div>
+          <div class="ans-grid" id="eAnsGrid"></div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center">
+            <button type="button" class="btn b-green" id="btnConfirmOk">✅ OK — Confirm &amp; Upload to Sheets (Background)</button>
+            <button type="button" class="btn b-out" id="btnSaveDraft">💾 Save Edits Only</button>
+            <button type="button" class="btn b-out" id="btnSkipNext">⏭️ Skip to Next</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal" id="settingsModal">
+  <div class="mbox sbox">
+    <div class="mhdr">
+      <h2>⚙️ OMR Reader, Gemini OCR &amp; Google Sheets Settings</h2>
+      <button type="button" class="btn b-red-out sm" id="btnCloseSet">✕ Close</button>
+    </div>
+    <div class="mbody">
+      <div class="sgrid">
+        <div class="full">
+          <label>Google Apps Script Web App URL (Direct Upload to PGTSE-2027 Results Sheet)</label>
+          <input id="sUrl" type="url">
+        </div>
+        <div class="full">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+            <input id="sOcrOn" type="checkbox" style="width:auto">
+            <span>Enable Background Gemini Handwriting OCR (reads Student Name, Father Name, School, Exam Date &amp; Contact No.)</span>
+          </label>
+        </div>
+        <div class="full">
+          <label>Gemini API Key (saved only in your browser's local storage)</label>
+          <input id="sKey" type="password" placeholder="AIza...">
+        </div>
+        <div>
+          <label>Gemini Model (use <code>gemini-3.5-flash-lite</code> for fastest OCR)</label>
+          <input id="sModel" list="geminiModels">
+          <datalist id="geminiModels">
+            <option value="gemini-3.5-flash">
+            <option value="gemini-3.5-flash-lite">
+            <option value="gemini-3.8-flash">
+          </datalist>
+        </div>
+        <div>
+          <label>Max Requests / Min (RPM) &amp; Parallel Workers</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+            <input id="sRpm" type="number" min="1" max="120" title="Requests per minute">
+            <select id="sConc" title="Parallel Gemini workers"><option value="1">1 Worker</option><option value="2">2 Parallel</option><option value="3">3 Parallel</option></select>
+          </div>
+        </div>
+        <div>
+          <label>Bubble Darkness Threshold (Default 0.48)</label>
+          <input id="sThresh" type="number" step="0.02" min="0.25" max="0.75">
+        </div>
+        <div>
+          <label>Optional Answer Key JSON Override</label>
+          <input id="sKeyFile" type="file" accept=".json">
+        </div>
+        <div class="full">
+          <label>Optional Official School Names List (one per line for auto spelling snap)</label>
+          <textarea id="sSchools" rows="3" placeholder="GOVT HIGH SCHOOL GURUMATKAL&#10;MORARJI DESAI RESIDENTIAL SCHOOL..."></textarea>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;margin-top:14px">
+        <div class="toolbar-grp">
+          <button type="button" class="btn b-out sm" id="btnTestGemini">🧪 Test Gemini Key</button>
+          <button type="button" class="btn b-out sm" id="btnTestSheet">🔗 Test Sheet URL</button>
+          <button type="button" class="btn b-red-out sm" id="btnResetKey">Reset to Built-in V1–V5 Key</button>
+        </div>
+        <button type="button" class="btn b-green" id="btnSaveSet">💾 Save Settings</button>
+      </div>
+      <div id="setTestMsg" style="margin-top:8px;font-size:12.5px;font-weight:700"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  if (new URLSearchParams(location.search).get("embed") === "1") {
+    document.getElementById("topHdr").style.display = "none";
+  }
+
+  /* =========================================================================
+     1. EXACT OMR GEOMETRY & OFFICIAL 5-VERSION MASTER ANSWER KEYS (V1-V5)
+     ========================================================================= */
+  const PAGE_W = 2480, PAGE_H = 3508;
+  const FID_SIZE = 70, FID_MARGIN_X = 110, FID_MARGIN_Y = 110;
+  const FID = {
+    TL: [FID_MARGIN_X + 35, FID_MARGIN_Y + 35],
+    TR: [PAGE_W - FID_MARGIN_X - 35, FID_MARGIN_Y + 35],
+    BR: [PAGE_W - FID_MARGIN_X - 35, PAGE_H - FID_MARGIN_Y - 35],
+    BL: [FID_MARGIN_X + 35, PAGE_H - FID_MARGIN_Y - 35]
+  };
+  const ORIGIN_X = FID.TL[0], ORIGIN_Y = FID.TL[1];
+  const WARP_W = FID.TR[0] - FID.TL[0]; // 2190
+  const WARP_H = FID.BL[1] - FID.TL[1]; // 3218
+  const BUBBLE_R = 22;
+
+  const SATS_DIGITS = 9, SATS_BOX_X0 = 195, SATS_BOX_Y0 = 965, SATS_COL_STEP = 68, SATS_ROW_Y0 = 1110, SATS_ROW_STEP = 60;
+  const VER_OPTIONS = [1, 2, 3, 4, 5], VER_COL_X = 955, VER_ROW_Y0 = 1150, VER_ROW_STEP = 85;
+  const Q_COLS = 4, Q_ROWS_PER_COL = 15, Q_TOTAL = 60, Q_OPTIONS = ["A", "B", "C", "D"];
+  const Q_GRID_X0 = 195, Q_COL_WIDTH = 535, Q_OPT_OFFSET_X = 140, Q_OPT_STEP_X = 82, Q_ROW_Y0 = 1945, Q_ROW_STEP_Y = 85;
+  const SUBJECT_RANGES = [
+    ["Physics", 1, 10],
+    ["Chemistry", 11, 20],
+    ["Mathematics", 21, 40],
+    ["Biology", 41, 50],
+    ["Mental Ability", 51, 60]
+  ];
+
+  // Updated handwritten boxes (Date box completely blank, Room No removed)
+  const OCR_FIELD_BOXES = {
+    Student_Name: [565, 480, 2280, 544],
+    Father_Name:  [565, 565, 2280, 629],
+    School_Name:  [565, 650, 2280, 714],
+    Exam_Date:    [430, 735, 1120, 797],
+    Contact_No:   [1460, 735, 2280, 797]
+  };
+
+  const DEFAULT_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzXedUOZjoAt0qqRR9mrdUSU65NAUY9ajzsE2ZVfAT9VUsJLgP5On3nSWZBjuevxd0E/exec";
+  const DEFAULT_ANSWER_KEYS = {"1":{"1":"B","2":"A","3":"B","4":"B","5":"B","6":"B","7":"B","8":"C","9":"C","10":"C","11":"B","12":"B","13":"A","14":"C","15":"B","16":"C","17":"B","18":"B","19":"B","20":"C","21":"B","22":"B","23":"B","24":"B","25":"B","26":"B","27":"A","28":"B","29":"B","30":"B","31":"C","32":"B","33":"B","34":"A","35":"A","36":"C","37":"C","38":"A","39":"B","40":"C","41":"B","42":"B","43":"B","44":"B","45":"C","46":"B","47":"B","48":"C","49":"B","50":"B","51":"B","52":"A","53":"A","54":"B","55":"D","56":"B","57":"B","58":"C","59":"C","60":"A"},"2":{"1":"B","2":"B","3":"B","4":"A","5":"B","6":"A","7":"C","8":"B","9":"A","10":"B","11":"B","12":"B","13":"D","14":"B","15":"B","16":"B","17":"B","18":"C","19":"B","20":"B","21":"B","22":"C","23":"A","24":"B","25":"B","26":"B","27":"B","28":"B","29":"B","30":"C","31":"C","32":"C","33":"B","34":"B","35":"B","36":"B","37":"B","38":"B","39":"C","40":"A","41":"B","42":"B","43":"B","44":"C","45":"C","46":"B","47":"B","48":"A","49":"B","50":"B","51":"B","52":"B","53":"A","54":"C","55":"D","56":"B","57":"B","58":"C","59":"C","60":"C"},"3":{"1":"B","2":"A","3":"B","4":"C","5":"B","6":"A","7":"C","8":"C","9":"B","10":"B","11":"B","12":"B","13":"C","14":"B","15":"B","16":"B","17":"B","18":"C","19":"B","20":"C","21":"B","22":"B","23":"B","24":"B","25":"B","26":"C","27":"C","28":"B","29":"B","30":"C","31":"C","32":"B","33":"B","34":"A","35":"C","36":"B","37":"A","38":"B","39":"B","40":"B","41":"B","42":"A","43":"B","44":"A","45":"D","46":"B","47":"B","48":"B","49":"C","50":"B","51":"B","52":"B","53":"A","54":"B","55":"C","56":"B","57":"B","58":"C","59":"C","60":"B"},"4":{"1":"B","2":"A","3":"B","4":"A","5":"B","6":"A","7":"C","8":"B","9":"B","10":"B","11":"B","12":"B","13":"B","14":"B","15":"B","16":"B","17":"B","18":"C","19":"B","20":"A","21":"B","22":"B","23":"A","24":"B","25":"B","26":"B","27":"B","28":"B","29":"B","30":"B","31":"B","32":"B","33":"B","34":"A","35":"B","36":"B","37":"B","38":"B","39":"B","40":"B","41":"B","42":"B","43":"B","44":"B","45":"B","46":"B","47":"B","48":"C","49":"B","50":"B","51":"C","52":"B","53":"A","54":"C","55":"C","56":"B","57":"B","58":"C","59":"C","60":"B"},"5":{"1":"B","2":"A","3":"A","4":"C","5":"B","6":"B","7":"B","8":"C","9":"A","10":"D","11":"A","12":"B","13":"D","14":"B","15":"B","16":"B","17":"B","18":"B","19":"B","20":"A","21":"B","22":"C","23":"B","24":"B","25":"B","26":"B","27":"B","28":"C","29":"B","30":"C","31":"C","32":"C","33":"B","34":"A","35":"A","36":"C","37":"A","38":"B","39":"B","40":"B","41":"B","42":"B","43":"B","44":"B","45":"B","46":"B","47":"B","48":"B","49":"A","50":"C","51":"B","52":"B","53":"A","54":"C","55":"C","56":"B","57":"B","58":"C","59":"C","60":"B"}};
+
+  const GEMINI_PROMPT =
+    "These five images are stacked from top to bottom. They are boxes from an Indian school exam OMR sheet, " +
+    "all filled in by hand with a pen: (1) the student's full name, (2) the father's name, (3) the high school name, " +
+    "(4) the exam date written completely by hand by the student, (5) a 10-digit mobile contact number. " +
+    "Read ONLY the handwriting. Names are meant to be in CAPITAL letters. " +
+    'Reply with JSON only, exactly like {"student_name":"","father_name":"","school_name":"","exam_date":"","contact_no":""}. ' +
+    "exam_date must be DD/MM/YYYY (or empty string if blank). contact_no must contain digits only. " +
+    "Use UPPERCASE letters for names and keep spaces between words. If a box is empty or you cannot read it, use an empty string. Never guess or invent anything.";
+
+  const $ = s => document.querySelector(s);
+  const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const getSatsCenter = (col, d) => [SATS_BOX_X0 + col * SATS_COL_STEP + 28, SATS_ROW_Y0 + d * SATS_ROW_STEP];
+  const getVerCenter = idx => [VER_COL_X, VER_ROW_Y0 + idx * VER_ROW_STEP];
+  const getQCenter = (qNum, optIdx) => {
+    const col = Math.floor((qNum - 1) / Q_ROWS_PER_COL);
+    const row = (qNum - 1) % Q_ROWS_PER_COL;
+    return [Q_GRID_X0 + col * Q_COL_WIDTH + Q_OPT_OFFSET_X + optIdx * Q_OPT_STEP_X, Q_ROW_Y0 + row * Q_ROW_STEP_Y];
+  };
+  const pageToWarped = ([x, y]) => [x - ORIGIN_X, y - ORIGIN_Y];
+
+  /* =========================================================================
+     2. SETTINGS (localStorage) & PERSISTENT REVIEW FOLDER (IndexedDB)
+     ========================================================================= */
+  const SET_KEY = "pragathi_pgtse_omr_settings_v2";
+  function loadSettings() {
+    const def = {
+      appsScriptUrl: DEFAULT_APPS_SCRIPT_URL,
+      ocrEnabled: true,
+      geminiKey: "",
+      geminiModel: "gemini-3.5-flash",
+      geminiRpm: 15,
+      concurrency: 2,
+      fillThreshold: 0.48,
+      schoolsText: "",
+      customKeys: null
+    };
+    try { return { ...def, ...(JSON.parse(localStorage.getItem(SET_KEY) || "{}")) }; }
+    catch { return def; }
+  }
+  let CFG = loadSettings();
+  function saveSettings() {
+    localStorage.setItem(SET_KEY, JSON.stringify(CFG));
+    renderCfgBanner();
+  }
+  const activeKeys = () => CFG.customKeys || DEFAULT_ANSWER_KEYS;
+
+  // IndexedDB store for Review Folder so uploaded & reviewed sheets survive page refreshes
+  const DB_NAME = "PragathiPgtseOmrReviewDB", STORE_NAME = "sheets";
+  let dbPromise = null;
+  function openDb() {
+    if (dbPromise) return dbPromise;
+    dbPromise = new Promise((res, rej) => {
+      const req = indexedDB.open(DB_NAME, 1);
+      req.onupgradeneeded = e => {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains(STORE_NAME)) {
+          db.createObjectStore(STORE_NAME, { keyPath: "id" });
+        }
+      };
+      req.onsuccess = e => res(e.target.result);
+      req.onerror = e => rej(e.target.error);
+    });
+    return dbPromise;
+  }
+  async function dbPut(rec) {
+    const db = await openDb();
+    return new Promise((res, rej) => {
+      const tx = db.transaction(STORE_NAME, "readwrite");
+      tx.objectStore(STORE_NAME).put(rec);
+      tx.oncomplete = () => res();
+      tx.onerror = () => rej(tx.error);
+    });
+  }
+  async function dbDel(id) {
+    const db = await openDb();
+    return new Promise((res, rej) => {
+      const tx = db.transaction(STORE_NAME, "readwrite");
+      tx.objectStore(STORE_NAME).delete(id);
+      tx.oncomplete = () => res();
+      tx.onerror = () => rej(tx.error);
+    });
+  }
+  async function dbAll() {
+    const db = await openDb();
+    return new Promise((res, rej) => {
+      const tx = db.transaction(STORE_NAME, "readonly");
+      const r = tx.objectStore(STORE_NAME).getAll();
+      r.onsuccess = () => res(r.result || []);
+      r.onerror = () => rej(r.error);
+    });
+  }
+
+  let RECORDS = [];
+  let FILTER = "all";
+  let ACTIVE_REVIEW_ID = null;
+  const FILE_CACHE = new Map(); // holds original File objects for queued_read items in current session
+
+  /* =========================================================================
+     3. PRINTABLE 300-DPI A4 OMR GENERATOR (Times New Roman, Blank Date, No Room)
+     ========================================================================= */
+  function loadLogoImage() {
+    return new Promise(resolve => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => resolve(img);
+      img.onerror = () => {
+        const img2 = new Image();
+        img2.onload = () => resolve(img2);
+        img2.onerror = () => resolve(null);
+        img2.src = "favicon.png";
+      };
+      img.src = "media/logo-pragathi.png";
+    });
+  }
+
+  async function renderOmrCanvas(sampleData = null) {
+    const c = document.createElement("canvas");
+    c.width = PAGE_W; c.height = PAGE_H;
+    const ctx = c.getContext("2d");
+
+    const BLACK = "#000000", NAVY = "#122858", RED = "#a52030", LIGHT = "#f4f7fc", LRED = "#fdf4f5",
+          GRAY = "#505a6e", BUB_OUT = "#5a283c", BUB_TXT = "#6e374b";
+
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, PAGE_W, PAGE_H);
+    ctx.textBaseline = "top";
+
+    const rect = (x0, y0, x1, y1, fill, stroke, lw = 2) => {
+      if (fill) { ctx.fillStyle = fill; ctx.fillRect(x0, y0, x1 - x0, y1 - y0); }
+      if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lw; ctx.strokeRect(x0, y0, x1 - x0, y1 - y0); }
+    };
+    const centerTxt = (cx, y, txt, font, color) => {
+      ctx.font = font; ctx.fillStyle = color; ctx.textAlign = "center";
+      ctx.fillText(txt, cx, y);
+      ctx.textAlign = "left";
+    };
+    const circle = (cx, cy, r, fill, stroke, lw = 3) => {
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+      if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lw; ctx.stroke(); }
+    };
+
+    // 1. 4 Corner Fiducial Squares
+    for (const [cx, cy] of Object.values(FID)) {
+      const x0 = cx - FID_SIZE / 2, y0 = cy - FID_SIZE / 2;
+      rect(x0, y0, x0 + FID_SIZE, y0 + FID_SIZE, BLACK, null);
+      rect(x0 - 12, y0 - 12, x0 + FID_SIZE + 12, y0 + FID_SIZE + 12, null, BLACK, 2);
+    }
+
+    // Timing marks along left & right
+    for (let r = 0; r < Q_ROWS_PER_COL; r++) {
+      const ty = Q_ROW_Y0 + r * Q_ROW_STEP_Y;
+      rect(115, ty - 8, 145, ty + 8, BLACK, null);
+      rect(PAGE_W - 145, ty - 8, PAGE_W - 115, ty + 8, BLACK, null);
+    }
+
+    // 2. Header Block (College Name in Times New Roman Bold!)
+    const hdrX0 = 200, hdrY0 = 120, hdrX1 = 2280, hdrY1 = 385;
+    rect(hdrX0, hdrY0, hdrX1, hdrY1, LIGHT, NAVY, 4);
+    const logo = await loadLogoImage();
+    let targetW = 0;
+    if (logo) {
+      const targetH = 225;
+      targetW = Math.round(logo.width * (targetH / logo.height));
+      ctx.drawImage(logo, hdrX0 + 22, hdrY0 + 20, targetW, targetH);
+    }
+    const tcx = Math.round((hdrX0 + targetW + 30 + hdrX1 - 20) / 2);
+    centerTxt(tcx, 134, "DECCAN EDUCATION SOCIETY (R.)", "bold 28px Arial,sans-serif", RED);
+    centerTxt(tcx, 174, "PRAGATHI P.U. COLLEGE, GURUMATKAL", 'bold 56px "Times New Roman",Times,Georgia,serif', NAVY);
+    centerTxt(tcx, 242, "Tq: Gurumatkal, Dist: Yadgir, Karnataka - 585214  |  College Code: KY0434", "26px Arial,sans-serif", BLACK);
+    rect(hdrX0 + targetW + 35, 290, hdrX1 - 25, 368, NAVY, null);
+    centerTxt(tcx, 310, "PRAGATHI GENIUS TALENT SEARCH EXAM - 2027 (OMR ANSWER SHEET)", "bold 36px Arial,sans-serif", "#ffffff");
+
+    // 3. Part A: Candidate Details (Blank Exam Date, Room No REMOVED)
+    const infoX0 = 165, infoY0 = 410, infoX1 = 2315, infoY1 = 815;
+    rect(infoX0, infoY0, infoX1, infoY1, null, NAVY, 3);
+    rect(infoX0, infoY0, infoX1, infoY0 + 52, NAVY, null);
+    ctx.font = "bold 28px Arial,sans-serif"; ctx.fillStyle = "#ffffff";
+    ctx.fillText("PART A : CANDIDATE DETAILS (TO BE WRITTEN IN CAPITAL LETTERS USING BLACK/BLUE BALL PEN)", infoX0 + 25, infoY0 + 12);
+
+    const fields = [
+      ["1. STUDENT FULL NAME :", 480],
+      ["2. FATHER'S NAME      :", 565],
+      ["3. HIGH SCHOOL NAME   :", 650]
+    ];
+    for (const [lbl, fy] of fields) {
+      ctx.font = "bold 26px Arial,sans-serif"; ctx.fillStyle = NAVY;
+      ctx.fillText(lbl, infoX0 + 30, fy + 16);
+      rect(565, fy, 2280, fy + 64, "#fcfdff", GRAY, 2);
+      const sw = (2280 - 565) / 28;
+      ctx.strokeStyle = "#bec8d7"; ctx.lineWidth = 2;
+      for (let s = 1; s < 28; s++) {
+        const sx = Math.round(565 + s * sw);
+        ctx.beginPath(); ctx.moveTo(sx, fy + 50); ctx.lineTo(sx, fy + 64); ctx.stroke();
+      }
+    }
+
+    // Row 4: Completely EMPTY Exam Date box + Contact No box (NO Room No.)
+    const fy4 = 735;
+    ctx.font = "bold 26px Arial,sans-serif"; ctx.fillStyle = NAVY;
+    ctx.fillText("4. EXAM DATE :", infoX0 + 30, fy4 + 16);
+    rect(430, fy4, 1120, fy4 + 62, "#fcfdff", GRAY, 2);
+
+    ctx.fillText("5. CONTACT NO :", 1175, fy4 + 16);
+    rect(1460, fy4, 2280, fy4 + 62, "#fcfdff", GRAY, 2);
+
+    // 4. Middle Section: SATS + Paper Version + Instructions
+    const midY0 = 840, midY1 = 1715;
+
+    // 4A. SATS Grid
+    rect(165, midY0, 825, midY1, null, NAVY, 3);
+    rect(165, midY0, 825, midY0 + 52, NAVY, null);
+    ctx.font = "bold 28px Arial,sans-serif"; ctx.fillStyle = "#ffffff";
+    ctx.fillText("SATS NUMBER (9 DIGITS)", 210, midY0 + 12);
+    ctx.font = "bold 22px Arial,sans-serif"; ctx.fillStyle = RED;
+    ctx.fillText("Write SATS No. in boxes & darken matching circles:", 190, midY0 + 64);
+
+    for (let d = 0; d < 10; d++) {
+      if (d % 2 === 1) {
+        const [, cy] = getSatsCenter(0, d);
+        rect(173, cy - BUBBLE_R - 4, 817, cy + BUBBLE_R + 4, "#f8f4f6", null);
+      }
+    }
+    for (let col = 0; col < SATS_DIGITS; col++) {
+      const bx = SATS_BOX_X0 + col * SATS_COL_STEP;
+      rect(bx, SATS_BOX_Y0, bx + 56, SATS_BOX_Y0 + 68, LRED, NAVY, 3);
+      ctx.font = "21px Arial,sans-serif"; ctx.fillStyle = GRAY;
+      ctx.fillText(String(col + 1), bx + 20, SATS_BOX_Y0 - 26);
+      for (let d = 0; d < 10; d++) {
+        const [cx, cy] = getSatsCenter(col, d);
+        circle(cx, cy, BUBBLE_R, null, BUB_OUT, 3);
+        centerTxt(cx, cy - 11, String(d), "bold 22px Arial,sans-serif", BUB_TXT);
+      }
+    }
+
+    // 4B. Paper Version Grid
+    rect(850, midY0, 1310, midY1, null, NAVY, 3);
+    rect(850, midY0, 1310, midY0 + 52, RED, null);
+    ctx.font = "bold 28px Arial,sans-serif"; ctx.fillStyle = "#ffffff";
+    ctx.fillText("QUESTION PAPER VERSION", 885, midY0 + 12);
+    ctx.font = "bold 22px Arial,sans-serif"; ctx.fillStyle = NAVY;
+    ctx.fillText("Write & Darken Paper Version", 875, midY0 + 70);
+    ctx.font = "21px Arial,sans-serif"; ctx.fillStyle = BLACK;
+    ctx.fillText("(Version 1 / 2 / 3 / 4 / 5):", 875, midY0 + 100);
+    rect(985, 975, 1175, 1060, LIGHT, NAVY, 3);
+
+    VER_OPTIONS.forEach((vn, idx) => {
+      const [cx, cy] = getVerCenter(idx);
+      rect(880, cy - 32, 1280, cy + 32, idx % 2 === 0 ? LRED : "#ffffff", "#d2bec3", 2);
+      circle(cx, cy, BUBBLE_R, null, BUB_OUT, 3);
+      centerTxt(cx, cy - 11, String(vn), "bold 22px Arial,sans-serif", BUB_TXT);
+      ctx.font = "bold 26px Arial,sans-serif"; ctx.fillStyle = NAVY;
+      ctx.fillText(`VERSION - ${vn}`, cx + 48, cy - 13);
+    });
+
+    rect(868, 1545, 1292, 1698, LIGHT, NAVY, 2);
+    ctx.font = "bold 21px Arial,sans-serif"; ctx.fillStyle = RED;
+    ctx.fillText("EXAM PATTERN (60 Qs):", 880, 1554);
+    ctx.font = "19px Arial,sans-serif"; ctx.fillStyle = BLACK;
+    ["• Physics (Q1-10)        : 10 Qs", "• Chemistry (Q11-20)     : 10 Qs", "• Mathematics (Q21-40)   : 20 Qs",
+     "• Biology (Q41-50)       : 10 Qs", "• Mental Ability (Q51-60): 10 Qs"].forEach((s, i) => ctx.fillText(s, 878, 1582 + i * 22));
+
+    // 4C. Instructions & Signatures
+    rect(1335, midY0, 2315, midY1, null, NAVY, 3);
+    rect(1335, midY0, 2315, midY0 + 52, NAVY, null);
+    ctx.font = "bold 28px Arial,sans-serif"; ctx.fillStyle = "#ffffff";
+    ctx.fillText("IMPORTANT INSTRUCTIONS FOR CANDIDATES", 1365, midY0 + 12);
+    ctx.font = "21px Arial,sans-serif"; ctx.fillStyle = BLACK;
+    [
+      "1. Use ONLY Black or Dark Blue Ball Point Pen to darken circles.",
+      "2. Darken the circle COMPLETELY. Light or partial marks are invalid.",
+      "3. Darken ONLY ONE circle per question. Multiple marks get 0 Marks.",
+      "4. Do NOT fold, tear, or make stray marks near the 4 corner squares.",
+      "5. Darken both your 9-digit SATS No. and Paper Version (1 to 5).",
+      "6. Each question carries 1 Mark (No negative marking). Max Marks = 60."
+    ].forEach((ln, i) => ctx.fillText(ln, 1360, midY0 + 72 + i * 48));
+
+    rect(1360, 1200, 2290, 1410, LIGHT, GRAY, 2);
+    ctx.font = "bold 22px Arial,sans-serif"; ctx.fillStyle = "#007828";
+    ctx.fillText("CORRECT METHOD OF DARKENING :", 1380, 1216);
+    ["A", "B", "C", "D"].forEach((ch, i) => {
+      const ex = 1855 + i * 75, ey = 1228;
+      if (i === 2) circle(ex, ey, 20, BLACK, BLACK, 2);
+      else { circle(ex, ey, 20, null, BUB_OUT, 3); centerTxt(ex, ey - 11, ch, "bold 22px Arial,sans-serif", BUB_TXT); }
+    });
+    ctx.font = "bold 22px Arial,sans-serif"; ctx.fillStyle = RED;
+    ctx.fillText("WRONG METHODS (INVALID) :", 1380, 1308);
+    ["cross", "tick", "half", "dot"].forEach((mode, i) => {
+      const ex = 1815 + i * 105, ey = 1320;
+      circle(ex, ey, 20, null, BUB_OUT, 3);
+      ctx.strokeStyle = BLACK; ctx.fillStyle = BLACK; ctx.lineWidth = 4;
+      if (mode === "cross") {
+        ctx.beginPath(); ctx.moveTo(ex - 14, ey - 14); ctx.lineTo(ex + 14, ey + 14);
+        ctx.moveTo(ex - 14, ey + 14); ctx.lineTo(ex + 14, ey - 14); ctx.stroke();
+      } else if (mode === "tick") {
+        ctx.beginPath(); ctx.moveTo(ex - 12, ey); ctx.lineTo(ex - 2, ey + 12); ctx.lineTo(ex + 15, ey - 12); ctx.stroke();
+      } else if (mode === "half") {
+        ctx.beginPath(); ctx.arc(ex, ey, 20, Math.PI / 2, Math.PI * 1.5); ctx.closePath(); ctx.fill();
+      } else {
+        circle(ex, ey, 7, BLACK, null);
+      }
+    });
+
+    const sigY0 = 1435, sigY1 = 1695, midSig = 1825;
+    rect(1360, sigY0, midSig - 12, sigY1, null, NAVY, 2);
+    rect(1360, sigY1 - 45, midSig - 12, sigY1, LIGHT, NAVY, 2);
+    centerTxt((1360 + midSig - 12) / 2, sigY1 - 33, "CANDIDATE'S SIGNATURE", "bold 21px Arial,sans-serif", NAVY);
+    rect(midSig + 12, sigY0, 2290, sigY1, null, NAVY, 2);
+    rect(midSig + 12, sigY1 - 45, 2290, sigY1, LIGHT, NAVY, 2);
+    centerTxt((midSig + 12 + 2290) / 2, sigY1 - 33, "INVIGILATOR'S SIGNATURE", "bold 21px Arial,sans-serif", NAVY);
+
+    // 5. Part B: 60 Questions Bubble Grid
+    rect(165, 1745, 2315, 3290, null, NAVY, 3);
+    rect(165, 1745, 2315, 1800, NAVY, null);
+    ctx.font = "bold 28px Arial,sans-serif"; ctx.fillStyle = "#ffffff";
+    ctx.fillText("PART B : ANSWERS FOR 60 QUESTIONS (DARKEN ONLY ONE CIRCLE A, B, C, OR D PER QUESTION)", 190, 1759);
+
+    const colHeaders = [
+      "Q1–10: Physics | Q11–15: Chem",
+      "Q16–20: Chem | Q21–30: Maths",
+      "Q31–40: Maths | Q41–45: Bio",
+      "Q46–50: Bio | Q51–60: Mental Ab."
+    ];
+    for (let col = 0; col < Q_COLS; col++) {
+      const cx0 = Q_GRID_X0 + col * Q_COL_WIDTH, cx1 = cx0 + Q_COL_WIDTH - 22;
+      rect(cx0 - 8, 1812, cx1, 3268, null, GRAY, 2);
+      rect(cx0 - 8, 1812, cx1, 1856, LIGHT, GRAY, 2);
+      ctx.font = "bold 22px Arial,sans-serif"; ctx.fillStyle = NAVY;
+      ctx.fillText(colHeaders[col], cx0 + 8, 1823);
+      ctx.fillStyle = RED;
+      ctx.fillText("Q.No", cx0 + 12, 1868);
+      Q_OPTIONS.forEach((ch, oi) => ctx.fillText(ch, cx0 + Q_OPT_OFFSET_X + oi * Q_OPT_STEP_X - 8, 1868));
+
+      for (let r = 0; r < Q_ROWS_PER_COL; r++) {
+        const qNum = col * Q_ROWS_PER_COL + r + 1;
+        const [, cy] = getQCenter(qNum, 0);
+        if (r % 2 === 1) rect(cx0 - 6, cy - BUBBLE_R - 10, cx1 - 2, cy + BUBBLE_R + 10, LRED, null);
+        if ([10, 20, 40, 50].includes(qNum) && r < Q_ROWS_PER_COL - 1) {
+          ctx.strokeStyle = NAVY; ctx.lineWidth = 3;
+          ctx.beginPath(); ctx.moveTo(cx0 - 6, cy + Q_ROW_STEP_Y / 2); ctx.lineTo(cx1 - 2, cy + Q_ROW_STEP_Y / 2); ctx.stroke();
+        }
+        ctx.font = "bold 26px Arial,sans-serif"; ctx.fillStyle = NAVY;
+        ctx.fillText(String(qNum).padStart(2, "0"), cx0 + 22, cy - 13);
+        Q_OPTIONS.forEach((ch, oi) => {
+          const [bx, by] = getQCenter(qNum, oi);
+          circle(bx, by, BUBBLE_R, null, BUB_OUT, 3);
+          centerTxt(bx, by - 11, ch, "bold 22px Arial,sans-serif", BUB_TXT);
+        });
+      }
+    }
+
+    centerTxt(PAGE_W / 2, 3318, "PRAGATHI P.U. COLLEGE, GURUMATKAL  •  PGTSE-2027 AUTOMATED OMR EVALUATION SYSTEM  •  DO NOT FOLD", "bold 22px Arial,sans-serif", NAVY);
+
+    // Optional synthetic filled sample overlay for self-test
+    if (sampleData) {
+      ctx.font = "bold 32px Arial,sans-serif"; ctx.fillStyle = "#141e5a";
+      ctx.fillText(sampleData.studentName || "RAHUL PATIL", 585, 495);
+      ctx.fillText(sampleData.fatherName || "SURESH PATIL", 585, 580);
+      ctx.fillText(sampleData.schoolName || "GOVT HIGH SCHOOL GURUMATKAL", 585, 665);
+      ctx.fillText(sampleData.examDate || "24/01/2027", 460, 750);
+      ctx.fillText(sampleData.contactNo || "9845012345", 1490, 750);
+      const satsStr = String(sampleData.sats || "291045672").padStart(9, "0").slice(0, 9);
+      for (let i = 0; i < 9; i++) {
+        const d = parseInt(satsStr[i], 10);
+        const [bx, by] = getSatsCenter(i, d);
+        ctx.fillText(satsStr[i], SATS_BOX_X0 + i * SATS_COL_STEP + 18, SATS_BOX_Y0 + 18);
+        circle(bx, by, BUBBLE_R - 2, "#111116", null);
+      }
+      const v = Number(sampleData.version || 2);
+      ctx.fillText(String(v), 1068, 1002);
+      const [vx, vy] = getVerCenter(v - 1);
+      circle(vx, vy, BUBBLE_R - 2, "#111116", null);
+      const key = activeKeys()[String(v)] || DEFAULT_ANSWER_KEYS["1"];
+      for (let q = 1; q <= 60; q++) {
+        let opt = key[String(q)];
+        if ([5, 14, 28, 35, 44, 53].includes(q)) opt = opt !== "D" ? "D" : "A";
+        if ([19, 58].includes(q)) continue;
+        const [qx, qy] = getQCenter(q, Q_OPTIONS.indexOf(opt));
+        circle(qx, qy, BUBBLE_R - 2, "#111116", null);
+      }
+    }
+    return c;
+  }
+
+  /* =========================================================================
+     4. PURE-JS OPENCV-EQUIVALENT PERSPECTIVE WARP & OMR BUBBLE READER
+     ========================================================================= */
+  function solveHomography(srcPts, dstPts) {
+    // Computes 3x3 H mapping dstPts -> srcPts (for inverse warping)
+    const A = [], B = [];
+    for (let i = 0; i < 4; i++) {
+      const [x, y] = dstPts[i], [u, v] = srcPts[i];
+      A.push([x, y, 1, 0, 0, 0, -u * x, -u * y]); B.push(u);
+      A.push([0, 0, 0, x, y, 1, -v * x, -v * y]); B.push(v);
+    }
+    const n = 8;
+    for (let col = 0; col < n; col++) {
+      let piv = col;
+      for (let r = col + 1; r < n; r++) if (Math.abs(A[r][col]) > Math.abs(A[piv][col])) piv = r;
+      [A[col], A[piv]] = [A[piv], A[col]];
+      [B[col], B[piv]] = [B[piv], B[col]];
+      const div = A[col][col] || 1e-12;
+      for (let c = col; c < n; c++) A[col][c] /= div;
+      B[col] /= div;
+      for (let r = 0; r < n; r++) {
+        if (r === col) continue;
+        const f = A[r][col];
+        for (let c = col; c < n; c++) A[r][c] -= f * A[col][c];
+        B[r] -= f * B[col];
+      }
+    }
+    return [B[0], B[1], B[2], B[3], B[4], B[5], B[6], B[7], 1];
+  }
+
+  function otsuThreshold(gray) {
+    const hist = new Uint32Array(256);
+    for (let i = 0; i < gray.length; i++) hist[gray[i]]++;
+    const total = gray.length;
+    let sum = 0;
+    for (let t = 0; t < 256; t++) sum += t * hist[t];
+    let sumB = 0, wB = 0, varMax = 0, thresh = 140;
+    for (let t = 0; t < 256; t++) {
+      wB += hist[t];
+      if (!wB) continue;
+      const wF = total - wB;
+      if (!wF) break;
+      sumB += t * hist[t];
+      const mB = sumB / wB, mF = (sum - sumB) / wF;
+      const v = wB * wF * (mB - mF) * (mB - mF);
+      if (v > varMax) { varMax = v; thresh = t; }
+    }
+    return thresh;
+  }
+
+  function detectFiducials(srcCanvas) {
+    const sw = srcCanvas.width, sh = srcCanvas.height;
+    // Downsample to ~700px wide for ultra-fast (<25ms) connected-components fiducial search
+    const scale = Math.min(1, 750 / Math.max(sw, sh));
+    const w = Math.max(1, Math.round(sw * scale)), h = Math.max(1, Math.round(sh * scale));
+    const tmp = document.createElement("canvas");
+    tmp.width = w; tmp.height = h;
+    const tctx = tmp.getContext("2d");
+    tctx.drawImage(srcCanvas, 0, 0, w, h);
+    const data = tctx.getImageData(0, 0, w, h).data;
+    const gray = new Uint8Array(w * h);
+    for (let i = 0, p = 0; i < gray.length; i++, p += 4) {
+      gray[i] = (data[p] * 77 + data[p + 1] * 150 + data[p + 2] * 29) >> 8;
+    }
+    const th = otsuThreshold(gray);
+    const bin = new Uint8Array(w * h);
+    for (let i = 0; i < gray.length; i++) bin[i] = gray[i] < th ? 1 : 0;
+
+    const visited = new Uint8Array(w * h);
+    const areaTotal = w * h;
+    const minArea = areaTotal * 0.00012, maxArea = areaTotal * 0.006;
+    const stack = new Int32Array(w * h);
+    const cands = [];
+
+    for (let idx = 0; idx < bin.length; idx++) {
+      if (!bin[idx] || visited[idx]) continue;
+      let sp = 0;
+      stack[sp++] = idx;
+      visited[idx] = 1;
+      let cnt = 0, sx = 0, sy = 0, minX = w, maxX = 0, minY = h, maxY = 0;
+      while (sp > 0) {
+        const cur = stack[--sp];
+        const y = (cur / w) | 0, x = cur - y * w;
+        cnt++; sx += x; sy += y;
+        if (x < minX) minX = x; if (x > maxX) maxX = x;
+        if (y < minY) minY = y; if (y > maxY) maxY = y;
+        if (x > 0 && bin[cur - 1] && !visited[cur - 1]) { visited[cur - 1] = 1; stack[sp++] = cur - 1; }
+        if (x + 1 < w && bin[cur + 1] && !visited[cur + 1]) { visited[cur + 1] = 1; stack[sp++] = cur + 1; }
+        if (y > 0 && bin[cur - w] && !visited[cur - w]) { visited[cur - w] = 1; stack[sp++] = cur - w; }
+        if (y + 1 < h && bin[cur + w] && !visited[cur + w]) { visited[cur + w] = 1; stack[sp++] = cur + w; }
+      }
+      if (cnt > minArea && cnt < maxArea) {
+        const bw = maxX - minX + 1, bh = maxY - minY + 1;
+        const aspect = bw / bh, extent = cnt / (bw * bh);
+        if (aspect >= 0.65 && aspect <= 1.45 && extent >= 0.62) {
+          cands.push([sx / cnt / scale, sy / cnt / scale, cnt]);
+        }
+      }
+    }
+
+    const targets = [[0, 0], [sw, 0], [sw, sh], [0, sh]];
+    if (cands.length >= 4) {
+      return targets.map(([tx, ty]) => {
+        let best = cands[0], bd = Infinity;
+        for (const c of cands) {
+          const d = (c[0] - tx) ** 2 + (c[1] - ty) ** 2;
+          if (d < bd) { bd = d; best = c; }
+        }
+        return [best[0], best[1]];
+      });
+    }
+    const sx = sw / PAGE_W, sy = sh / PAGE_H;
+    return [
+      [FID.TL[0] * sx, FID.TL[1] * sy],
+      [FID.TR[0] * sx, FID.TR[1] * sy],
+      [FID.BR[0] * sx, FID.BR[1] * sy],
+      [FID.BL[0] * sx, FID.BL[1] * sy]
+    ];
+  }
+
+  function warpCanonical(srcCanvas) {
+    const srcPts = detectFiducials(srcCanvas);
+    const dstPts = [[0, 0], [WARP_W - 1, 0], [WARP_W - 1, WARP_H - 1], [0, WARP_H - 1]];
+    const H = solveHomography(srcPts, dstPts);
+
+    const sw = srcCanvas.width, sh = srcCanvas.height;
+    const sctx = srcCanvas.getContext("2d");
+    const sData = new Uint32Array(sctx.getImageData(0, 0, sw, sh).data.buffer);
+
+    const wCanvas = document.createElement("canvas");
+    wCanvas.width = WARP_W; wCanvas.height = WARP_H;
+    const wctx = wCanvas.getContext("2d");
+    const wImg = wctx.createImageData(WARP_W, WARP_H);
+    const d32 = new Uint32Array(wImg.data.buffer);
+    const d8 = wImg.data;
+    const gray = new Uint8Array(WARP_W * WARP_H);
+
+    const [h0, h1, h2, h3, h4, h5, h6, h7, h8] = H;
+    let p = 0;
+    for (let y = 0; y < WARP_H; y++) {
+      const ny = h1 * y + h2, vy = h4 * y + h5, wy = h7 * y + h8;
+      for (let x = 0; x < WARP_W; x++, p++) {
+        const denom = h6 * x + wy;
+        const sx = ((h0 * x + ny) / denom + 0.5) | 0;
+        const sy = ((h3 * x + vy) / denom + 0.5) | 0;
+        if (sx >= 0 && sx < sw && sy >= 0 && sy < sh) {
+          d32[p] = sData[sy * sw + sx];
+        } else {
+          d32[p] = 0xffffffff;
+        }
+        const i4 = p << 2;
+        gray[p] = (d8[i4] * 77 + d8[i4 + 1] * 150 + d8[i4 + 2] * 29) >> 8;
+      }
+    }
+    wctx.putImageData(wImg, 0, 0);
+
+    // Robust threshold: ~165 for clean white scans, adapts gracefully for slightly dimmer phone photos
+    const hist = new Uint32Array(256);
+    for (let i = 0; i < gray.length; i += 4) hist[gray[i]]++;
+    let acc = 0, p85 = 240, target = (gray.length >> 2) * 0.85;
+    for (let t = 0; t < 256; t++) { acc += hist[t]; if (acc >= target) { p85 = t; break; } }
+    const binThresh = Math.min(172, Math.max(125, Math.round(p85 * 0.68)));
+    const binInv = new Uint8Array(WARP_W * WARP_H);
+    for (let i = 0; i < gray.length; i++) binInv[i] = gray[i] < binThresh ? 1 : 0;
+
+    return { wCanvas, binInv };
+  }
+
+  function measureBubbleFill(binInv, wx, wy, radius = 17) {
+    const x0 = Math.max(0, wx - radius), x1 = Math.min(WARP_W - 1, wx + radius);
+    const y0 = Math.max(0, wy - radius), y1 = Math.min(WARP_H - 1, wy + radius);
+    const r2 = radius * radius;
+    let total = 0, dark = 0;
+    for (let y = y0; y <= y1; y++) {
+      const dy2 = (y - wy) * (y - wy), rowOff = y * WARP_W;
+      for (let x = x0; x <= x1; x++) {
+        if ((x - wx) * (x - wx) + dy2 <= r2) {
+          total++;
+          if (binInv[rowOff + x]) dark++;
+        }
+      }
+    }
+    return total ? dark / total : 0;
+  }
+
+  function gradeResponses(responses, version) {
+    const keys = activeKeys();
+    const vKey = keys[String(version)] || keys["1"] || DEFAULT_ANSWER_KEYS["1"];
+    const subj = { Physics: 0, Chemistry: 0, Mathematics: 0, Biology: 0, "Mental Ability": 0 };
+    let correct = 0, wrong = 0, blank = 0;
+    for (let q = 1; q <= Q_TOTAL; q++) {
+      const ans = responses[`Q${q}`] || "UNATTEMPTED";
+      const k = String(vKey[String(q)] || "B").trim().toUpperCase();
+      if (Q_OPTIONS.includes(ans)) {
+        if (ans === k) {
+          correct++;
+          for (const [sn, a, b] of SUBJECT_RANGES) if (q >= a && q <= b) { subj[sn]++; break; }
+        } else wrong++;
+      } else blank++;
+    }
+    return {
+      Physics: subj.Physics, Chemistry: subj.Chemistry, Mathematics: subj.Mathematics,
+      Biology: subj.Biology, Mental_Ability: subj["Mental Ability"],
+      Total_Marks: correct, Max_Marks: Q_TOTAL,
+      Percentage: Number(((correct / Q_TOTAL) * 100).toFixed(2)),
+      Correct_Count: correct, Wrong_Count: wrong, Unattempted_Count: blank
+    };
+  }
+
+  function buildStripAndOcrImages(wCanvas) {
+    // 1. Wide Candidate Details Strip for operator Review modal
+    const [sx0, sy0] = pageToWarped([165, 472]);
+    const [sx1, sy1] = pageToWarped([2315, 805]);
+    const sw = sx1 - sx0, sh = sy1 - sy0;
+    const sc = document.createElement("canvas");
+    const sScale = Math.min(1, 1150 / sw);
+    sc.width = Math.round(sw * sScale); sc.height = Math.round(sh * sScale);
+    sc.getContext("2d").drawImage(wCanvas, sx0, sy0, sw, sh, 0, 0, sc.width, sc.height);
+    const stripDataUrl = sc.toDataURL("image/jpeg", 0.84);
+
+    // 2. Stacked 5-box canvas for fast Gemini OCR (~960px wide)
+    const boxes = Object.values(OCR_FIELD_BOXES).map(([x0, y0, x1, y1]) => {
+      const [wx0, wy0] = pageToWarped([x0 - 6, y0 - 6]);
+      const [wx1, wy1] = pageToWarped([x1 + 6, y1 + 6]);
+      return [Math.max(0, wx0), Math.max(0, wy0), Math.min(WARP_W, wx1) - Math.max(0, wx0), Math.min(WARP_H, wy1) - Math.max(0, wy0)];
+    });
+    const gap = 22;
+    const maxW = Math.max(...boxes.map(b => b[2]));
+    const totH = boxes.reduce((a, b) => a + b[3], 0) + gap * (boxes.length - 1);
+    const oc = document.createElement("canvas");
+    const oScale = Math.min(1, 960 / maxW);
+    oc.width = Math.round(maxW * oScale); oc.height = Math.round(totH * oScale);
+    const octx = oc.getContext("2d");
+    octx.fillStyle = "#ffffff";
+    octx.fillRect(0, 0, oc.width, oc.height);
+    let cy = 0;
+    for (const [bx, by, bw, bh] of boxes) {
+      octx.drawImage(wCanvas, bx, by, bw, bh, 0, Math.round(cy * oScale), Math.round(bw * oScale), Math.round(bh * oScale));
+      cy += bh + gap;
+    }
+    const ocrJpegB64 = oc.toDataURL("image/jpeg", 0.82).split(",")[1];
+    return { stripDataUrl, ocrJpegB64 };
+  }
+
+  async function loadImageToCanvas(fileOrCanvas) {
+    if (fileOrCanvas instanceof HTMLCanvasElement) return fileOrCanvas;
+    const url = URL.createObjectURL(fileOrCanvas);
+    try {
+      const img = await new Promise((res, rej) => {
+        const im = new Image();
+        im.onload = () => res(im);
+        im.onerror = () => rej(new Error("Could not decode image"));
+        im.src = url;
+      });
+      const maxDim = 2600;
+      const scale = Math.min(1, maxDim / Math.max(img.naturalWidth, img.naturalHeight));
+      const c = document.createElement("canvas");
+      c.width = Math.round(img.naturalWidth * scale);
+      c.height = Math.round(img.naturalHeight * scale);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      return c;
+    } finally {
+      URL.revokeObjectURL(url);
+    }
+  }
+
+  async function scanOmrLocal(fileOrCanvas, fileName) {
+    const srcCanvas = await loadImageToCanvas(fileOrCanvas);
+    const { wCanvas, binInv } = warpCanonical(srcCanvas);
+    const { stripDataUrl, ocrJpegB64 } = buildStripAndOcrImages(wCanvas);
+
+    const thresh = Number(CFG.fillThreshold || 0.48);
+    const ctx = wCanvas.getContext("2d");
+    const drawCircle = (x, y, r, color, lw = 4) => {
+      ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.stroke();
+    };
+
+    // 1. Read 9-Digit SATS Number
+    let sats = "";
+    for (let col = 0; col < SATS_DIGITS; col++) {
+      const fills = [];
+      for (let d = 0; d < 10; d++) {
+        const [wx, wy] = pageToWarped(getSatsCenter(col, d));
+        fills.push([measureBubbleFill(binInv, wx, wy), d, wx, wy]);
+      }
+      fills.sort((a, b) => b[0] - a[0]);
+      if (fills[0][0] >= thresh && (fills[0][0] - fills[1][0]) >= 0.12) {
+        sats += String(fills[0][1]);
+        drawCircle(fills[0][2], fills[0][3], BUBBLE_R, "#00b400", 4);
+      } else {
+        sats += "?";
+        drawCircle(fills[0][2], fills[0][3], BUBBLE_R, "#ff8c00", 4);
+      }
+    }
+
+    // 2. Read Question Paper Version (1-5)
+    const vFills = VER_OPTIONS.map((vn, idx) => {
+      const [wx, wy] = pageToWarped(getVerCenter(idx));
+      return [measureBubbleFill(binInv, wx, wy), String(vn), wx, wy];
+    }).sort((a, b) => b[0] - a[0]);
+    let version = "1";
+    if (vFills[0][0] >= thresh && (vFills[0][0] - vFills[1][0]) >= 0.12) {
+      version = vFills[0][1];
+      drawCircle(vFills[0][2], vFills[0][3], BUBBLE_R, "#00b400", 5);
+    } else {
+      drawCircle(vFills[0][2], vFills[0][3], BUBBLE_R, "#dc2626", 5);
+    }
+
+    // 3. Read & Annotate all 60 Questions
+    const vKey = activeKeys()[version] || DEFAULT_ANSWER_KEYS["1"];
+    const responses = {};
+    for (let q = 1; q <= Q_TOTAL; q++) {
+      const optFills = Q_OPTIONS.map((ch, oi) => {
+        const [wx, wy] = pageToWarped(getQCenter(q, oi));
+        return [measureBubbleFill(binInv, wx, wy), ch, wx, wy];
+      });
+      const marked = optFills.filter(o => o[0] >= thresh);
+      const corr = String(vKey[String(q)] || "B").toUpperCase();
+      if (marked.length === 0) {
+        responses[`Q${q}`] = "UNATTEMPTED";
+        const co = optFills.find(o => o[1] === corr);
+        if (co) drawCircle(co[2], co[3], BUBBLE_R, "#eab308", 4);
+      } else if (marked.length > 1) {
+        responses[`Q${q}`] = "MULTIPLE";
+        marked.forEach(m => drawCircle(m[2], m[3], BUBBLE_R, "#f97316", 4));
+      } else {
+        const ans = marked[0][1];
+        responses[`Q${q}`] = ans;
+        if (ans === corr) {
+          drawCircle(marked[0][2], marked[0][3], BUBBLE_R, "#16a34a", 5);
+        } else {
+          drawCircle(marked[0][2], marked[0][3], BUBBLE_R, "#dc2626", 5);
+          const co = optFills.find(o => o[1] === corr);
+          if (co) drawCircle(co[2], co[3], BUBBLE_R - 4, "#2563eb", 3);
+        }
+      }
+    }
+
+    const graded = gradeResponses(responses, version);
+
+    // Draw top summary banner on annotated sheet & compress for storage
+    ctx.fillStyle = "#122858";
+    ctx.fillRect(20, 15, WARP_W - 40, 78);
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 34px Arial,sans-serif";
+    ctx.fillText(
+      `SATS: ${sats} | Ver: ${version} | Score: ${graded.Total_Marks}/60 (${graded.Percentage}%) | P:${graded.Physics} C:${graded.Chemistry} M:${graded.Mathematics} B:${graded.Biology} MA:${graded.Mental_Ability}`,
+      42, 42
+    );
+    const annC = document.createElement("canvas");
+    const aScale = 960 / WARP_W;
+    annC.width = 960; annC.height = Math.round(WARP_H * aScale);
+    annC.getContext("2d").drawImage(wCanvas, 0, 0, annC.width, annC.height);
+    const annotatedDataUrl = annC.toDataURL("image/jpeg", 0.80);
+
+    return {
+      SATS_Number: sats,
+      Paper_Version: version,
+      Responses: responses,
+      ...graded,
+      stripDataUrl,
+      annotatedDataUrl,
+      ocrJpegB64,
+      Source_File: fileName,
+      Scanned_At: new Date().toLocaleString("en-IN", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", hour12: true })
+    };
+  }
+
+  /* =========================================================================
+     5. BACKGROUND GEMINI HANDWRITING OCR (NON-BLOCKING + THROTTLED)
+     ========================================================================= */
+  let lastGeminiTs = 0;
+  async function waitGeminiSlot() {
+    const rpm = Math.max(1, Math.min(120, Number(CFG.geminiRpm || 15)));
+    const gapMs = Math.ceil(60000 / rpm);
+    const now = Date.now();
+    const nextSlot = Math.max(now, lastGeminiTs + gapMs);
+    lastGeminiTs = nextSlot;
+    const wait = nextSlot - now;
+    if (wait > 0) await new Promise(r => setTimeout(r, wait));
+  }
+
+  function normDate(txt) {
+    const nums = String(txt || "").match(/\d+/g) || [];
+    let d, m, y;
+    if (nums.length >= 3) [d, m, y] = nums;
+    else if (nums.length === 2) [d, m, y] = [nums[0], nums[1], "2027"];
+    else return "";
+    if (y.length === 2) y = "20" + y;
+    const di = +d, mi = +m, yi = +y;
+    if (di < 1 || di > 31 || mi < 1 || mi > 12 || yi < 2000 || yi > 2100) return "";
+    return `${String(di).padStart(2, "0")}/${String(mi).padStart(2, "0")}/${yi}`;
+  }
+  function normContact(txt) {
+    let d = String(txt || "").replace(/\D/g, "");
+    if (d.length === 12 && d.startsWith("91")) d = d.slice(2);
+    else if (d.length === 11 && d.startsWith("0")) d = d.slice(1);
+    return d;
+  }
+  function cleanName(txt) {
+    return String(txt || "").toUpperCase().replace(/[^A-Z .'-]/g, " ").replace(/\s+/g, " ").trim();
+  }
+  function snapSchool(txt) {
+    const list = (CFG.schoolsText || "").split(/\r?\n/).map(s => s.trim().toUpperCase()).filter(Boolean);
+    if (!txt || !list.length) return txt;
+    const up = txt.toUpperCase();
+    for (const s of list) if (s === up || s.includes(up) || up.includes(s)) return s;
+    return up;
+  }
+
+  async function callGeminiOcr(ocrJpegB64) {
+    const key = (CFG.geminiKey || "").trim();
+    const model = (CFG.geminiModel || "gemini-3.5-flash").trim();
+    if (!CFG.ocrEnabled) return { details: {}, status: "OCR OFF" };
+    if (!key) return { details: {}, status: "NO GEMINI KEY — Type in Review or set API Key in Settings" };
+
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`;
+    const body = JSON.stringify({
+      contents: [{ parts: [
+        { text: GEMINI_PROMPT },
+        { inline_data: { mime_type: "image/jpeg", data: ocrJpegB64 } }
+      ]}],
+      generationConfig: { temperature: 0, responseMimeType: "application/json" }
+    });
+
+    for (let attempt = 0; attempt < 3; attempt++) {
+      await waitGeminiSlot();
+      try {
+        const resp = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-goog-api-key": key },
+          body
+        });
+        const j = await resp.json().catch(() => ({}));
+        if (resp.status === 429) {
+          const msg = (j.error && j.error.message) || "Rate limited";
+          if (/daily|per[\s_-]?day/i.test(msg)) return { details: {}, status: "REVIEW — Gemini daily quota reached" };
+          const m = msg.match(/retry in ([\d.]+)\s*s/i);
+          const waitSec = m ? Math.min(60, parseFloat(m[1]) + 1) : 15;
+          await new Promise(r => setTimeout(r, waitSec * 1000));
+          continue;
+        }
+        if (!resp.ok) {
+          return { details: {}, status: `REVIEW — Gemini HTTP ${resp.status}: ${(j.error && j.error.message) || resp.statusText}` };
+        }
+        const parts = (((j.candidates || [{}])[0].content || {}).parts) || [];
+        let txt = parts.filter(p => !p.thought).map(p => p.text || "").join("").trim();
+        txt = txt.replace(/```(?:json)?/gi, "").replace(/```/g, "").trim();
+        const parsed = JSON.parse(txt);
+        const details = {
+          Student_Name: cleanName(parsed.student_name),
+          Father_Name: cleanName(parsed.father_name),
+          School_Name: snapSchool(cleanName(parsed.school_name)),
+          Exam_Date: normDate(parsed.exam_date),
+          Contact_No: normContact(parsed.contact_no)
+        };
+        const missing = Object.entries(details).filter(([, v]) => !v).map(([k]) => k.replace("_", " "));
+        if (details.Contact_No && details.Contact_No.length !== 10) missing.push("Contact digits");
+        return { details, status: missing.length ? "REVIEW — Check: " + missing.join(", ") : "OK (Gemini)" };
+      } catch (err) {
+        if (attempt === 2) return { details: {}, status: "REVIEW — OCR error: " + (err.message || err) };
+        await new Promise(r => setTimeout(r, 2500));
+      }
+    }
+    return { details: {}, status: "REVIEW — OCR skipped" };
+  }
+
+  /* =========================================================================
+     6. DUAL ASYNC BACKGROUND WORKERS (READER + GOOGLE SHEETS UPLOADER)
+     ========================================================================= */
+  let activeReaders = 0;
+  let currentReadingFile = "";
+  let uploaderRunning = false;
+
+  async function kickReaderWorkers() {
+    const maxConc = Math.max(1, Math.min(3, Number(CFG.concurrency || 2)));
+    while (activeReaders < maxConc) {
+      const next = RECORDS.find(r => r.status === "queued_read");
+      if (!next) break;
+      next.status = "reading";
+      activeReaders++;
+      currentReadingFile = next.Source_File;
+      await dbPut(next);
+      renderAll();
+      processOneRead(next).finally(() => {
+        activeReaders--;
+        if (activeReaders === 0) currentReadingFile = "";
+        renderAll();
+        kickReaderWorkers();
+      });
+    }
+  }
+
+  async function processOneRead(rec) {
+    try {
+      const fileObj = FILE_CACHE.get(rec.id);
+      if (!fileObj) throw new Error("Original image missing from session memory — please re-upload.");
+      // Phase A: Fast OMR bubble reading
+      const scanned = await scanOmrLocal(fileObj, rec.Source_File);
+      Object.assign(rec, scanned);
+      await dbPut(rec);
+      renderAll();
+
+      // Phase B: Background Gemini OCR (reads name, father, school, date, contact)
+      const { details, status } = await callGeminiOcr(scanned.ocrJpegB64);
+      rec.Student_Name = details.Student_Name || "";
+      rec.Father_Name = details.Father_Name || "";
+      rec.School_Name = details.School_Name || "";
+      rec.Exam_Date = details.Exam_Date || "";
+      rec.Contact_No = details.Contact_No || "";
+      rec.OCR_Status = status;
+      delete rec.ocrJpegB64; // free IndexedDB space
+      FILE_CACHE.delete(rec.id);
+      rec.status = "ready_review";
+      await dbPut(rec);
+    } catch (err) {
+      rec.status = "read_error";
+      rec.errorMsg = err.message || String(err);
+      await dbPut(rec);
+    }
+  }
+
+  async function kickUploadWorker() {
+    if (uploaderRunning) return;
+    uploaderRunning = true;
+    try {
+      while (true) {
+        const next = RECORDS.find(r => r.status === "queued_upload");
+        if (!next) break;
+        next.status = "uploading";
+        await dbPut(next);
+        renderAll();
+
+        const url = (CFG.appsScriptUrl || "").trim();
+        if (!url || !url.startsWith("http")) {
+          next.status = "upload_error";
+          next.errorMsg = "Apps Script URL not set in Settings.";
+          await dbPut(next);
+          renderAll();
+          continue;
+        }
+
+        const payload = {
+          action: "uploadOmrResults",
+          exam: "PGTSE-2027",
+          results: [{
+            satsNumber: next.SATS_Number,
+            studentName: next.Student_Name || "",
+            fatherName: next.Father_Name || "",
+            schoolName: next.School_Name || "",
+            examDate: next.Exam_Date || "",
+            contactNo: next.Contact_No || "",
+            ocrStatus: next.OCR_Status || "VERIFIED",
+            paperVersion: String(next.Paper_Version || "1"),
+            physics: Number(next.Physics || 0),
+            chemistry: Number(next.Chemistry || 0),
+            mathematics: Number(next.Mathematics || 0),
+            biology: Number(next.Biology || 0),
+            mentalAbility: Number(next.Mental_Ability || 0),
+            totalMarks: Number(next.Total_Marks || 0),
+            maxMarks: Number(next.Max_Marks || 60),
+            percentage: Number(next.Percentage || 0),
+            correctCount: Number(next.Correct_Count || 0),
+            wrongCount: Number(next.Wrong_Count || 0),
+            unattemptedCount: Number(next.Unattempted_Count || 0),
+            scannedAt: next.Scanned_At || ""
+          }]
+        };
+
+        let uploadedOk = false, lastErr = "";
+        for (let attempt = 0; attempt < 3; attempt++) {
+          try {
+            const resp = await fetch(url, {
+              method: "POST",
+              headers: { "Content-Type": "text/plain;charset=utf-8" },
+              body: JSON.stringify(payload)
+            });
+            const bodyTxt = await resp.text();
+            let j = {};
+            try { j = JSON.parse(bodyTxt); } catch { j = { status: resp.ok ? "success" : "error", raw: bodyTxt.slice(0, 160) }; }
+            if (resp.ok && String(j.status || "").toLowerCase() !== "error") {
+              uploadedOk = true;
+              break;
+            }
+            lastErr = j.message || j.raw || `HTTP ${resp.status}`;
+          } catch (e) {
+            lastErr = e.message || String(e);
+          }
+          await new Promise(r => setTimeout(r, 2000));
+        }
+
+        if (uploadedOk) {
+          next.status = "uploaded";
+          next.errorMsg = "";
+          next.uploadedAt = new Date().toLocaleTimeString("en-IN");
+        } else {
+          next.status = "upload_error";
+          next.errorMsg = lastErr;
+        }
+        await dbPut(next);
+        renderAll();
+      }
+    } finally {
+      uploaderRunning = false;
+      renderAll();
+    }
+  }
+
+  /* =========================================================================
+     7. UI RENDERING, CORNER STATUS WIDGET & PARENT POSTMESSAGE SYNC
+     ========================================================================= */
+  function renderCfgBanner() {
+    const ocrTxt = !CFG.ocrEnabled ? "OFF" : (CFG.geminiKey ? `Gemini (${CFG.geminiModel}, ${CFG.concurrency}x)` : "NO API KEY (Set in Settings)");
+    $("#cfgSummary").innerHTML =
+      `<b>Sheet Upload:</b> ${CFG.appsScriptUrl ? "✅ Ready" : "⚠️ Not Set"} &nbsp;|&nbsp; ` +
+      `<b>Handwriting OCR:</b> ${esc(ocrTxt)} &nbsp;|&nbsp; ` +
+      `<b>Answer Key:</b> ${CFG.customKeys ? "Custom JSON" : "Built-in Official V1–V5"}`;
+  }
+
+  function renderCornerAndParent() {
+    const total = RECORDS.length;
+    const readingCnt = RECORDS.filter(r => r.status === "queued_read" || r.status === "reading").length;
+    const readErrCnt = RECORDS.filter(r => r.status === "read_error").length;
+    const readDone = total - readingCnt - readErrCnt;
+    const readyRev = RECORDS.filter(r => r.status === "ready_review").length;
+    const upQueued = RECORDS.filter(r => r.status === "queued_upload" || r.status === "uploading").length;
+    const upDone = RECORDS.filter(r => r.status === "uploaded").length;
+    const upErr = RECORDS.filter(r => r.status === "upload_error").length;
+    const upTotal = upQueued + upDone + upErr;
+
+    $("#kTotal").textContent = total;
+    $("#kReading").textContent = readingCnt;
+    $("#kReview").textContent = readyRev;
+    $("#kUploaded").textContent = upDone;
+    $("#kFailed").textContent = readErrCnt + upErr;
+    $("#revNextCnt").textContent = readyRev;
+
+    const rPct = total ? Math.round((readDone / total) * 100) : 0;
+    $("#csReadTxt").textContent = readingCnt > 0 ? `Reading (${readDone}/${total})` : (total ? `Done (${readDone}/${total})` : "Idle (0/0)");
+    $("#csReadBar").style.width = rPct + "%";
+    $("#csReadSub").textContent = currentReadingFile ? `Reading: ${currentReadingFile}` : (readingCnt > 0 ? `${readingCnt} queued…` : (total ? "All uploaded OMRs read" : "Waiting for OMR images…"));
+
+    $("#csRevTxt").textContent = `${readyRev} ready to review`;
+
+    const uPct = upTotal ? Math.round((upDone / upTotal) * 100) : 0;
+    $("#csUpTxt").textContent = upQueued > 0 ? `Uploading (${upDone}/${upTotal})` : (upTotal ? `${upDone}/${upTotal} uploaded` : "Idle (0/0)");
+    $("#csUpBar").style.width = uPct + "%";
+    $("#csUpSub").textContent = upErr > 0 ? `⚠️ ${upErr} failed — click Retry Failed Uploads` : (upQueued > 0 ? `Uploading ${upQueued} confirmed sheet(s) to Google Sheets…` : (upDone ? `✅ ${upDone} sheet(s) synced to Google Sheets` : "Click OK in Review Folder to upload"));
+
+    // Broadcast live status to parent College Login window
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({
+        type: "pgtse-omr-status",
+        total, readingCnt, readDone, readyRev, upQueued, upDone, upErr,
+        currentReadingFile
+      }, "*");
+    }
+  }
+
+  function statusBadge(r) {
+    if (r.status === "queued_read") return '<span class="badge bg-wait">⏳ Queued to Read</span>';
+    if (r.status === "reading") return '<span class="badge bg-read">🔄 Reading OMR &amp; OCR…</span>';
+    if (r.status === "ready_review") return '<span class="badge bg-rev">🟡 Ready for Review</span>';
+    if (r.status === "queued_upload") return '<span class="badge bg-upq">☁️ Queued Upload</span>';
+    if (r.status === "uploading") return '<span class="badge bg-read">⏫ Uploading to Sheets…</span>';
+    if (r.status === "uploaded") return '<span class="badge bg-done">✅ Uploaded to Sheets</span>';
+    if (r.status === "upload_error") return `<span class="badge bg-err" title="${esc(r.errorMsg)}">❌ Upload Error</span>`;
+    return `<span class="badge bg-err" title="${esc(r.errorMsg)}">❌ Read Error</span>`;
+  }
+
+  function renderTable() {
+    const q = ($("#qSearch").value || "").trim().toLowerCase();
+    const list = RECORDS.filter(r => {
+      if (FILTER === "reading" && r.status !== "queued_read" && r.status !== "reading") return false;
+      if (FILTER === "ready_review" && r.status !== "ready_review") return false;
+      if (FILTER === "uploading" && r.status !== "queued_upload" && r.status !== "uploading") return false;
+      if (FILTER === "uploaded" && r.status !== "uploaded") return false;
+      if (FILTER === "error" && r.status !== "read_error" && r.status !== "upload_error") return false;
+      if (q) {
+        const hay = [r.Source_File, r.SATS_Number, r.Student_Name, r.Father_Name, r.School_Name, r.Contact_No].join(" ").toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+
+    const tb = $("#queueTbody");
+    if (!list.length) {
+      tb.innerHTML = `<tr><td colspan="11" class="c" style="padding:26px;color:var(--mut)">${RECORDS.length ? "No sheets match this filter." : "No OMR images uploaded yet. Click <b>Select Multiple OMR Images</b> above to start background reading."}</td></tr>`;
+      return;
+    }
+
+    tb.innerHTML = list.map((r, i) => `
+      <tr>
+        <td class="c">${i + 1}</td>
+        <td style="max-width:170px;word-break:break-word"><b>${esc(r.Source_File)}</b></td>
+        <td><b>${esc(r.SATS_Number || "—")}</b></td>
+        <td class="c">${r.Paper_Version ? "V" + esc(r.Paper_Version) : "—"}</td>
+        <td><b>${esc(r.Student_Name || "—")}</b></td>
+        <td>${esc(r.Father_Name || "—")}</td>
+        <td>${esc(r.School_Name || "—")}</td>
+        <td><small>${esc(r.Exam_Date || "—")}<br>${esc(r.Contact_No || "—")}</small></td>
+        <td class="c">${r.Total_Marks !== undefined ? `<b style="color:var(--maroon)">${r.Total_Marks}/60</b><br><small>${r.Percentage}%</small>` : "—"}</td>
+        <td>${statusBadge(r)}${r.OCR_Status ? `<br><small style="color:var(--mut)">${esc(r.OCR_Status).slice(0, 48)}</small>` : ""}</td>
+        <td class="c" style="white-space:nowrap">
+          ${["ready_review", "uploaded", "upload_error", "queued_upload"].includes(r.status) ? `<button type="button" class="btn b-navy sm" data-rev="${r.id}">✏️ Review</button>` : ""}
+          ${r.status === "upload_error" ? `<button type="button" class="btn b-green sm" data-up="${r.id}">☁️ Retry</button>` : ""}
+          <button type="button" class="btn b-red-out sm" data-del="${r.id}" title="Remove">🗑️</button>
+        </td>
+      </tr>
+    `).join("");
+  }
+
+  function renderAll() {
+    renderCornerAndParent();
+    renderTable();
+  }
+
+  /* =========================================================================
+     8. OPERATOR REVIEW & EDIT MODAL
+     ========================================================================= */
+  function openReviewModal(id) {
+    const rec = RECORDS.find(r => r.id === id);
+    if (!rec) return;
+    ACTIVE_REVIEW_ID = id;
+    const readyList = RECORDS.filter(r => r.status === "ready_review");
+    const pos = readyList.findIndex(r => r.id === id);
+    $("#revTitle").textContent = `Review OMR ${pos >= 0 ? `(${pos + 1} of ${readyList.length} pending)` : ""} — ${rec.Source_File}`;
+    $("#revStripImg").src = rec.stripDataUrl || "";
+    $("#revFullImg").src = rec.annotatedDataUrl || "";
+    $("#revFullImg").classList.remove("zoomed");
+
+    $("#eSats").value = rec.SATS_Number || "";
+    $("#eVer").value = String(rec.Paper_Version || "1");
+    $("#eName").value = rec.Student_Name || "";
+    $("#eFather").value = rec.Father_Name || "";
+    $("#eSchool").value = rec.School_Name || "";
+    $("#eDate").value = rec.Exam_Date || "";
+    $("#eContact").value = rec.Contact_No || "";
+    $("#eOcrNote").textContent = (rec.SATS_Number && rec.SATS_Number.includes("?") ? "⚠️ SATS contains '?' — verify 9 digits!  |  " : "") + "OCR: " + (rec.OCR_Status || "—");
+
+    // Build 4 columns x 15 questions editable answer grid
+    const grid = $("#eAnsGrid");
+    grid.innerHTML = "";
+    for (let col = 0; col < 4; col++) {
+      const colDiv = document.createElement("div");
+      colDiv.className = "ans-col";
+      for (let r = 0; r < 15; r++) {
+        const q = col * 15 + r + 1;
+        const raw = (rec.Responses && rec.Responses[`Q${q}`]) || "UNATTEMPTED";
+        const val = Q_OPTIONS.includes(raw) ? raw : (raw === "MULTIPLE" ? "M" : "");
+        const cell = document.createElement("div");
+        cell.className = "ans-cell";
+        cell.innerHTML = `<span>${q}</span><input maxlength="1" data-q="${q}" value="${val}">`;
+        colDiv.appendChild(cell);
+      }
+      grid.appendChild(colDiv);
+    }
+
+    const updateLiveScore = () => {
+      const ver = $("#eVer").value;
+      const vKey = activeKeys()[ver] || DEFAULT_ANSWER_KEYS["1"];
+      const resp = {};
+      grid.querySelectorAll("input[data-q]").forEach(inp => {
+        const q = inp.dataset.q;
+        let v = inp.value.trim().toUpperCase().slice(0, 1);
+        if (v !== inp.value) inp.value = v;
+        resp[`Q${q}`] = Q_OPTIONS.includes(v) ? v : (v === "M" ? "MULTIPLE" : "UNATTEMPTED");
+        const corr = String(vKey[q] || "B").toUpperCase();
+        inp.className = Q_OPTIONS.includes(v) ? (v === corr ? "ok" : "bad") : "blk";
+      });
+      const g = gradeResponses(resp, ver);
+      $("#eScoreBar").textContent =
+        `Score: ${g.Total_Marks}/60 (${g.Percentage}%)  |  Ver ${ver}  |  P:${g.Physics}  C:${g.Chemistry}  M:${g.Mathematics}  B:${g.Biology}  MA:${g.Mental_Ability}  |  Wrong:${g.Wrong_Count}  Blank/Multi:${g.Unattempted_Count}`;
+      return resp;
+    };
+
+    grid.oninput = updateLiveScore;
+    $("#eVer").onchange = updateLiveScore;
+    updateLiveScore();
+    $("#reviewModal").classList.add("open");
+  }
+
+  async function saveReviewEdits(andUpload) {
+    const rec = RECORDS.find(r => r.id === ACTIVE_REVIEW_ID);
+    if (!rec) return;
+    const sats = $("#eSats").value.trim().replace(/\s+/g, "");
+    const ver = $("#eVer").value.trim();
+    const dt = $("#eDate").value.trim();
+    const contact = $("#eContact").value.trim().replace(/[\s-]/g, "");
+
+    if (andUpload) {
+      if (!/^\d{9}$/.test(sats)) {
+        alert("SATS Number must be exactly 9 digits before uploading to Sheets.");
+        $("#eSats").focus();
+        return;
+      }
+      if (dt && !/^\d{2}\/\d{2}\/\d{4}$/.test(dt)) {
+        alert("Exam Date must be DD/MM/YYYY (or leave empty).");
+        $("#eDate").focus();
+        return;
+      }
+    }
+
+    const resp = {};
+    $("#eAnsGrid").querySelectorAll("input[data-q]").forEach(inp => {
+      const v = inp.value.trim().toUpperCase();
+      resp[`Q${inp.dataset.q}`] = Q_OPTIONS.includes(v) ? v : (v === "M" ? "MULTIPLE" : "UNATTEMPTED");
+    });
+
+    const changed = sats !== rec.SATS_Number || ver !== String(rec.Paper_Version) ||
+      $("#eName").value.trim() !== (rec.Student_Name || "") ||
+      $("#eFather").value.trim() !== (rec.Father_Name || "") ||
+      $("#eSchool").value.trim() !== (rec.School_Name || "") ||
+      dt !== (rec.Exam_Date || "") || contact !== (rec.Contact_No || "");
+
+    Object.assign(rec, gradeResponses(resp, ver), {
+      SATS_Number: sats,
+      Paper_Version: ver,
+      Student_Name: $("#eName").value.trim().toUpperCase(),
+      Father_Name: $("#eFather").value.trim().toUpperCase(),
+      School_Name: $("#eSchool").value.trim().toUpperCase(),
+      Exam_Date: dt,
+      Contact_No: contact,
+      Responses: resp,
+      OCR_Status: andUpload ? (changed ? "VERIFIED (corrected)" : "VERIFIED") : rec.OCR_Status
+    });
+
+    if (andUpload) {
+      rec.status = "queued_upload";
+      rec.errorMsg = "";
+    }
+    await dbPut(rec);
+    renderAll();
+
+    if (andUpload) {
+      kickUploadWorker();
+      // Auto-advance to the next sheet ready in Review Folder!
+      const nextReady = RECORDS.find(r => r.status === "ready_review");
+      if (nextReady) openReviewModal(nextReady.id);
+      else $("#reviewModal").classList.remove("open");
+    } else {
+      $("#reviewModal").classList.remove("open");
+    }
+  }
+
+  /* =========================================================================
+     9. BULK FILE QUEUING, EXPORT, PRINTABLE OMR & EVENT HANDLERS
+     ========================================================================= */
+  async function enqueueFiles(fileList) {
+    const imgs = [...fileList].filter(f => f.type.startsWith("image/") && !f.name.toLowerCase().startsWith("graded_"));
+    if (!imgs.length) return;
+    for (const f of imgs) {
+      const id = `omr_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+      const rec = {
+        id,
+        Source_File: f.name,
+        status: "queued_read",
+        SATS_Number: "",
+        Student_Name: "", Father_Name: "", School_Name: "", Exam_Date: "", Contact_No: "",
+        OCR_Status: "Queued…",
+        createdAt: Date.now()
+      };
+      FILE_CACHE.set(id, f);
+      RECORDS.unshift(rec);
+      await dbPut(rec);
+    }
+    renderAll();
+    kickReaderWorkers();
+  }
+
+  function exportRows() {
+    return RECORDS.filter(r => r.Total_Marks !== undefined).map(r => ({
+      "SATS Number": r.SATS_Number,
+      "Student Name": r.Student_Name || "",
+      "Father Name": r.Father_Name || "",
+      "School Name": r.School_Name || "",
+      "Exam Date": r.Exam_Date || "",
+      "Contact No": r.Contact_No || "",
+      "OCR Status": r.OCR_Status || "",
+      "Question Paper Version": r.Paper_Version,
+      "Physics (10)": r.Physics,
+      "Chemistry (10)": r.Chemistry,
+      "Mathematics (20)": r.Mathematics,
+      "Biology (10)": r.Biology,
+      "Mental Ability (10)": r.Mental_Ability,
+      "Total Marks (60)": r.Total_Marks,
+      "Percentage (%)": r.Percentage,
+      "Correct": r.Correct_Count,
+      "Wrong": r.Wrong_Count,
+      "Unattempted": r.Unattempted_Count,
+      "Scanned Date & Time": r.Scanned_At,
+      "Upload Status": r.status,
+      "OMR Image File": r.Source_File
+    }));
+  }
+
+  // Event bindings
+  const dz = $("#dropzone");
+  $("#btnPickFiles").onclick = e => { e.stopPropagation(); $("#fileInput").click(); };
+  $("#btnPickFolder").onclick = e => { e.stopPropagation(); $("#folderInput").click(); };
+  dz.onclick = e => { if (e.target.tagName !== "BUTTON") $("#fileInput").click(); };
+  dz.ondragover = e => { e.preventDefault(); dz.classList.add("drag"); };
+  dz.ondragleave = () => dz.classList.remove("drag");
+  dz.ondrop = e => { e.preventDefault(); dz.classList.remove("drag"); enqueueFiles(e.dataTransfer.files); };
+  $("#fileInput").onchange = e => { enqueueFiles(e.target.files); e.target.value = ""; };
+  $("#folderInput").onchange = e => { enqueueFiles(e.target.files); e.target.value = ""; };
+
+  $("#btnSelfTest").onclick = async e => {
+    e.stopPropagation();
+    const c = await renderOmrCanvas({ sats: "291045672", version: 2, studentName: "RAHUL PATIL", fatherName: "SURESH PATIL", schoolName: "GOVT HIGH SCHOOL GURUMATKAL", examDate: "24/01/2027", contactNo: "9845012345" });
+    c.toBlob(blob => {
+      const f = new File([blob], "Sample_Filled_OMR_V2_SATS_291045672.png", { type: "image/png" });
+      enqueueFiles([f]);
+    }, "image/png");
+  };
+
+  $("#btnGenPng").onclick = async () => {
+    $("#btnGenPng").disabled = true;
+    try {
+      const c = await renderOmrCanvas();
+      const a = document.createElement("a");
+      a.download = "PGTSE_2027_OMR_Sheet_A4.png";
+      a.href = c.toDataURL("image/png");
+      a.click();
+    } finally { $("#btnGenPng").disabled = false; }
+  };
+
+  $("#btnGenPdf").onclick = async () => {
+    $("#btnGenPdf").disabled = true;
+    try {
+      const c = await renderOmrCanvas();
+      const imgData = c.toDataURL("image/jpeg", 0.95);
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+      pdf.addImage(imgData, "JPEG", 0, 0, 210, 297);
+      pdf.save("PGTSE_2027_OMR_Sheet_A4.pdf");
+    } finally { $("#btnGenPdf").disabled = false; }
+  };
+
+  $("#btnReviewNext").onclick = () => {
+    const next = RECORDS.find(r => r.status === "ready_review");
+    if (!next) return alert("No sheets ready in Review Folder right now.");
+    openReviewModal(next.id);
+  };
+
+  $("#queueTbody").onclick = async e => {
+    const bRev = e.target.closest("button[data-rev]");
+    if (bRev) return openReviewModal(bRev.dataset.rev);
+    const bUp = e.target.closest("button[data-up]");
+    if (bUp) {
+      const rec = RECORDS.find(r => r.id === bUp.dataset.up);
+      if (rec) { rec.status = "queued_upload"; rec.errorMsg = ""; await dbPut(rec); renderAll(); kickUploadWorker(); }
+      return;
+    }
+    const bDel = e.target.closest("button[data-del]");
+    if (bDel) {
+      if (!confirm("Remove this OMR sheet from the Review Folder?")) return;
+      RECORDS = RECORDS.filter(r => r.id !== bDel.dataset.del);
+      await dbDel(bDel.dataset.del);
+      renderAll();
+    }
+  };
+
+  $("#btnRetryUploads").onclick = async () => {
+    const failed = RECORDS.filter(r => r.status === "upload_error");
+    if (!failed.length) return alert("No failed uploads to retry.");
+    for (const r of failed) { r.status = "queued_upload"; r.errorMsg = ""; await dbPut(r); }
+    renderAll();
+    kickUploadWorker();
+  };
+
+  $("#btnClearUploaded").onclick = async () => {
+    const done = RECORDS.filter(r => r.status === "uploaded");
+    if (!done.length) return alert("No uploaded sheets to clear.");
+    if (!confirm(`Clear ${done.length} already-uploaded sheet(s) from this local Review Folder? (They remain safely in Google Sheets.)`)) return;
+    for (const r of done) await dbDel(r.id);
+    RECORDS = RECORDS.filter(r => r.status !== "uploaded");
+    renderAll();
+  };
+
+  $("#btnExportXlsx").onclick = () => {
+    const rows = exportRows();
+    if (!rows.length) return alert("No scanned OMR records to export yet.");
+    const ws = XLSX.utils.json_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "PGTSE_2027_OMR_Results");
+    XLSX.writeFile(wb, "PGTSE_2027_OMR_Results.xlsx");
+  };
+
+  $("#btnExportCsv").onclick = () => {
+    const rows = exportRows();
+    if (!rows.length) return alert("No scanned OMR records to export yet.");
+    const cols = Object.keys(rows[0]);
+    const csv = "\ufeff" + [cols.join(","), ...rows.map(r => cols.map(c => `"${String(r[c] ?? "").replace(/"/g, '""')}"`).join(","))].join("\r\n");
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+    a.download = "PGTSE_2027_OMR_Results.csv";
+    a.click();
+  };
+
+  $("#filterPills").onclick = e => {
+    const b = e.target.closest("button[data-f]");
+    if (!b) return;
+    FILTER = b.dataset.f;
+    $("#filterPills").querySelectorAll("button[data-f]").forEach(x => x.classList.toggle("on", x === b));
+    renderTable();
+  };
+  $("#qSearch").oninput = renderTable;
+
+  $("#csToggle").onclick = () => {
+    const collapsed = $("#csBody").classList.toggle("collapsed");
+    $("#csCaret").textContent = collapsed ? "▸" : "▾";
+  };
+
+  // Review Modal Controls
+  $("#btnCloseRev").onclick = () => $("#reviewModal").classList.remove("open");
+  $("#btnConfirmOk").onclick = () => saveReviewEdits(true);
+  $("#btnSaveDraft").onclick = () => saveReviewEdits(false);
+  $("#btnSkipNext").onclick = () => {
+    const ready = RECORDS.filter(r => r.status === "ready_review");
+    const idx = ready.findIndex(r => r.id === ACTIVE_REVIEW_ID);
+    if (ready.length > 1) openReviewModal(ready[(idx + 1) % ready.length].id);
+    else $("#reviewModal").classList.remove("open");
+  };
+  $("#btnToggleZoom").onclick = () => $("#revFullImg").classList.toggle("zoomed");
+  $("#revFullImg").onclick = () => $("#revFullImg").classList.toggle("zoomed");
+
+  // Settings Modal Controls
+  $("#btnSettings").onclick = () => {
+    $("#sUrl").value = CFG.appsScriptUrl || DEFAULT_APPS_SCRIPT_URL;
+    $("#sOcrOn").checked = Boolean(CFG.ocrEnabled);
+    $("#sKey").value = CFG.geminiKey || "";
+    $("#sModel").value = CFG.geminiModel || "gemini-3.5-flash";
+    $("#sRpm").value = CFG.geminiRpm || 15;
+    $("#sConc").value = String(CFG.concurrency || 2);
+    $("#sThresh").value = CFG.fillThreshold || 0.48;
+    $("#sSchools").value = CFG.schoolsText || "";
+    $("#setTestMsg").textContent = "";
+    $("#settingsModal").classList.add("open");
+  };
+  $("#btnCloseSet").onclick = () => $("#settingsModal").classList.remove("open");
+  $("#sKeyFile").onchange = async e => {
+    const f = e.target.files[0];
+    if (!f) return;
+    try {
+      const j = JSON.parse(await f.text());
+      if (!j["1"]) throw new Error("JSON must have keys '1'..'5'");
+      CFG.customKeys = j;
+      $("#setTestMsg").style.color = "#15803d";
+      $("#setTestMsg").textContent = "✅ Custom 5-Version Answer Key JSON loaded.";
+    } catch (err) {
+      $("#setTestMsg").style.color = "#b91c1c";
+      $("#setTestMsg").textContent = "❌ Invalid JSON: " + err.message;
+    }
+  };
+  $("#btnResetKey").onclick = () => {
+    CFG.customKeys = null;
+    $("#setTestMsg").style.color = "#15803d";
+    $("#setTestMsg").textContent = "✅ Reset to built-in Official PGTSE-2027 V1–V5 Master Key.";
+  };
+  $("#btnSaveSet").onclick = () => {
+    CFG.appsScriptUrl = $("#sUrl").value.trim() || DEFAULT_APPS_SCRIPT_URL;
+    CFG.ocrEnabled = $("#sOcrOn").checked;
+    CFG.geminiKey = $("#sKey").value.trim();
+    CFG.geminiModel = $("#sModel").value.trim() || "gemini-3.5-flash";
+    CFG.geminiRpm = Math.max(1, Math.min(120, Number($("#sRpm").value || 15)));
+    CFG.concurrency = Math.max(1, Math.min(3, Number($("#sConc").value || 2)));
+    CFG.fillThreshold = Math.max(0.25, Math.min(0.75, Number($("#sThresh").value || 0.48)));
+    CFG.schoolsText = $("#sSchools").value;
+    saveSettings();
+    $("#settingsModal").classList.remove("open");
+  };
+  $("#btnTestGemini").onclick = async () => {
+    const key = $("#sKey").value.trim(), model = $("#sModel").value.trim() || "gemini-3.5-flash";
+    if (!key) return alert("Enter a Gemini API Key first.");
+    $("#setTestMsg").style.color = "#1d4ed8";
+    $("#setTestMsg").textContent = "⏳ Testing Gemini API key…";
+    try {
+      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-goog-api-key": key },
+        body: JSON.stringify({ contents: [{ parts: [{ text: "Reply OK" }] }] })
+      });
+      const j = await r.json();
+      if (r.ok) { $("#setTestMsg").style.color = "#15803d"; $("#setTestMsg").textContent = `✅ Gemini API Key works with ${model}!`; }
+      else { $("#setTestMsg").style.color = "#b91c1c"; $("#setTestMsg").textContent = `❌ HTTP ${r.status}: ${(j.error && j.error.message) || r.statusText}`; }
+    } catch (err) {
+      $("#setTestMsg").style.color = "#b91c1c"; $("#setTestMsg").textContent = "❌ " + err.message;
+    }
+  };
+  $("#btnTestSheet").onclick = async () => {
+    const u = $("#sUrl").value.trim();
+    $("#setTestMsg").style.color = "#1d4ed8";
+    $("#setTestMsg").textContent = "⏳ Testing Google Apps Script URL…";
+    try {
+      const sep = u.includes("?") ? "&" : "?";
+      const r = await fetch(`${u}${sep}action=getAllResults&_t=${Date.now()}`);
+      const j = await r.json();
+      if (j && j.status === "success") {
+        $("#setTestMsg").style.color = "#15803d";
+        $("#setTestMsg").textContent = `✅ Connected to Google Sheet! (${(j.results || []).length} existing result rows)`;
+      } else {
+        $("#setTestMsg").style.color = "#b91c1c";
+        $("#setTestMsg").textContent = "⚠️ Unexpected reply from script.";
+      }
+    } catch (err) {
+      $("#setTestMsg").style.color = "#b91c1c"; $("#setTestMsg").textContent = "❌ Cannot reach script: " + err.message;
+    }
+  };
+
+  // Boot: restore any persisted Review Folder records from IndexedDB
+  (async () => {
+    renderCfgBanner();
+    try {
+      const saved = await dbAll();
+      saved.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+      for (const r of saved) {
+        if (r.status === "reading" || r.status === "queued_read") {
+          r.status = "read_error";
+          r.errorMsg = "Interrupted before reading finished — re-upload this image.";
+          await dbPut(r);
+        }
+        if (r.status === "uploading") {
+          r.status = "queued_upload";
+          await dbPut(r);
+        }
+      }
+      RECORDS = saved;
+    } catch {}
+    renderAll();
+    kickUploadWorker();
+  })();
+})();
+</script>
+</body>
+</html>

@@ -227,3 +227,12 @@ a.notif-link:hover{color:var(--maroon);text-decoration:underline}
 .batch-mini .hi b{color:#15803d}
 @media(max-width:960px){.gain-kpis{grid-template-columns:repeat(2,1fr)}.gain-layout{grid-template-columns:1fr}}
 @media(max-width:520px){.gain-kpis{grid-template-columns:1fr}}
+
+
+/* PGTSE-2027 Sub-Tabs (Read OMR / Complete Results) & Floating Corner Background Status */
+.subtabs{display:flex;gap:8px;justify-content:center;margin:-8px 0 18px;flex-wrap:wrap}
+.subtabs button{padding:8px 18px;border:1.5px solid var(--maroon);background:#fff;color:var(--maroon);font:700 14px inherit;border-radius:20px;cursor:pointer;transition:.15s}
+.subtabs button:hover{background:#fdf2f4}
+.subtabs button.on{background:var(--maroon);color:#fff;box-shadow:0 2px 8px rgba(142,27,46,.25)}
+#parentOmrCorner{position:fixed;right:16px;bottom:14px;z-index:9000;background:#0c2047;color:#fff;border:2px solid var(--gold);border-radius:10px;padding:10px 14px;font-size:12.5px;line-height:1.5;box-shadow:0 10px 28px rgba(0,0,0,.35);cursor:pointer;min-width:240px}
+#parentOmrCorner .poc-hdr{font-weight:700;color:var(--gold);margin-bottom:3px;border-bottom:1px solid #1e3a6d;padding-bottom:3px}
