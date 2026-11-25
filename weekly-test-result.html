@@ -147,7 +147,8 @@
 <script>
 (() => {
   // Paste your deployed Weekly_Test_OMR_AppsScript.gs Web App URL in site.js (C.weeklyResult)
-  const getApiUrl = () => (C.weeklyResult || localStorage.getItem("pragathi_weekly_result_api_url") || "").trim();
+  const DEFAULT_WEEKLY_API_URL = "https://script.google.com/macros/s/AKfycbwKcUZlSB6Dry2twvmPiT2gXS7dOcd0J3AoqNxU3arFuYECnQEdHj_OMyDQE5ZXXLscYw/exec";
+  const getApiUrl = () => (C.weeklyResult || localStorage.getItem("pragathi_weekly_result_api_url") || DEFAULT_WEEKLY_API_URL).trim();
   const $ = s => document.querySelector(s);
   const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 

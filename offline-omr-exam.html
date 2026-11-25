@@ -42,10 +42,14 @@ body{margin:0;font:14.5px/1.55 "Lato","Segoe UI",Tahoma,Arial,sans-serif;color:v
 .vtab{border:1.5px solid var(--navy);background:#fff;color:var(--navy);border-radius:6px;padding:5px 14px;font:700 12.5px inherit;cursor:pointer}
 .vtab.on{background:var(--navy);color:#fff}
 .vtab .vcnt{font-weight:600;opacity:.85;margin-left:4px;font-size:11px}
-.key-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px 8px;max-height:240px;overflow-y:auto;background:#fff;border:1px solid var(--line);border-radius:6px;padding:8px}
-.kcell{display:flex;align-items:center;justify-content:space-between;gap:3px;font:700 11.5px Consolas,monospace}
-.kcell span{color:var(--mut);width:26px;text-align:right}
-.kcell input{width:30px;padding:2px 0;text-align:center;border:1px solid #cbd5e1;border-radius:4px;font:700 12px Consolas,monospace;text-transform:uppercase}
+.key-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-height:290px;overflow-y:auto;background:#f8fafc;border:1px solid var(--line);border-radius:6px;padding:8px;align-items:start}
+.omr-col{background:#fff;border:1px solid #cbd5e1;border-radius:6px;overflow:hidden}
+.omr-col-hdr{background:#eef3fb;color:var(--navy);font:700 10.5px/1.2 inherit;text-align:center;padding:5px 4px;border-bottom:1.5px solid #c3cde0;text-transform:uppercase;letter-spacing:.2px;position:sticky;top:0;z-index:1}
+.omr-col-body{padding:4px 6px;display:flex;flex-direction:column;gap:3px}
+.kcell{display:flex;align-items:center;justify-content:space-between;gap:4px;font:700 11.5px Consolas,monospace;padding:1px 2px}
+.kcell.sep5{border-top:1px dashed #cbd5e1;padding-top:4px;margin-top:2px}
+.kcell span{color:var(--mut);width:28px;text-align:right}
+.kcell input{width:32px;padding:2px 0;text-align:center;border:1px solid #cbd5e1;border-radius:4px;font:700 12px Consolas,monospace;text-transform:uppercase}
 .kcell input:focus{outline:none;border-color:var(--navy);background:#e8f0fe}
 .dropzone{border:2.5px dashed #8fa5cc;border-radius:12px;background:#f8fbff;padding:20px 16px;text-align:center;cursor:pointer;transition:.18s}
 .dropzone:hover,.dropzone.drag{border-color:var(--navy);background:#ebf2ff}
@@ -103,10 +107,11 @@ tr:hover td{background:#fff9e6}
 .fgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px 10px}
 .fgrid label{display:block;font-size:11px;font-weight:700;color:var(--navy);text-transform:uppercase;margin-bottom:2px}
 .fgrid input,.fgrid select{width:100%;padding:6px 8px;border:1.5px solid #cbd5e1;border-radius:6px;font:700 13px Consolas,monospace}
-.ans-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px 8px;margin-top:8px;max-height:310px;overflow-y:auto;background:#f8fafc;border:1px solid var(--line);border-radius:6px;padding:8px}
-.ans-cell{display:flex;align-items:center;justify-content:space-between;gap:3px;font:700 11.5px Consolas,monospace}
-.ans-cell span{width:24px;text-align:right;color:var(--navy)}
-.ans-cell input{width:30px;padding:2px 0;text-align:center;border:1.5px solid #cbd5e1;border-radius:4px;font:700 12px Consolas,monospace;text-transform:uppercase}
+.ans-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px;max-height:520px;overflow-y:auto;background:#f1f5f9;border:1px solid var(--line);border-radius:6px;padding:8px;align-items:start}
+.ans-cell{display:flex;align-items:center;justify-content:space-between;gap:4px;font:700 12px Consolas,monospace;padding:1.5px 3px}
+.ans-cell.sep5{border-top:1px dashed #cbd5e1;padding-top:4px;margin-top:2px}
+.ans-cell span{width:28px;text-align:right;color:var(--navy)}
+.ans-cell input{width:34px;padding:2px 0;text-align:center;border:1.5px solid #cbd5e1;border-radius:4px;font:700 12.5px Consolas,monospace;text-transform:uppercase}
 .ans-cell input.ok{background:#dcfce7;border-color:#16a34a;color:#14532d}
 .ans-cell input.bad{background:#fee2e2;border-color:#dc2626;color:#991b1b}
 .ans-cell input.blk{background:#fef9c3;border-color:#ca8a04;color:#854d0e}
@@ -116,8 +121,8 @@ tr:hover td{background:#fff9e6}
 .sgrid .full{grid-column:1/-1}
 .sgrid label{display:block;font-size:12px;font-weight:700;color:var(--navy);margin-bottom:4px}
 .sgrid input,.sgrid select{width:100%;padding:8px 10px;border:1.5px solid #cbd5e1;border-radius:6px;font:600 13px inherit}
-@media(max-width:1024px){.setup-grid,.two-col,.rev-grid{grid-template-columns:1fr 1fr}.rev-grid{grid-template-columns:1fr}.kpi-row{grid-template-columns:repeat(2,1fr)}.key-grid,.ans-grid{grid-template-columns:repeat(4,1fr)}}
-@media(max-width:640px){.setup-grid,.two-col,.fgrid,.sgrid{grid-template-columns:1fr}.key-grid,.ans-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:1024px){.setup-grid,.two-col,.rev-grid{grid-template-columns:1fr 1fr}.rev-grid{grid-template-columns:1fr}.kpi-row{grid-template-columns:repeat(2,1fr)}.key-grid,.ans-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.setup-grid,.two-col,.fgrid,.sgrid{grid-template-columns:1fr}.key-grid,.ans-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -311,6 +316,7 @@ tr:hover td{background:#fff9e6}
     <div class="mhdr">
       <h2 id="revTitle">Review OMR Sheet</h2>
       <div class="grp">
+        <button type="button" class="btn b-gold sm" id="btnFixCorners">📐 Fix 4 Corners &amp; Re-Scan</button>
         <button type="button" class="btn b-out sm" id="btnToggleZoom">🔍 Zoom OMR</button>
         <button type="button" class="btn b-red-out sm" id="btnCloseRev">✕ Close</button>
       </div>
@@ -344,6 +350,29 @@ tr:hover td{background:#fff9e6}
   </div>
 </div>
 
+
+<!-- Manual 4-Corner Calibration Modal (Safety Net for Torn / Cropped / Skewed Photos) -->
+<div class="modal" id="cornerModal">
+  <div class="mbox" style="max-width:940px">
+    <div class="mhdr">
+      <h2>📐 Fix 4 Corners &amp; Re-Scan OMR Sheet</h2>
+      <button type="button" class="btn b-red-out sm" id="btnCloseCorner">✕ Cancel</button>
+    </div>
+    <div class="mbody">
+      <div style="background:#eef4ff;border:1px solid #93c5fd;border-radius:8px;padding:9px 12px;margin-bottom:10px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px">
+        <span id="cornerPrompt" style="font-weight:700;color:var(--navy)">Click the center of the 4 black corner squares in order: <b>1. Top-Left → 2. Top-Right → 3. Bottom-Right → 4. Bottom-Left</b></span>
+        <div class="grp">
+          <button type="button" class="btn b-out sm" id="btnCornerReset">↺ Reset Points</button>
+          <button type="button" class="btn b-green sm" id="btnCornerApply" disabled>✅ Apply &amp; Re-Scan</button>
+        </div>
+      </div>
+      <div style="background:#1e293b;border-radius:8px;padding:8px;text-align:center;max-height:70vh;overflow:auto">
+        <canvas id="cornerCanvas" style="max-width:100%;height:auto;cursor:crosshair;border-radius:4px"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Settings Modal -->
 <div class="modal" id="settingsModal">
   <div class="mbox sbox">
@@ -358,7 +387,7 @@ tr:hover td{background:#fff9e6}
           <input id="sApiUrl" type="url" placeholder="https://script.google.com/macros/s/.../exec">
         </div>
         <div>
-          <label>Bubble Darkness Threshold (Default 0.46)</label>
+          <label>Bubble Darkness Threshold (Default 0.38 · Adaptive Local)</label>
           <input id="sThresh" type="number" step="0.02" min="0.25" max="0.75">
         </div>
         <div>
@@ -385,7 +414,7 @@ tr:hover td{background:#fff9e6}
      1. EXAM PATTERNS, GEOMETRY (300 DPI A4) & EMBEDDED MASTER DB TEMPLATE
      ========================================================================= */
   const MASTER_DB_TEMPLATE_B64 = "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";
-  const DEFAULT_WEEKLY_API_URL = "";
+  const DEFAULT_WEEKLY_API_URL = "https://script.google.com/macros/s/AKfycbwKcUZlSB6Dry2twvmPiT2gXS7dOcd0J3AoqNxU3arFuYECnQEdHj_OMyDQE5ZXXLscYw/exec";
 
   const PATTERNS = {
     NEET: {
@@ -443,14 +472,16 @@ tr:hover td{background:#fff9e6}
   /* =========================================================================
      2. PERSISTENT STATE (SETTINGS, MASTER DB, 4-VERSION KEYS, REVIEW DB)
      ========================================================================= */
-  const SET_KEY = "pragathi_weekly_offline_omr_cfg_v1";
+  const SET_KEY = "pragathi_weekly_offline_omr_cfg_v2";
   const MASTER_KEY = "pragathi_weekly_master_db_v1";
   const KEYS_STORE = "pragathi_weekly_4ver_keys_v1";
 
   let CFG = (() => {
-    const def = { apiUrl: DEFAULT_WEEKLY_API_URL, fillThreshold: 0.46 };
-    try { return { ...def, ...(JSON.parse(localStorage.getItem(SET_KEY) || "{}")) }; }
-    catch { return def; }
+    const def = { apiUrl: DEFAULT_WEEKLY_API_URL, fillThreshold: 0.38 };
+    try {
+      const saved = JSON.parse(localStorage.getItem(SET_KEY) || "{}");
+      return { ...def, ...saved, apiUrl: (saved.apiUrl || "").trim() || DEFAULT_WEEKLY_API_URL };
+    } catch { return def; }
   })();
   let MASTER_DB = (() => {
     try { return JSON.parse(localStorage.getItem(MASTER_KEY) || "[]"); }
@@ -519,11 +550,22 @@ tr:hover td{background:#fff9e6}
     const vMap = ANSWER_KEYS[ACTIVE_KEY_VER] || {};
     const grid = $("#keyGrid");
     grid.innerHTML = "";
-    for (let q = 1; q <= pat.totalQ; q++) {
-      const cell = document.createElement("div");
-      cell.className = "kcell";
-      cell.innerHTML = `<span>${q}</span><input maxlength="1" data-q="${q}" value="${esc(vMap[String(q)] || "")}">`;
-      grid.appendChild(cell);
+    for (let col = 0; col < 4; col++) {
+      const sub = pat.subjects[col] || { name: `Part ${col + 1}`, start: col * pat.rowsPerCol + 1, end: (col + 1) * pat.rowsPerCol };
+      const colEl = document.createElement("div");
+      colEl.className = "omr-col";
+      colEl.innerHTML = `<div class="omr-col-hdr">${esc(sub.name)} (${sub.start}–${sub.end})</div>`;
+      const body = document.createElement("div");
+      body.className = "omr-col-body";
+      for (let r = 0; r < pat.rowsPerCol; r++) {
+        const q = col * pat.rowsPerCol + r + 1;
+        const cell = document.createElement("div");
+        cell.className = "kcell" + (r > 0 && r % 5 === 0 ? " sep5" : "");
+        cell.innerHTML = `<span>${String(q).padStart(2, "0")}</span><input maxlength="1" data-q="${q}" value="${esc(vMap[String(q)] || "")}">`;
+        body.appendChild(cell);
+      }
+      colEl.appendChild(body);
+      grid.appendChild(colEl);
     }
     updateKeyCounts();
   }
@@ -781,11 +823,10 @@ tr:hover td{background:#fff9e6}
       if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lw; ctx.stroke(); }
     };
 
-    // 1. 4 Corner Fiducial Markers (MUST stay solid black for automatic alignment)
+    // 1. 4 Corner Fiducial Markers (Clean solid black squares with pure white quiet zone — zero outer box)
     for (const [cx, cy] of Object.values(FID)) {
-      const x0 = cx - FID_SIZE / 2, y0 = cy - FID_SIZE / 2;
-      rect(x0, y0, x0 + FID_SIZE, y0 + FID_SIZE, BLACK, null);
-      rect(x0 - 12, y0 - 12, x0 + FID_SIZE + 12, y0 + FID_SIZE + 12, null, BLACK, 2);
+      const x0 = cx - (FID_SIZE + 4) / 2, y0 = cy - (FID_SIZE + 4) / 2;
+      rect(x0, y0, x0 + FID_SIZE + 4, y0 + FID_SIZE + 4, BLACK, null);
     }
 
     // 2. Header Block (Pure White Fill, Crisp Black Outlines, Monochrome Logo, 100% Times New Roman)
@@ -1010,7 +1051,8 @@ tr:hover td{background:#fff9e6}
   };
 
   /* =========================================================================
-     6. PERSPECTIVE WARP, BUBBLE READER & GRADING ENGINE (V1..V4 + V1 FALLBACK)
+     6. ROBUST FIDUCIAL DETECTOR, PERSPECTIVE WARP & LOCAL ADAPTIVE BUBBLE READER
+        (Works on already-printed sheets, WhatsApp/phone photos, shadows & blue pen!)
      ========================================================================= */
   function solveHomography(srcPts, dstPts) {
     const A = [], B = [];
@@ -1036,37 +1078,80 @@ tr:hover td{background:#fff9e6}
     return [B[0], B[1], B[2], B[3], B[4], B[5], B[6], B[7], 1];
   }
 
-  function otsuThreshold(gray) {
-    const hist = new Uint32Array(256);
-    for (let i = 0; i < gray.length; i++) hist[gray[i]]++;
-    const total = gray.length;
-    let sum = 0; for (let t = 0; t < 256; t++) sum += t * hist[t];
-    let sumB = 0, wB = 0, varMax = 0, thresh = 140;
-    for (let t = 0; t < 256; t++) {
-      wB += hist[t]; if (!wB) continue;
-      const wF = total - wB; if (!wF) break;
-      sumB += t * hist[t];
-      const v = wB * wF * (sumB / wB - (sum - sumB) / wF) ** 2;
-      if (v > varMax) { varMax = v; thresh = t; }
+  function buildIntegral(gray, w, h) {
+    const W1 = w + 1;
+    const integ = new Float64Array(W1 * (h + 1));
+    for (let y = 0; y < h; y++) {
+      let rowSum = 0;
+      const srcOff = y * w, dstOff = (y + 1) * W1, prevOff = y * W1;
+      for (let x = 0; x < w; x++) {
+        rowSum += gray[srcOff + x];
+        integ[dstOff + x + 1] = integ[prevOff + x + 1] + rowSum;
+      }
     }
-    return thresh;
+    return integ;
+  }
+
+  function boxMean(integ, W1, w, h, x0, y0, x1, y1) {
+    const ax = Math.max(0, x0), ay = Math.max(0, y0), bx = Math.min(w, x1), by = Math.min(h, y1);
+    const area = (bx - ax) * (by - ay);
+    if (area <= 0) return 255;
+    return (integ[by * W1 + bx] - integ[ay * W1 + bx] - integ[by * W1 + ax] + integ[ay * W1 + ax]) / area;
   }
 
   function detectFiducials(srcCanvas) {
     const sw = srcCanvas.width, sh = srcCanvas.height;
-    const scale = Math.min(1, 750 / Math.max(sw, sh));
+    const scale = Math.min(1, 1000 / Math.max(sw, sh));
     const w = Math.max(1, Math.round(sw * scale)), h = Math.max(1, Math.round(sh * scale));
     const tmp = document.createElement("canvas"); tmp.width = w; tmp.height = h;
     const tctx = tmp.getContext("2d"); tctx.drawImage(srcCanvas, 0, 0, w, h);
     const data = tctx.getImageData(0, 0, w, h).data;
-    const gray = new Uint8Array(w * h);
-    for (let i = 0, p = 0; i < gray.length; i++, p += 4) gray[i] = (data[p] * 77 + data[p + 1] * 150 + data[p + 2] * 29) >> 8;
-    const th = otsuThreshold(gray);
-    const bin = new Uint8Array(w * h);
-    for (let i = 0; i < gray.length; i++) bin[i] = gray[i] < th ? 1 : 0;
 
-    const visited = new Uint8Array(w * h), stack = new Int32Array(w * h), cands = [];
-    const minA = w * h * 0.00012, maxA = w * h * 0.006;
+    // Ink-enhanced grayscale (0.45R + 0.45G + 0.10B keeps both black & blue ink dark)
+    const gray = new Uint8Array(w * h);
+    for (let i = 0, p = 0; i < gray.length; i++, p += 4) {
+      gray[i] = Math.round(data[p] * 0.45 + data[p + 1] * 0.45 + data[p + 2] * 0.10);
+    }
+
+    // 1. Local adaptive threshold via integral image (completely immune to shadows & dark desks)
+    const W1 = w + 1;
+    const integ = buildIntegral(gray, w, h);
+    const halfWin = Math.max(15, Math.round(Math.min(w, h) * 0.032));
+    const binRaw = new Uint8Array(w * h);
+    for (let y = 0; y < h; y++) {
+      const y0 = y - halfWin, y1 = y + halfWin + 1, off = y * w;
+      for (let x = 0; x < w; x++) {
+        const g = gray[off + x];
+        if (g < 188) {
+          const lm = boxMean(integ, W1, w, h, x - halfWin, y0, x + halfWin + 1, y1);
+          if (g < lm - 18) binRaw[off + x] = 1;
+        }
+      }
+    }
+
+    // 2. 1-pixel binary erosion vaporizes thin 2px outer fiducial frames, text, and table borders
+    //    while keeping solid 70x70 corner squares crisp & isolated!
+    const bin = new Uint8Array(w * h);
+    for (let y = 1; y < h - 1; y++) {
+      const off = y * w;
+      for (let x = 1; x < w - 1; x++) {
+        const idx = off + x;
+        if (binRaw[idx] && binRaw[idx - 1] && binRaw[idx + 1] &&
+            binRaw[idx - w] && binRaw[idx - w - 1] && binRaw[idx - w + 1] &&
+            binRaw[idx + w] && binRaw[idx + w - 1] && binRaw[idx + w + 1]) {
+          bin[idx] = 1;
+        }
+      }
+    }
+
+    // 3. Connected components -> Quadrant-restricted solid square candidates
+    const visited = new Uint8Array(w * h), stack = new Int32Array(w * h);
+    const minDim = Math.max(6, Math.floor(w * 0.010));
+    const maxDim = Math.max(38, Math.ceil(w * 0.075));
+    const minArea = minDim * minDim * 0.55;
+    const maxArea = maxDim * maxDim * 1.15;
+    const quads = { TL: [], TR: [], BR: [], BL: [] };
+
     for (let idx = 0; idx < bin.length; idx++) {
       if (!bin[idx] || visited[idx]) continue;
       let sp = 0; stack[sp++] = idx; visited[idx] = 1;
@@ -1074,32 +1159,180 @@ tr:hover td{background:#fff9e6}
       while (sp > 0) {
         const cur = stack[--sp], y = (cur / w) | 0, x = cur - y * w;
         cnt++; sx += x; sy += y;
-        if (x < minX) minX = x; if (x > maxX) maxX = x; if (y < minY) minY = y; if (y > maxY) maxY = y;
+        if (x < minX) minX = x; if (x > maxX) maxX = x;
+        if (y < minY) minY = y; if (y > maxY) maxY = y;
         if (x > 0 && bin[cur - 1] && !visited[cur - 1]) { visited[cur - 1] = 1; stack[sp++] = cur - 1; }
         if (x + 1 < w && bin[cur + 1] && !visited[cur + 1]) { visited[cur + 1] = 1; stack[sp++] = cur + 1; }
         if (y > 0 && bin[cur - w] && !visited[cur - w]) { visited[cur - w] = 1; stack[sp++] = cur - w; }
         if (y + 1 < h && bin[cur + w] && !visited[cur + w]) { visited[cur + w] = 1; stack[sp++] = cur + w; }
       }
-      if (cnt > minA && cnt < maxA) {
-        const bw = maxX - minX + 1, bh = maxY - minY + 1, asp = bw / bh, ext = cnt / (bw * bh);
-        if (asp >= 0.65 && asp <= 1.45 && ext >= 0.62) cands.push([sx / cnt / scale, sy / cnt / scale]);
+      if (cnt < minArea || cnt > maxArea) continue;
+      const bw = maxX - minX + 1, bh = maxY - minY + 1;
+      if (bw < minDim || bh < minDim || bw > maxDim || bh > maxDim) continue;
+      const asp = bw / bh, ext = cnt / (bw * bh);
+      if (asp < 0.65 || asp > 1.55 || ext < 0.60) continue;
+
+      const cx = sx / cnt, cy = sy / cnt;
+      // Verify strong contrast between dark square core and surrounding white margin
+      const padOut = Math.round(Math.max(bw, bh) * 1.25);
+      const ry0 = Math.max(0, Math.round(cy - padOut)), ry1 = Math.min(h - 1, Math.round(cy + padOut));
+      const rx0 = Math.max(0, Math.round(cx - padOut)), rx1 = Math.min(w - 1, Math.round(cx + padOut));
+      const vals = [];
+      for (let yy = ry0; yy <= ry1; yy += 2) {
+        const ro = yy * w;
+        for (let xx = rx0; xx <= rx1; xx += 2) vals.push(gray[ro + xx]);
+      }
+      if (vals.length < 16) continue;
+      vals.sort((a, b) => a - b);
+      const ringP80 = vals[Math.floor(vals.length * 0.80)];
+      const coreMean = boxMean(integ, W1, w, h, Math.round(cx - bw * 0.35), Math.round(cy - bh * 0.35), Math.round(cx + bw * 0.35) + 1, Math.round(cy + bh * 0.35) + 1);
+      const contrast = ringP80 - coreMean;
+      if (contrast < 35) continue;
+
+      const cand = {
+        x: cx / scale, y: cy / scale,
+        w: (bw + 2) / scale, h: (bh + 2) / scale,
+        area: cnt, ext, asp, contrast,
+        score: ext * Math.min(asp, 1 / asp) * Math.min(1.5, contrast / 80)
+      };
+      if (cx < w * 0.44 && cy < h * 0.40) quads.TL.push(cand);
+      if (cx > w * 0.56 && cy < h * 0.40) quads.TR.push(cand);
+      if (cx > w * 0.56 && cy > h * 0.60) quads.BR.push(cand);
+      if (cx < w * 0.44 && cy > h * 0.60) quads.BL.push(cand);
+    }
+
+    for (const k of ["TL", "TR", "BR", "BL"]) {
+      quads[k].sort((a, b) => (b.area * b.score) - (a.area * a.score));
+      quads[k] = quads[k].slice(0, 8);
+    }
+
+    // 4. Global Best-Quad Search with strict fiducial-size & geometry verification
+    const NOMINAL_AR = WARP_W / WARP_H; // 0.6805
+    const evalQuad = (tl, tr, br, bl) => {
+      const topW = Math.hypot(tr.x - tl.x, tr.y - tl.y);
+      const botW = Math.hypot(br.x - bl.x, br.y - bl.y);
+      const leftH = Math.hypot(bl.x - tl.x, bl.y - tl.y);
+      const rightH = Math.hypot(br.x - tr.x, br.y - tr.y);
+      if (Math.min(topW, botW) < sw * 0.30 || Math.min(leftH, rightH) < sh * 0.38) return -1e9;
+      const wRatio = Math.min(topW, botW) / Math.max(topW, botW);
+      const hRatio = Math.min(leftH, rightH) / Math.max(leftH, rightH);
+      if (wRatio < 0.78 || hRatio < 0.78) return -1e9;
+      const meanW = 0.5 * (topW + botW), meanH = 0.5 * (leftH + rightH);
+      const ar = meanW / meanH;
+      if (ar < 0.54 || ar > 0.84) return -1e9;
+
+      const pts = [[tl.x, tl.y], [tr.x, tr.y], [br.x, br.y], [bl.x, bl.y]];
+      for (let i = 0; i < 4; i++) {
+        const p0 = pts[(i + 3) % 4], p1 = pts[i], p2 = pts[(i + 1) % 4];
+        const v1x = p0[0] - p1[0], v1y = p0[1] - p1[1], v2x = p2[0] - p1[0], v2y = p2[1] - p1[1];
+        const cosA = (v1x * v2x + v1y * v2y) / (Math.hypot(v1x, v1y) * Math.hypot(v2x, v2y) + 1e-9);
+        if (Math.abs(cosA) > 0.34) return -1e9;
+      }
+
+      // Expected fiducial width = meanW * (70 / 2190). Filled bubbles are ~0.57x -> REJECTED!
+      const expFw = meanW * (70 / 2190);
+      const sizes = [tl, tr, br, bl].map(c => 0.5 * (c.w + c.h));
+      const ratios = sizes.map(s => s / expFw);
+      if (Math.min(...ratios) < 0.68 || Math.max(...ratios) > 1.50) return -1e9;
+      const sizeCons = Math.min(...sizes) / Math.max(...sizes);
+      if (sizeCons < 0.66) return -1e9;
+
+      const sizeMatch = 1 - ratios.reduce((s, r) => s + Math.abs(r - 1), 0) / 4;
+      const arMatch = 1 - Math.abs(ar - NOMINAL_AR) / 0.22;
+      const spanBonus = (meanW / sw) * (meanH / sh);
+      const candQ = (tl.score + tr.score + br.score + bl.score) / 4;
+      return 3.5 * sizeMatch + 2.5 * arMatch + 2.0 * wRatio + 2.0 * hRatio + 2.0 * sizeCons + 3.0 * spanBonus + 1.5 * candQ;
+    };
+
+    let bestQuad = null, bestScore = -1e9, usedMode = "4-corner";
+    for (const tl of quads.TL)
+      for (const tr of quads.TR)
+        for (const br of quads.BR)
+          for (const bl of quads.BL) {
+            const sc = evalQuad(tl, tr, br, bl);
+            if (sc > bestScore) { bestScore = sc; bestQuad = [tl, tr, br, bl]; }
+          }
+
+    // 5. 3-Corner Parallelogram Fallback (if 1 corner was covered by a thumb or clipped)
+    if (!bestQuad) {
+      usedMode = "3-corner-est";
+      const triples = [["TL", "TR", "BR", "BL"], ["TR", "BR", "BL", "TL"], ["BR", "BL", "TL", "TR"], ["BL", "TL", "TR", "BR"]];
+      for (const [a, b, c, miss] of triples) {
+        for (const ca of quads[a].slice(0, 5))
+          for (const cb of quads[b].slice(0, 5))
+            for (const cc of quads[c].slice(0, 5)) {
+              const syn = { x: ca.x + cc.x - cb.x, y: ca.y + cc.y - cb.y, w: (ca.w + cb.w + cc.w) / 3, h: (ca.h + cb.h + cc.h) / 3, score: 0.5 };
+              const m = { [a]: ca, [b]: cb, [c]: cc, [miss]: syn };
+              const sc = evalQuad(m.TL, m.TR, m.BR, m.BL) - 1.5;
+              if (sc > bestScore) { bestScore = sc; bestQuad = [m.TL, m.TR, m.BR, m.BL]; }
+            }
       }
     }
-    const targets = [[0, 0], [sw, 0], [sw, sh], [0, sh]];
-    if (cands.length >= 4) {
-      return targets.map(([tx, ty]) => cands.reduce((a, b) => ((b[0] - tx) ** 2 + (b[1] - ty) ** 2) < ((a[0] - tx) ** 2 + (a[1] - ty) ** 2) ? b : a));
+
+    if (bestQuad) {
+      const pts = bestQuad.map(c => [c.x, c.y]);
+      // 6. Full-resolution sub-pixel centroid refinement on srcCanvas
+      const meanW = 0.5 * (Math.hypot(pts[1][0] - pts[0][0], pts[1][1] - pts[0][1]) + Math.hypot(pts[2][0] - pts[3][0], pts[2][1] - pts[3][1]));
+      const rRef = Math.max(12, Math.round(meanW * (70 / 2190) * 0.65));
+      const sctx = srcCanvas.getContext("2d");
+      const refined = pts.map(([px, py]) => {
+        const ix = Math.round(px), iy = Math.round(py);
+        const x0 = Math.max(0, ix - rRef), y0 = Math.max(0, iy - rRef);
+        const rw = Math.min(sw, ix + rRef + 1) - x0, rh = Math.min(sh, iy + rRef + 1) - y0;
+        if (rw < 10 || rh < 10) return [px, py];
+        const d = sctx.getImageData(x0, y0, rw, rh).data;
+        const rg = new Uint8Array(rw * rh);
+        const sorted = [];
+        for (let i = 0, p = 0; i < rg.length; i++, p += 4) {
+          const v = Math.round(d[p] * 0.45 + d[p + 1] * 0.45 + d[p + 2] * 0.10);
+          rg[i] = v;
+          if ((i & 3) === 0) sorted.push(v);
+        }
+        sorted.sort((a, b) => a - b);
+        const p20 = sorted[Math.floor(sorted.length * 0.20)], p85 = sorted[Math.floor(sorted.length * 0.85)];
+        if (p85 - p20 < 35) return [px, py];
+        const th = p20 + 0.42 * (p85 - p20);
+        // Flood-fill largest solid component closest to center
+        const vis = new Uint8Array(rw * rh), st = new Int32Array(rw * rh);
+        let bestC = null, bestDist = 1e9;
+        for (let i = 0; i < rg.length; i++) {
+          if (rg[i] >= th || vis[i]) continue;
+          let sp = 0; st[sp++] = i; vis[i] = 1;
+          let cnt = 0, csx = 0, csy = 0;
+          while (sp > 0) {
+            const cur = st[--sp], cy = (cur / rw) | 0, cx = cur - cy * rw;
+            cnt++; csx += cx; csy += cy;
+            if (cx > 0 && rg[cur - 1] < th && !vis[cur - 1]) { vis[cur - 1] = 1; st[sp++] = cur - 1; }
+            if (cx + 1 < rw && rg[cur + 1] < th && !vis[cur + 1]) { vis[cur + 1] = 1; st[sp++] = cur + 1; }
+            if (cy > 0 && rg[cur - rw] < th && !vis[cur - rw]) { vis[cur - rw] = 1; st[sp++] = cur - rw; }
+            if (cy + 1 < rh && rg[cur + rw] < th && !vis[cur + rw]) { vis[cur + rw] = 1; st[sp++] = cur + rw; }
+          }
+          if (cnt < rRef * rRef * 0.22) continue;
+          const dist = Math.hypot(csx / cnt - (ix - x0), csy / cnt - (iy - y0));
+          if (dist < bestDist) { bestDist = dist; bestC = [x0 + csx / cnt, y0 + csy / cnt]; }
+        }
+        return (bestC && bestDist < rRef * 0.5) ? bestC : [px, py];
+      });
+      return { pts: refined, mode: usedMode };
     }
+
     const sx = sw / PAGE_W, sy = sh / PAGE_H;
-    return [[FID.TL[0] * sx, FID.TL[1] * sy], [FID.TR[0] * sx, FID.TR[1] * sy], [FID.BR[0] * sx, FID.BR[1] * sy], [FID.BL[0] * sx, FID.BL[1] * sy]];
+    return {
+      pts: [[FID.TL[0] * sx, FID.TL[1] * sy], [FID.TR[0] * sx, FID.TR[1] * sy], [FID.BR[0] * sx, FID.BR[1] * sy], [FID.BL[0] * sx, FID.BL[1] * sy]],
+      mode: "fallback-frame"
+    };
   }
 
-  function warpCanonical(srcCanvas) {
-    const H = solveHomography(detectFiducials(srcCanvas), [[0, 0], [WARP_W - 1, 0], [WARP_W - 1, WARP_H - 1], [0, WARP_H - 1]]);
+  function warpCanonical(srcCanvas, manualCorners = null) {
+    const det = manualCorners ? { pts: manualCorners, mode: "manual" } : detectFiducials(srcCanvas);
+    const H = solveHomography(det.pts, [[0, 0], [WARP_W - 1, 0], [WARP_W - 1, WARP_H - 1], [0, WARP_H - 1]]);
     const sw = srcCanvas.width, sh = srcCanvas.height;
     const sData = new Uint32Array(srcCanvas.getContext("2d").getImageData(0, 0, sw, sh).data.buffer);
     const wCanvas = document.createElement("canvas"); wCanvas.width = WARP_W; wCanvas.height = WARP_H;
     const wctx = wCanvas.getContext("2d"), wImg = wctx.createImageData(WARP_W, WARP_H);
-    const d32 = new Uint32Array(wImg.data.buffer), d8 = wImg.data, gray = new Uint8Array(WARP_W * WARP_H);
+    const d32 = new Uint32Array(wImg.data.buffer), d8 = wImg.data;
+    // Ink-enhanced grayscale for local adaptive bubble scoring (works on black & blue pen under shadows!)
+    const wGray = new Uint8Array(WARP_W * WARP_H);
     const [h0, h1, h2, h3, h4, h5, h6, h7, h8] = H;
     let p = 0;
     for (let y = 0; y < WARP_H; y++) {
@@ -1108,28 +1341,183 @@ tr:hover td{background:#fff9e6}
         const den = h6 * x + wy, sx = ((h0 * x + ny) / den + 0.5) | 0, sy = ((h3 * x + vy) / den + 0.5) | 0;
         d32[p] = (sx >= 0 && sx < sw && sy >= 0 && sy < sh) ? sData[sy * sw + sx] : 0xffffffff;
         const i4 = p << 2;
-        gray[p] = (d8[i4] * 77 + d8[i4 + 1] * 150 + d8[i4 + 2] * 29) >> 8;
+        wGray[p] = Math.round(d8[i4] * 0.45 + d8[i4 + 1] * 0.45 + d8[i4 + 2] * 0.10);
       }
     }
     wctx.putImageData(wImg, 0, 0);
-    const hist = new Uint32Array(256); for (let i = 0; i < gray.length; i += 4) hist[gray[i]]++;
-    let acc = 0, p85 = 240, tgt = (gray.length >> 2) * 0.85;
-    for (let t = 0; t < 256; t++) { acc += hist[t]; if (acc >= tgt) { p85 = t; break; } }
-    const binTh = Math.min(172, Math.max(125, Math.round(p85 * 0.68)));
-    const binInv = new Uint8Array(WARP_W * WARP_H);
-    for (let i = 0; i < gray.length; i++) binInv[i] = gray[i] < binTh ? 1 : 0;
-    return { wCanvas, binInv };
+    return { wCanvas, wGray, corners: det.pts, alignMode: det.mode };
   }
 
-  function measureFill(binInv, wx, wy, r) {
-    const x0 = Math.max(0, wx - r), x1 = Math.min(WARP_W - 1, wx + r);
-    const y0 = Math.max(0, wy - r), y1 = Math.min(WARP_H - 1, wy + r);
-    const r2 = r * r; let tot = 0, dark = 0;
+  function measureBubbleLocal(wGray, wx, wy, r) {
+    // 1. Local paper white reference (85th percentile in +-3*r patch around bubble)
+    const pRad = Math.round(r * 3.0);
+    const px0 = Math.max(0, wx - pRad), px1 = Math.min(WARP_W - 1, wx + pRad);
+    const py0 = Math.max(0, wy - pRad), py1 = Math.min(WARP_H - 1, wy + pRad);
+    const pVals = [];
+    for (let y = py0; y <= py1; y += 3) {
+      const off = y * WARP_W;
+      for (let x = px0; x <= px1; x += 3) pVals.push(wGray[off + x]);
+    }
+    pVals.sort((a, b) => a - b);
+    const paperRef = pVals.length ? pVals[Math.floor(pVals.length * 0.85)] : 220;
+
+    // 2. Inner core (0.72 * r avoids printed circle outline!)
+    const ri = Math.max(5, Math.round(r * 0.72));
+    const x0 = Math.max(0, wx - ri), x1 = Math.min(WARP_W - 1, wx + ri);
+    const y0 = Math.max(0, wy - ri), y1 = Math.min(WARP_H - 1, wy + ri);
+    const r2 = ri * ri;
+    const delta = Math.max(24, paperRef * 0.20);
+    const cut = paperRef - delta;
+    let tot = 0, dark = 0, sumVal = 0;
     for (let y = y0; y <= y1; y++) {
       const dy2 = (y - wy) * (y - wy), off = y * WARP_W;
-      for (let x = x0; x <= x1; x++) if ((x - wx) * (x - wx) + dy2 <= r2) { tot++; if (binInv[off + x]) dark++; }
+      for (let x = x0; x <= x1; x++) {
+        if ((x - wx) * (x - wx) + dy2 <= r2) {
+          const v = wGray[off + x];
+          tot++; sumVal += v;
+          if (v < cut) dark++;
+        }
+      }
     }
-    return tot ? dark / tot : 0;
+    if (!tot) return 0;
+    const darkRatio = dark / tot;
+    const meanDrop = Math.max(0, (paperRef - (sumVal / tot)) / Math.max(45, paperRef * 0.65));
+    return 0.65 * darkRatio + 0.35 * Math.min(1, meanDrop);
+  }
+
+  // Local Section-Box Border Snapping: cancels paper bowing & phone lens distortion to <2px everywhere!
+  function medianOf(arr) {
+    if (!arr.length) return 255;
+    arr.sort((a, b) => a - b);
+    return arr[arr.length >> 1];
+  }
+
+  function findEdgePeaks(prof, offset, minDip = 10) {
+    const n = prof.length, peaks = [];
+    for (let i = 2; i < n - 2; i++) {
+      const v = prof[i];
+      if (v <= prof[i - 1] && v <= prof[i + 1] && v <= prof[i - 2] && v <= prof[i + 2]) {
+        let lRef = v, rRef = v;
+        for (let k = Math.max(0, i - 14); k < Math.max(1, i - 2); k++) if (prof[k] > lRef) lRef = prof[k];
+        for (let k = Math.min(n - 1, i + 3); k < Math.min(n, i + 15); k++) if (prof[k] > rRef) rRef = prof[k];
+        const dip = 0.5 * (lRef + rRef) - v;
+        if (dip >= minDip) peaks.push([offset + i, dip]);
+      }
+    }
+    const merged = [];
+    for (const p of peaks) {
+      if (merged.length && p[0] - merged[merged.length - 1][0] <= 4) {
+        if (p[1] > merged[merged.length - 1][1]) merged[merged.length - 1] = p;
+      } else merged.push(p);
+    }
+    return merged;
+  }
+
+  function sampleProfile(wGray, axis, a0, a1, o0, o1) {
+    const prof = [];
+    if (axis === "v") {
+      const ya = Math.max(0, Math.round(o0)), yb = Math.min(WARP_H - 1, Math.round(o1));
+      const xa = Math.max(0, Math.round(a0)), xb = Math.min(WARP_W - 1, Math.round(a1));
+      const stepY = Math.max(2, Math.floor((yb - ya) / 90));
+      for (let x = xa; x <= xb; x++) {
+        const tmp = [];
+        for (let y = ya; y <= yb; y += stepY) tmp.push(wGray[y * WARP_W + x]);
+        prof.push(medianOf(tmp));
+      }
+      return { prof, offset: xa };
+    } else {
+      const xa = Math.max(0, Math.round(o0)), xb = Math.min(WARP_W - 1, Math.round(o1));
+      const ya = Math.max(0, Math.round(a0)), yb = Math.min(WARP_H - 1, Math.round(a1));
+      const stepX = Math.max(2, Math.floor((xb - xa) / 90));
+      for (let y = ya; y <= yb; y++) {
+        const tmp = [], off = y * WARP_W;
+        for (let x = xa; x <= xb; x += stepX) tmp.push(wGray[off + x]);
+        prof.push(medianOf(tmp));
+      }
+      return { prof, offset: ya };
+    }
+  }
+
+  function snapEdgePair(wGray, axis, nom0, nom1, orth0, orth1, search = 50) {
+    const nomSpan = nom1 - nom0;
+    const s0 = sampleProfile(wGray, axis, nom0 - search, nom0 + search, orth0, orth1);
+    const s1 = sampleProfile(wGray, axis, nom1 - search, nom1 + search, orth0, orth1);
+    const p0s = findEdgePeaks(s0.prof, s0.offset, 10);
+    const p1s = findEdgePeaks(s1.prof, s1.offset, 10);
+    if (!p0s.length || !p1s.length) return [nom0, nom1];
+    let best = [nom0, nom1], bestSc = -1e9;
+    const maxErr = Math.max(28, nomSpan * 0.08);
+    for (const [pos0, dip0] of p0s) {
+      for (const [pos1, dip1] of p1s) {
+        const spanErr = Math.abs((pos1 - pos0) - nomSpan);
+        if (spanErr > maxErr) continue;
+        const sc = Math.min(dip0, 80) + Math.min(dip1, 80) - spanErr * 2.2 - (Math.abs(pos0 - nom0) + Math.abs(pos1 - nom1)) * 0.25;
+        if (sc > bestSc) { bestSc = sc; best = [pos0, pos1]; }
+      }
+    }
+    return best;
+  }
+
+  function findLineSide(wGray, axis, nom, orth0, orth1, search = 48, pick = "closest") {
+    const s = sampleProfile(wGray, axis, nom - search, nom + search, orth0, orth1);
+    const peaks = findEdgePeaks(s.prof, s.offset, 11);
+    if (!peaks.length) return nom;
+    if (pick === "left" || pick === "top") return peaks[0][0];
+    if (pick === "right" || pick === "bottom") return peaks[peaks.length - 1][0];
+    return peaks.reduce((a, b) => (b[1] - Math.abs(b[0] - nom) * 0.25) > (a[1] - Math.abs(a[0] - nom) * 0.25) ? b : a)[0];
+  }
+
+  function computeSectionBoxes(wGray) {
+    const [sx0, sx1] = snapEdgePair(wGray, "v", 20, 670, 560, 1050, 50);
+    const [sy0, sy1] = snapEdgePair(wGray, "h", 505, 1100, 80, 610, 50);
+    const [vx0, vx1] = snapEdgePair(wGray, "v", 690, 1150, 560, 1050, 50);
+    const [vy0, vy1] = snapEdgePair(wGray, "h", 505, 1100, 740, 1100, 50);
+    const cols = [];
+    for (let c = 0; c < 4; c++) {
+      const nx0 = 42 + c * 535, nx1 = 563 + c * 535;
+      let cy0 = findLineSide(wGray, "h", 1209, nx0 + 50, nx1 - 50, 50, "bottom");
+      let cy1 = findLineSide(wGray, "h", 3133, nx0 + 50, nx1 - 50, 50, "top");
+      if (cy1 - cy0 < 1800 || cy1 - cy0 > 2040) { cy0 = 1209; cy1 = 3133; }
+      const bands = [];
+      for (let b = 0; b < 4; b++) {
+        const by0 = cy0 + (cy1 - cy0) * (b / 4) + 25;
+        const by1 = cy0 + (cy1 - cy0) * ((b + 1) / 4) - 25;
+        let bx0 = findLineSide(wGray, "v", nx0, by0, by1, 45, "right");
+        let bx1 = findLineSide(wGray, "v", nx1, by0, by1, 45, c < 3 ? "left" : "closest");
+        if (bx1 - bx0 < 465 || bx1 - bx0 > 575) { bx0 = nx0; bx1 = nx1; }
+        bands.push([0.5 * (by0 + by1), bx0, bx1]);
+      }
+      cols.push({ nx0, nx1, cy0, cy1, bands });
+    }
+    return { sats: [sx0, sx1, sy0, sy1], ver: [vx0, vx1, vy0, vy1], cols };
+  }
+
+  function mapInBox(wx, wy, nx0, nx1, ny0, ny1, box) {
+    const [ax0, ax1, ay0, ay1] = box;
+    return [
+      Math.round(ax0 + ((wx - nx0) / (nx1 - nx0)) * (ax1 - ax0)),
+      Math.round(ay0 + ((wy - ny0) / (ny1 - ny0)) * (ay1 - ay0))
+    ];
+  }
+
+  function mapInCol(wx, wy, cb) {
+    const fy = (wy - 1209) / (3133 - 1209);
+    const ay = cb.cy0 + fy * (cb.cy1 - cb.cy0);
+    const bs = cb.bands;
+    let ax0 = bs[0][1], ax1 = bs[0][2];
+    if (ay >= bs[bs.length - 1][0]) { ax0 = bs[bs.length - 1][1]; ax1 = bs[bs.length - 1][2]; }
+    else if (ay > bs[0][0]) {
+      for (let i = 0; i < bs.length - 1; i++) {
+        if (ay >= bs[i][0] && ay <= bs[i + 1][0]) {
+          const t = (ay - bs[i][0]) / (bs[i + 1][0] - bs[i][0]);
+          ax0 = bs[i][1] + t * (bs[i + 1][1] - bs[i][1]);
+          ax1 = bs[i][2] + t * (bs[i + 1][2] - bs[i][2]);
+          break;
+        }
+      }
+    }
+    const fx = (wx - cb.nx0) / (cb.nx1 - cb.nx0);
+    return [Math.round(ax0 + fx * (ax1 - ax0)), Math.round(ay)];
   }
 
   function getKeyForVersion(ver) {
@@ -1162,49 +1550,41 @@ tr:hover td{background:#fff9e6}
     return { subjectStats, totalMarks, maxMarks: pat.maxMarks, percentage, correctCount: correct, wrongCount: wrong, unattemptedCount: unattempted };
   }
 
-  async function scanOneFile(fileObj, fileName) {
+  function scanFromCanvas(srcCanvas, fileName, manualCorners = null, existingOrigUrl = null) {
     const pat = curPat();
-    const url = URL.createObjectURL(fileObj);
-    let srcCanvas;
-    try {
-      const img = await new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = () => rej(new Error("Image decode failed")); im.src = url; });
-      const scale = Math.min(1, 2600 / Math.max(img.naturalWidth, img.naturalHeight));
-      srcCanvas = document.createElement("canvas");
-      srcCanvas.width = Math.round(img.naturalWidth * scale); srcCanvas.height = Math.round(img.naturalHeight * scale);
-      srcCanvas.getContext("2d").drawImage(img, 0, 0, srcCanvas.width, srcCanvas.height);
-    } finally { URL.revokeObjectURL(url); }
-
-    const { wCanvas, binInv } = warpCanonical(srcCanvas);
-    const thresh = Number(CFG.fillThreshold || 0.46);
+    const { wCanvas, wGray, corners, alignMode } = warpCanonical(srcCanvas, manualCorners);
+    const boxes = computeSectionBoxes(wGray);
+    const thresh = Number(CFG.fillThreshold || 0.38);
     const ctx = wCanvas.getContext("2d");
     const drawC = (x, y, r, color, lw = 3.5) => { ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.stroke(); };
 
-    // 1. Read 9-digit SATS / Register Number
+    // 1. Read 9-digit SATS / Register Number (snapped to local SATS border box)
     let rawId = "";
     for (let col = 0; col < SATS_DIGITS; col++) {
       const fills = [];
       for (let d = 0; d < 10; d++) {
-        const [wx, wy] = pageToWarped(getSatsCenter(col, d));
-        fills.push([measureFill(binInv, wx, wy, SATS_BUB_R - 3), d, wx, wy]);
+        const [nwx, nwy] = pageToWarped(getSatsCenter(col, d));
+        const [wx, wy] = mapInBox(nwx, nwy, 20, 670, 505, 1100, boxes.sats);
+        fills.push([measureBubbleLocal(wGray, wx, wy, SATS_BUB_R), d, wx, wy]);
       }
       fills.sort((a, b) => b[0] - a[0]);
-      if (fills[0][0] >= thresh && (fills[0][0] - fills[1][0]) >= 0.11) {
+      if (fills[0][0] >= thresh && (fills[0][0] - fills[1][0]) >= 0.12) {
         rawId += String(fills[0][1]);
         drawC(fills[0][2], fills[0][3], SATS_BUB_R, "#16a34a", 3.5);
       } else {
         rawId += "?";
       }
     }
-    // Strip leading '?' if student wrote shorter Register No right-aligned (or trailing '?')
     const cleanId = rawId.replace(/^\?+|\?+$/g, "") || rawId;
 
-    // 2. Read Paper Version (1..4) — IF UNSELECTED, AUTOMATICALLY CONSIDER AS V1!
+    // 2. Read Paper Version (1..4) — snapped to local Version box; blank defaults to V1!
     const vFills = VER_OPTIONS.map((vn, idx) => {
-      const [wx, wy] = pageToWarped(getVerCenter(idx));
-      return [measureFill(binInv, wx, wy, VER_BUB_R - 4), String(vn), wx, wy];
+      const [nwx, nwy] = pageToWarped(getVerCenter(idx));
+      const [wx, wy] = mapInBox(nwx, nwy, 690, 1150, 505, 1100, boxes.ver);
+      return [measureBubbleLocal(wGray, wx, wy, VER_BUB_R), String(vn), wx, wy];
     }).sort((a, b) => b[0] - a[0]);
     let detectedVer = "1", verNote = "";
-    if (vFills[0][0] >= thresh && (vFills[0][0] - vFills[1][0]) >= 0.11) {
+    if (vFills[0][0] >= thresh && (vFills[0][0] - vFills[1][0]) >= 0.12) {
       detectedVer = vFills[0][1];
       drawC(vFills[0][2], vFills[0][3], VER_BUB_R, "#16a34a", 4.5);
     } else {
@@ -1214,16 +1594,18 @@ tr:hover td{background:#fff9e6}
       if (v1) drawC(v1[2], v1[3], VER_BUB_R, "#2563eb", 3.5);
     }
 
-    // 3. Read & Annotate all 60 / 100 / 180 Questions
+    // 3. Read & Annotate all 60 / 100 / 180 Questions (snapped to 4 curved subject columns!)
     const { key } = getKeyForVersion(detectedVer);
     const responses = {};
-    const mRad = Math.max(10, pat.qBubR - 3);
     for (let q = 1; q <= pat.totalQ; q++) {
+      const cb = boxes.cols[Math.floor((q - 1) / pat.rowsPerCol)];
       const optFills = Q_OPTIONS.map((ch, oi) => {
-        const [wx, wy] = pageToWarped(getQCenter(pat, q, oi));
-        return [measureFill(binInv, wx, wy, mRad), ch, wx, wy];
+        const [nwx, nwy] = pageToWarped(getQCenter(pat, q, oi));
+        const [wx, wy] = mapInCol(nwx, nwy, cb);
+        return [measureBubbleLocal(wGray, wx, wy, pat.qBubR), ch, wx, wy];
       });
-      const marked = optFills.filter(o => o[0] >= thresh);
+      const minS = Math.min(...optFills.map(o => o[0]));
+      const marked = optFills.filter(o => o[0] >= thresh && (o[0] - minS) >= 0.16);
       const corr = String(key[String(q)] || "").toUpperCase();
       if (marked.length === 0) {
         responses[`Q${q}`] = "UNATTEMPTED";
@@ -1246,17 +1628,31 @@ tr:hover td{background:#fff9e6}
 
     const graded = gradeRecord(responses, detectedVer, pat);
     const st = lookupMasterStudent(cleanId);
+    const alignTag = alignMode === "4-corner" ? "4-Corner Lock" : (alignMode === "manual" ? "Manual 4-Corner" : "⚠ Check Corners");
 
-    ctx.fillStyle = "#122858"; ctx.fillRect(20, 12, WARP_W - 40, 72);
-    ctx.fillStyle = "#ffffff"; ctx.font = "bold 32px Arial,sans-serif";
-    ctx.fillText(`ID: ${cleanId} | ${st ? st.studentName : "Not in DB"} | V${detectedVer} | Score: ${graded.totalMarks}/${graded.maxMarks} (${graded.percentage}%)`, 38, 34);
+    ctx.fillStyle = alignMode === "fallback-frame" ? "#991b1b" : "#122858";
+    ctx.fillRect(20, 12, WARP_W - 40, 72);
+    ctx.fillStyle = "#ffffff"; ctx.font = "bold 30px Arial,sans-serif";
+    ctx.fillText(`ID: ${cleanId} | ${st ? st.studentName : "Not in DB"} | V${detectedVer} | Score: ${graded.totalMarks}/${graded.maxMarks} (${graded.percentage}%) | ${alignTag}`, 38, 34);
 
     const annC = document.createElement("canvas");
     annC.width = 960; annC.height = Math.round(WARP_H * (960 / WARP_W));
     annC.getContext("2d").drawImage(wCanvas, 0, 0, annC.width, annC.height);
 
+    // Save compact original image for optional Manual "Fix 4 Corners & Re-Scan"
+    let origDataUrl = existingOrigUrl;
+    if (!origDataUrl) {
+      const oScale = Math.min(1, 1400 / Math.max(srcCanvas.width, srcCanvas.height));
+      const oc = document.createElement("canvas");
+      oc.width = Math.round(srcCanvas.width * oScale); oc.height = Math.round(srcCanvas.height * oScale);
+      oc.getContext("2d").drawImage(srcCanvas, 0, 0, oc.width, oc.height);
+      origDataUrl = oc.toDataURL("image/jpeg", 0.78);
+    }
+
+    const alignWarn = alignMode === "fallback-frame" ? "⚠️ Corners not found — click 'Fix 4 Corners & Re-Scan'"
+                    : (alignMode === "3-corner-est" ? "⚠️ 3 corners found (1 estimated) — verify alignment" : "");
     return {
-      satsNo: st ? st.satsNo : (cleanId.length === 9 ? cleanId : cleanId),
+      satsNo: st ? st.satsNo : cleanId,
       regNo: st ? st.regNo : (cleanId.length < 9 ? cleanId : ""),
       studentName: st ? st.studentName : "",
       fatherName: st ? st.fatherName : "",
@@ -1264,12 +1660,27 @@ tr:hover td{background:#fff9e6}
       section: st ? st.section : "",
       mobileNo: st ? st.mobileNo : "",
       paperVersion: detectedVer,
-      verNote,
+      verNote: [alignWarn, verNote].filter(Boolean).join(" · "),
+      alignMode,
+      origDataUrl,
       responses,
       ...graded,
-      annotatedDataUrl: annC.toDataURL("image/jpeg", 0.78),
+      annotatedDataUrl: annC.toDataURL("image/jpeg", 0.80),
       sourceFile: fileName
     };
+  }
+
+  async function scanOneFile(fileObj, fileName) {
+    const url = URL.createObjectURL(fileObj);
+    let srcCanvas;
+    try {
+      const img = await new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = () => rej(new Error("Image decode failed")); im.src = url; });
+      const scale = Math.min(1, 2400 / Math.max(img.naturalWidth, img.naturalHeight));
+      srcCanvas = document.createElement("canvas");
+      srcCanvas.width = Math.round(img.naturalWidth * scale); srcCanvas.height = Math.round(img.naturalHeight * scale);
+      srcCanvas.getContext("2d").drawImage(img, 0, 0, srcCanvas.width, srcCanvas.height);
+    } finally { URL.revokeObjectURL(url); }
+    return scanFromCanvas(srcCanvas, fileName);
   }
 
   async function regradeAllRecords() {
@@ -1593,13 +2004,24 @@ tr:hover td{background:#fff9e6}
 
     const grid = $("#eAnsGrid");
     grid.innerHTML = "";
-    for (let q = 1; q <= pat.totalQ; q++) {
-      const raw = (rec.responses && rec.responses[`Q${q}`]) || "UNATTEMPTED";
-      const val = Q_OPTIONS.includes(raw) ? raw : (raw === "MULTIPLE" ? "M" : "");
-      const cell = document.createElement("div");
-      cell.className = "ans-cell";
-      cell.innerHTML = `<span>${q}</span><input maxlength="1" data-q="${q}" value="${val}">`;
-      grid.appendChild(cell);
+    for (let col = 0; col < 4; col++) {
+      const sub = pat.subjects[col] || { name: `Part ${col + 1}`, start: col * pat.rowsPerCol + 1, end: (col + 1) * pat.rowsPerCol };
+      const colEl = document.createElement("div");
+      colEl.className = "omr-col";
+      colEl.innerHTML = `<div class="omr-col-hdr">${esc(sub.name)} (Q${sub.start}–Q${sub.end})</div>`;
+      const body = document.createElement("div");
+      body.className = "omr-col-body";
+      for (let r = 0; r < pat.rowsPerCol; r++) {
+        const q = col * pat.rowsPerCol + r + 1;
+        const raw = (rec.responses && rec.responses[`Q${q}`]) || "UNATTEMPTED";
+        const val = Q_OPTIONS.includes(raw) ? raw : (raw === "MULTIPLE" ? "M" : "");
+        const cell = document.createElement("div");
+        cell.className = "ans-cell" + (r > 0 && r % 5 === 0 ? " sep5" : "");
+        cell.innerHTML = `<span>${String(q).padStart(3, "0")}</span><input maxlength="1" data-q="${q}" value="${val}">`;
+        body.appendChild(cell);
+      }
+      colEl.appendChild(body);
+      grid.appendChild(colEl);
     }
 
     const recalc = () => {
@@ -1738,16 +2160,83 @@ tr:hover td{background:#fff9e6}
   $("#btnToggleZoom").onclick = () => $("#revFullImg").classList.toggle("zoomed");
   $("#revFullImg").onclick = () => $("#revFullImg").classList.toggle("zoomed");
 
+  // Manual 4-Corner Calibration ("Fix 4 Corners & Re-Scan")
+  let cornerPts = [], cornerImgObj = null;
+  const cornerNames = ["1. Top-Left (TL)", "2. Top-Right (TR)", "3. Bottom-Right (BR)", "4. Bottom-Left (BL)"];
+  function drawCornerPicker() {
+    const c = $("#cornerCanvas");
+    if (!cornerImgObj) return;
+    const ctx = c.getContext("2d");
+    ctx.drawImage(cornerImgObj, 0, 0, c.width, c.height);
+    if (cornerPts.length >= 2) {
+      ctx.strokeStyle = "#f2b705"; ctx.lineWidth = 4; ctx.beginPath();
+      ctx.moveTo(cornerPts[0][0], cornerPts[0][1]);
+      for (let i = 1; i < cornerPts.length; i++) ctx.lineTo(cornerPts[i][0], cornerPts[i][1]);
+      if (cornerPts.length === 4) ctx.closePath();
+      ctx.stroke();
+    }
+    cornerPts.forEach(([x, y], i) => {
+      ctx.beginPath(); ctx.arc(x, y, 16, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(220,38,38,0.85)"; ctx.fill();
+      ctx.strokeStyle = "#fff"; ctx.lineWidth = 3; ctx.stroke();
+      ctx.fillStyle = "#fff"; ctx.font = "bold 16px Arial,sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillText(String(i + 1), x, y);
+    });
+    ctx.textAlign = "left"; ctx.textBaseline = "top";
+    $("#btnCornerApply").disabled = cornerPts.length !== 4;
+    $("#cornerPrompt").innerHTML = cornerPts.length < 4
+      ? `Click the center of corner square: <b style="color:var(--maroon)">${cornerNames[cornerPts.length]}</b> (${cornerPts.length}/4 placed)`
+      : `✅ All 4 corners marked! Click <b>✅ Apply &amp; Re-Scan</b> to re-read every bubble accurately.`;
+  }
+
+  $("#btnFixCorners").onclick = () => {
+    const rec = RECORDS.find(r => r.id === ACTIVE_REV_ID);
+    if (!rec || !rec.origDataUrl) return alert("Original photo not stored for this older record. Please re-upload this OMR image.");
+    cornerPts = [];
+    const im = new Image();
+    im.onload = () => {
+      cornerImgObj = im;
+      const c = $("#cornerCanvas");
+      c.width = im.naturalWidth; c.height = im.naturalHeight;
+      drawCornerPicker();
+      $("#cornerModal").classList.add("open");
+    };
+    im.src = rec.origDataUrl;
+  };
+  $("#cornerCanvas").onclick = e => {
+    if (cornerPts.length >= 4 || !cornerImgObj) return;
+    const c = $("#cornerCanvas"), r = c.getBoundingClientRect();
+    const x = (e.clientX - r.left) * (c.width / r.width);
+    const y = (e.clientY - r.top) * (c.height / r.height);
+    cornerPts.push([x, y]);
+    drawCornerPicker();
+  };
+  $("#btnCornerReset").onclick = () => { cornerPts = []; drawCornerPicker(); };
+  $("#btnCloseCorner").onclick = () => $("#cornerModal").classList.remove("open");
+  $("#btnCornerApply").onclick = async () => {
+    const rec = RECORDS.find(r => r.id === ACTIVE_REV_ID);
+    if (!rec || cornerPts.length !== 4 || !cornerImgObj) return;
+    const srcC = document.createElement("canvas");
+    srcC.width = cornerImgObj.naturalWidth; srcC.height = cornerImgObj.naturalHeight;
+    srcC.getContext("2d").drawImage(cornerImgObj, 0, 0);
+    const rescanned = scanFromCanvas(srcC, rec.sourceFile, cornerPts, rec.origDataUrl);
+    Object.assign(rec, rescanned, { status: "ready_review", errorMsg: "" });
+    await dbPut(rec);
+    $("#cornerModal").classList.remove("open");
+    renderAll();
+    openReview(rec.id);
+  };
+
   $("#btnSettings").onclick = () => {
     $("#sApiUrl").value = CFG.apiUrl || "";
-    $("#sThresh").value = CFG.fillThreshold || 0.46;
+    $("#sThresh").value = CFG.fillThreshold || 0.38;
     $("#setTestMsg").textContent = "";
     $("#settingsModal").classList.add("open");
   };
   $("#btnCloseSet").onclick = () => $("#settingsModal").classList.remove("open");
   $("#btnSaveSet").onclick = () => {
     CFG.apiUrl = $("#sApiUrl").value.trim();
-    CFG.fillThreshold = Math.max(0.25, Math.min(0.75, Number($("#sThresh").value || 0.46)));
+    CFG.fillThreshold = Math.max(0.25, Math.min(0.75, Number($("#sThresh").value || 0.38)));
     saveCfg();
     // Sync URL to localStorage key also readable by weekly-test-result.html on same origin
     if (CFG.apiUrl) localStorage.setItem("pragathi_weekly_result_api_url", CFG.apiUrl);
