@@ -1,0 +1,1786 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Offline Exam (OMR Based) · Pragathi P.U. College, Gurumatkal</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700;900&family=Libre+Baskerville:wght@700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js" defer></script>
+<style>
+:root{--navy:#0b2a5b;--navy2:#071c3f;--maroon:#8e1b2e;--gold:#f2b705;--green:#15803d;--ink:#1c2233;--mut:#5b6478;--line:#dfe3ec;--bg:#f5f6fa}
+*{box-sizing:border-box}
+body{margin:0;font:14.5px/1.55 "Lato","Segoe UI",Tahoma,Arial,sans-serif;color:var(--ink);background:var(--bg);padding-bottom:108px}
+.topbar{background:linear-gradient(120deg,var(--navy2),var(--navy));color:#fff;padding:14px 20px;border-bottom:4px solid var(--gold);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.topbar h1{margin:0;font:700 20px/1.2 "Times New Roman",Times,Georgia,serif;letter-spacing:.4px}
+.topbar small{display:block;color:#fde047;font-size:12.5px;margin-top:2px}
+.wrap{max-width:1380px;margin:0 auto;padding:16px 18px}
+.btn{display:inline-flex;align-items:center;gap:6px;border:0;border-radius:6px;padding:8px 14px;font:700 13px/1.2 inherit;cursor:pointer;text-decoration:none;transition:.15s}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.b-navy{background:var(--navy);color:#fff}.b-navy:hover{background:#123b7a}
+.b-maroon{background:var(--maroon);color:#fff}.b-maroon:hover{background:#a82037}
+.b-green{background:var(--green);color:#fff}.b-green:hover{background:#166534}
+.b-gold{background:var(--gold);color:var(--navy2)}.b-gold:hover{background:#e0a800}
+.b-out{background:#fff;color:var(--navy);border:1.5px solid #c3cde0}.b-out:hover{background:#eef3fb}
+.b-red-out{background:#fff;color:#b91c1c;border:1.5px solid #fecaca}.b-red-out:hover{background:#fef2f2}
+.btn.sm{padding:6px 10px;font-size:12px}
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;box-shadow:0 2px 8px rgba(0,0,0,.04);margin-bottom:16px}
+.card h2{margin:0 0 8px;font-size:17px;color:var(--navy)}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.grp{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.cfg-banner{background:#eef4ff;border:1px solid #c7d7f7;border-radius:8px;padding:9px 14px;font-size:12.8px;color:var(--navy);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px}
+.setup-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px 14px}
+.setup-grid label{display:block;font-size:11.5px;font-weight:700;color:var(--navy);text-transform:uppercase;margin-bottom:3px}
+.setup-grid input,.setup-grid select{width:100%;padding:8px 10px;border:1.5px solid #cbd5e1;border-radius:6px;font:600 13.5px inherit;background:#fff}
+.setup-grid input:focus,.setup-grid select:focus{outline:none;border-color:var(--navy);background:#f8fbff}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.sub-box{background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.sub-box h3{margin:0 0 6px;font-size:14.5px;color:var(--navy)}
+.ver-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.vtab{border:1.5px solid var(--navy);background:#fff;color:var(--navy);border-radius:6px;padding:5px 14px;font:700 12.5px inherit;cursor:pointer}
+.vtab.on{background:var(--navy);color:#fff}
+.vtab .vcnt{font-weight:600;opacity:.85;margin-left:4px;font-size:11px}
+.key-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px 8px;max-height:240px;overflow-y:auto;background:#fff;border:1px solid var(--line);border-radius:6px;padding:8px}
+.kcell{display:flex;align-items:center;justify-content:space-between;gap:3px;font:700 11.5px Consolas,monospace}
+.kcell span{color:var(--mut);width:26px;text-align:right}
+.kcell input{width:30px;padding:2px 0;text-align:center;border:1px solid #cbd5e1;border-radius:4px;font:700 12px Consolas,monospace;text-transform:uppercase}
+.kcell input:focus{outline:none;border-color:var(--navy);background:#e8f0fe}
+.dropzone{border:2.5px dashed #8fa5cc;border-radius:12px;background:#f8fbff;padding:20px 16px;text-align:center;cursor:pointer;transition:.18s}
+.dropzone:hover,.dropzone.drag{border-color:var(--navy);background:#ebf2ff}
+.dropzone h3{margin:4px 0;color:var(--navy);font-size:16px}
+.dropzone p{margin:0;color:var(--mut);font-size:13px}
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:14px 0 4px}
+.kpi{background:#fff;border:1px solid var(--line);border-top:3.5px solid var(--navy);border-radius:8px;padding:10px 12px;text-align:center}
+.kpi.amber{border-top-color:#d97706}.kpi.blue{border-top-color:#2563eb}.kpi.green{border-top-color:var(--green)}.kpi.red{border-top-color:#dc2626}
+.kpi b{display:block;font-size:22px;color:var(--navy);line-height:1.15}
+.kpi.amber b{color:#b45309}.kpi.blue b{color:#1d4ed8}.kpi.green b{color:var(--green)}.kpi.red b{color:#b91c1c}
+.kpi span{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--mut);letter-spacing:.3px}
+.filter-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;align-items:center}
+.fpill{border:1px solid #cbd5e1;background:#fff;color:var(--ink);border-radius:20px;padding:4px 12px;font:700 12px inherit;cursor:pointer}
+.fpill.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px;background:#fff}
+th,td{padding:7px 9px;border:1px solid var(--line);text-align:left;vertical-align:middle}
+th{background:var(--navy);color:#fff;font-size:11.5px;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap}
+td.c,th.c{text-align:center}
+tr:nth-child(even) td{background:#fafbfd}
+tr:hover td{background:#fff9e6}
+.badge{display:inline-block;padding:2px 8px;border-radius:14px;font-size:11px;font-weight:700;white-space:nowrap}
+.bg-wait{background:#e2e8f0;color:#334155}.bg-read{background:#dbeafe;color:#1d4ed8}
+.bg-rev{background:#fef3c7;color:#92400e;border:1px solid #fcd34d}
+.bg-ok{background:#dcfce7;color:#166534;border:1px solid #86efac}
+.bg-err{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5}
+.pub-banner{margin-top:10px;padding:10px 14px;border-radius:8px;font-size:13px;font-weight:700;display:none}
+.pub-banner.ok{display:block;background:#dcfce7;border:1.5px solid #4ade80;color:#14532d}
+.pub-banner.err{display:block;background:#fee2e2;border:1.5px solid #fca5a5;color:#991b1b}
+.pub-banner.info{display:block;background:#dbeafe;border:1.5px solid #93c5fd;color:#1e3a8a}
+
+/* Corner Status Widget */
+#cornerStatus{position:fixed;right:16px;bottom:14px;z-index:9000;width:320px;max-width:calc(100vw - 24px);background:#0c2047;color:#fff;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.35);border:2px solid var(--gold);overflow:hidden;font-size:12.5px}
+.cs-hdr{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#071530;font-weight:700;color:var(--gold);cursor:pointer}
+.cs-body{padding:10px 12px;display:flex;flex-direction:column;gap:7px}
+.cs-body.collapsed{display:none}
+.cs-line{display:flex;justify-content:space-between;align-items:center;gap:6px}
+.cs-bar{height:6px;background:#1e3a6d;border-radius:4px;overflow:hidden;margin-top:2px}
+.cs-fill{height:100%;border-radius:4px;transition:width .25s}
+.cs-fill.read{background:#38bdf8}.cs-fill.up{background:#4ade80}
+.cs-sub{font-size:11px;color:#cbd5e1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Modals */
+.modal{position:fixed;inset:0;z-index:9500;background:rgba(7,20,45,.82);display:none;overflow:auto;padding:12px}
+.modal.open{display:block}
+.mbox{background:#f5f7fc;max-width:1340px;margin:0 auto;border-radius:12px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.45);border:2px solid var(--navy)}
+.mhdr{background:var(--navy);color:#fff;padding:11px 18px;display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:3px solid var(--gold)}
+.mhdr h2{margin:0;font-size:16px;color:#fff}
+.mbody{padding:14px 16px}
+.rev-grid{display:grid;grid-template-columns:460px 1fr;gap:14px;align-items:start}
+.omr-viewer{background:#334155;border-radius:8px;padding:8px;max-height:680px;overflow:auto;text-align:center}
+.omr-viewer img{width:100%;height:auto;border-radius:4px;cursor:zoom-in}
+.omr-viewer img.zoomed{width:960px;max-width:none;cursor:zoom-out}
+.rev-form{background:#fff;border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px 10px}
+.fgrid label{display:block;font-size:11px;font-weight:700;color:var(--navy);text-transform:uppercase;margin-bottom:2px}
+.fgrid input,.fgrid select{width:100%;padding:6px 8px;border:1.5px solid #cbd5e1;border-radius:6px;font:700 13px Consolas,monospace}
+.ans-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px 8px;margin-top:8px;max-height:310px;overflow-y:auto;background:#f8fafc;border:1px solid var(--line);border-radius:6px;padding:8px}
+.ans-cell{display:flex;align-items:center;justify-content:space-between;gap:3px;font:700 11.5px Consolas,monospace}
+.ans-cell span{width:24px;text-align:right;color:var(--navy)}
+.ans-cell input{width:30px;padding:2px 0;text-align:center;border:1.5px solid #cbd5e1;border-radius:4px;font:700 12px Consolas,monospace;text-transform:uppercase}
+.ans-cell input.ok{background:#dcfce7;border-color:#16a34a;color:#14532d}
+.ans-cell input.bad{background:#fee2e2;border-color:#dc2626;color:#991b1b}
+.ans-cell input.blk{background:#fef9c3;border-color:#ca8a04;color:#854d0e}
+.score-bar{background:#e8f0fe;border:1.5px solid #93c5fd;border-radius:8px;padding:8px 12px;margin:10px 0;font-weight:700;color:var(--navy);font-size:13px}
+.sbox{max-width:740px}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sgrid .full{grid-column:1/-1}
+.sgrid label{display:block;font-size:12px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.sgrid input,.sgrid select{width:100%;padding:8px 10px;border:1.5px solid #cbd5e1;border-radius:6px;font:600 13px inherit}
+@media(max-width:1024px){.setup-grid,.two-col,.rev-grid{grid-template-columns:1fr 1fr}.rev-grid{grid-template-columns:1fr}.kpi-row{grid-template-columns:repeat(2,1fr)}.key-grid,.ans-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:640px){.setup-grid,.two-col,.fgrid,.sgrid{grid-template-columns:1fr}.key-grid,.ans-grid{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+
+<div class="topbar" id="topHdr">
+  <div>
+    <h1>PRAGATHI P.U. COLLEGE, GURUMATKAL (KY0434)</h1>
+    <small>Offline Exam (OMR Based) · Common Printable OMR (Student Bubbles Version 1–4), Bulk Reader &amp; Google Drive Result Publisher</small>
+  </div>
+  <div><a class="btn b-gold sm" href="college-login.html">← Back to College Login</a></div>
+</div>
+
+<div class="wrap">
+  <!-- Config & Ink-Saver OMR Generator Strip -->
+  <div class="cfg-banner" style="flex-direction:column;align-items:stretch;gap:10px">
+    <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px">
+      <div id="cfgSummary">Loading settings…</div>
+      <button type="button" class="btn b-gold sm" id="btnSettings">⚙️ Drive API &amp; Settings</button>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding-top:8px;border-top:1px solid #c7d7f7">
+      <label for="omrTitle" style="font-size:12px;font-weight:700;color:var(--navy);white-space:nowrap">📝 OMR Sheet Title (Printed on Sheet):</label>
+      <input id="omrTitle" type="text" placeholder="Enter exact OMR title to print (e.g. WEEKLY TEST - 14 (NEET · 180 Qs) — OMR ANSWER SHEET)" style="flex:1;min-width:260px;padding:7px 10px;border:1.5px solid #93aee0;border-radius:6px;font:700 13px 'Times New Roman',Times,Georgia,serif;background:#fff;color:#000">
+      <button type="button" class="btn b-navy sm" id="btnGenPdf">🖨️ Download Ink-Saver OMR (PDF)</button>
+      <button type="button" class="btn b-out sm" id="btnGenPng">🖼️ Download OMR (PNG)</button>
+    </div>
+  </div>
+
+  <!-- Step 1: Exam Setup, 4-Version Keys & Master Database -->
+  <div class="card">
+    <h2>⚙️ Step 1: Weekly Exam Setup, Master Database &amp; 4-Version Answer Keys (V1–V4)</h2>
+    <div class="setup-grid">
+      <div>
+        <label>Test Name *</label>
+        <input id="examName" value="WEEKLY TEST - 14" placeholder="e.g. WEEKLY TEST - 14">
+      </div>
+      <div>
+        <label>Exam Date (DD/MM/YYYY) *</label>
+        <input id="examDate" placeholder="DD/MM/YYYY">
+      </div>
+      <div>
+        <label>Class *</label>
+        <select id="examClass">
+          <option value="II PUC">II PUC</option>
+          <option value="I PUC">I PUC</option>
+          <option value="I & II PUC">I &amp; II PUC</option>
+        </select>
+      </div>
+      <div>
+        <label>Exam Pattern *</label>
+        <select id="examType">
+          <option value="NEET">NEET — 180 Qs (+4 / -1 · Max 720)</option>
+          <option value="KCET">KCET — 100 Qs (+1 / 0 · Max 100)</option>
+          <option value="WEEKLY-60">WEEKLY-60 — 60 Qs (+1 / 0 · Max 60)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <!-- Left: Master Student Database -->
+      <div class="sub-box">
+        <div class="toolbar" style="margin-bottom:6px">
+          <h3>👥 Student Master Database Excel (.xlsx)</h3>
+          <button type="button" class="btn b-green sm" id="btnDlMasterTpl">📥 Download Sample Master DB Template</button>
+        </div>
+        <p style="margin:0 0 8px;font-size:12.5px;color:var(--mut)">Upload your Student Master Database Excel so scanned SATS / Register numbers instantly pull Student Name, Father Name, Class &amp; Mobile without slow OCR.</p>
+        <div class="grp">
+          <input type="file" id="masterDbFile" accept=".xlsx,.xls,.csv" style="max-width:290px">
+          <button type="button" class="btn b-red-out sm" id="btnClearDb">Clear DB</button>
+        </div>
+        <div id="masterDbStatus" style="margin-top:8px;font-size:12.5px;font-weight:700;color:var(--navy)">No Master Database loaded yet.</div>
+      </div>
+
+      <!-- Right: 4-Version Answer Keys (Excel + UI) -->
+      <div class="sub-box">
+        <div class="toolbar" style="margin-bottom:6px">
+          <h3>🔑 4-Version Answer Keys (V1, V2, V3, V4)</h3>
+          <div class="grp">
+            <button type="button" class="btn b-navy sm" id="btnDlKeyTpl">📥 Blank 4-Version Key Excel</button>
+            <label class="btn b-out sm" style="margin:0">📤 Upload Key Excel<input type="file" id="keyExcelFile" accept=".xlsx,.xls" hidden></label>
+          </div>
+        </div>
+        <p style="margin:0 0 6px;font-size:12px;color:var(--mut)">Excel format: <b>Sheet 1 = V1, Sheet 2 = V2, Sheet 3 = V3, Sheet 4 = V4</b>. If conducting only one version (or if a student leaves Version blank), <b>V1 is used automatically</b>.</p>
+        <div class="ver-tabs" id="keyVerTabs">
+          <button type="button" class="vtab on" data-v="1">V1 <span class="vcnt" id="vc1">(0)</span></button>
+          <button type="button" class="vtab" data-v="2">V2 <span class="vcnt" id="vc2">(0)</span></button>
+          <button type="button" class="vtab" data-v="3">V3 <span class="vcnt" id="vc3">(0)</span></button>
+          <button type="button" class="vtab" data-v="4">V4 <span class="vcnt" id="vc4">(0)</span></button>
+          <button type="button" class="btn b-out sm" id="btnQuickPaste" style="margin-left:auto">📋 Quick Paste Key</button>
+        </div>
+        <div class="key-grid" id="keyGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: Bulk Upload OMR Images -->
+  <div class="card">
+    <div class="dropzone" id="dropzone">
+      <div style="font-size:32px">📂</div>
+      <h3>Step 2: Bulk Upload Scanned OMR Images (Evaluates in Background → Review Folder)</h3>
+      <p>Select multiple OMR images or an entire folder. Reads 9-digit SATS / Register No., Version (1–4, blank → V1), and all MCQ bubbles in the background.</p>
+      <div style="margin-top:10px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+        <button type="button" class="btn b-maroon" id="btnPickFiles">📂 Select Multiple OMR Images</button>
+        <button type="button" class="btn b-out" id="btnPickFolder">📁 Select OMR Folder</button>
+        <button type="button" class="btn b-out" id="btnSelfTest">🧪 Test With Sample Filled OMR</button>
+      </div>
+      <input type="file" id="fileInput" accept="image/*" multiple hidden>
+      <input type="file" id="folderInput" accept="image/*" webkitdirectory directory multiple hidden>
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi"><b id="kTotal">0</b><span>Total Sheets</span></div>
+      <div class="kpi blue"><b id="kReading">0</b><span>Reading Background</span></div>
+      <div class="kpi amber"><b id="kReview">0</b><span>In Review Folder</span></div>
+      <div class="kpi green"><b id="kConfirmed">0</b><span>Confirmed (OK)</span></div>
+      <div class="kpi red"><b id="kErrors">0</b><span>Read Errors</span></div>
+    </div>
+  </div>
+
+  <!-- Step 3: Review Folder, Export Excel & Publish to Google Drive / Website -->
+  <div class="card">
+    <div class="toolbar">
+      <div>
+        <h2 style="margin:0">📁 Step 3: Review Folder, Export Excel &amp; Publish to Website Results</h2>
+        <small style="color:var(--mut)">Review &amp; edit any sheet, click <b>OK</b> to confirm, then click <b>🚀 Export &amp; Publish Result</b> to save the Excel sheet inside a new exam folder in Google Drive and publish to <b>Results → WEEKLY TEST RESULT</b>.</small>
+      </div>
+      <div class="grp">
+        <button type="button" class="btn b-navy" id="btnReviewNext">👁️ Review Next (<span id="revNextCnt">0</span>)</button>
+        <button type="button" class="btn b-out" id="btnConfirmAll">✅ Mark All Ready as OK</button>
+        <button type="button" class="btn b-out" id="btnExportXlsx">📥 Export Excel (.xlsx)</button>
+        <button type="button" class="btn b-green" id="btnPublishDrive">🚀 Export &amp; Publish Result (Drive + Website)</button>
+        <button type="button" class="btn b-red-out sm" id="btnClearQueue">🗑️ Clear All</button>
+      </div>
+    </div>
+    <div id="pubBanner" class="pub-banner"></div>
+
+    <div class="filter-pills" id="filterPills">
+      <button type="button" class="fpill on" data-f="all">All</button>
+      <button type="button" class="fpill" data-f="ready_review">🟡 Pending Review</button>
+      <button type="button" class="fpill" data-f="confirmed">✅ Confirmed (OK)</button>
+      <button type="button" class="fpill" data-f="error">⚠️ Errors</button>
+      <input id="qSearch" type="search" placeholder="🔍 Search SATS, Reg No, Student Name…" style="margin-left:auto;padding:5px 10px;border:1px solid #cbd5e1;border-radius:16px;font-size:12.5px;min-width:210px">
+    </div>
+
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr>
+            <th class="c">#</th>
+            <th>File</th>
+            <th>SATS / Reg No.</th>
+            <th class="c">Ver</th>
+            <th>Student Name</th>
+            <th>Father's Name</th>
+            <th>Class</th>
+            <th>Subject Scores</th>
+            <th class="c">Total</th>
+            <th class="c">%</th>
+            <th>Status</th>
+            <th class="c">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="queueTbody">
+          <tr><td colspan="12" class="c" style="padding:24px;color:var(--mut)">No OMR sheets uploaded yet. Upload your 4-Version Key Excel (or enter V1 key) and bulk upload OMR images above.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom-Right Corner Status Box -->
+<div id="cornerStatus">
+  <div class="cs-hdr" id="csToggle"><span>⚡ Offline OMR Background Status</span><span id="csCaret">▾</span></div>
+  <div class="cs-body" id="csBody">
+    <div>
+      <div class="cs-line"><span>📖 Read OMRs</span><b id="csReadTxt">Idle (0/0)</b></div>
+      <div class="cs-bar"><div class="cs-fill read" id="csReadBar" style="width:0%"></div></div>
+      <div class="cs-sub" id="csReadSub">Waiting for OMR images…</div>
+    </div>
+    <div class="cs-line"><span>🟡 Review Folder</span><b id="csRevTxt" style="color:#fde047">0 pending · 0 confirmed</b></div>
+    <div>
+      <div class="cs-line"><span>☁️ Publish to Drive</span><b id="csUpTxt" style="color:#86efac">Not published yet</b></div>
+      <div class="cs-bar"><div class="cs-fill up" id="csUpBar" style="width:0%"></div></div>
+      <div class="cs-sub" id="csUpSub">Saves Excel into exam subfolder &amp; updates website</div>
+    </div>
+  </div>
+</div>
+
+<!-- Review & Edit Modal -->
+<div class="modal" id="reviewModal">
+  <div class="mbox">
+    <div class="mhdr">
+      <h2 id="revTitle">Review OMR Sheet</h2>
+      <div class="grp">
+        <button type="button" class="btn b-out sm" id="btnToggleZoom">🔍 Zoom OMR</button>
+        <button type="button" class="btn b-red-out sm" id="btnCloseRev">✕ Close</button>
+      </div>
+    </div>
+    <div class="mbody">
+      <div class="rev-grid">
+        <div class="omr-viewer"><img id="revFullImg" alt="Annotated OMR" title="Click to zoom"></div>
+        <div class="rev-form">
+          <div class="fgrid">
+            <div><label>SATS No.</label><input id="eSats" maxlength="12"></div>
+            <div><label>Register / Roll No.</label><input id="eReg" maxlength="12"></div>
+            <div><label>Paper Version (1–4)</label>
+              <select id="eVer"><option value="1">Version 1 (V1)</option><option value="2">Version 2 (V2)</option><option value="3">Version 3 (V3)</option><option value="4">Version 4 (V4)</option></select>
+            </div>
+            <div><label>Student Full Name</label><input id="eName"></div>
+            <div><label>Father's Name</label><input id="eFather"></div>
+            <div><label>Class / Section</label><input id="eClass"></div>
+          </div>
+          <div style="margin-top:6px"><button type="button" class="btn b-out sm" id="btnLookupDb">🔍 Auto-Fill From Master DB</button> <span id="eDbNote" style="font-size:12px;color:var(--maroon);font-weight:700;margin-left:8px"></span></div>
+          <div class="score-bar" id="eScoreBar">Score: 0</div>
+          <div style="font-size:11.5px;font-weight:700;color:var(--navy)">Detected Answers (A / B / C / D, blank = Unattempted, M = Multiple):</div>
+          <div class="ans-grid" id="eAnsGrid"></div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px">
+            <button type="button" class="btn b-green" id="btnConfirmOk">✅ OK — Confirm &amp; Next</button>
+            <button type="button" class="btn b-out" id="btnSaveDraft">💾 Save Only</button>
+            <button type="button" class="btn b-out" id="btnSkipNext">⏭️ Skip</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal" id="settingsModal">
+  <div class="mbox sbox">
+    <div class="mhdr">
+      <h2>⚙️ Google Drive Publisher &amp; OMR Reader Settings</h2>
+      <button type="button" class="btn b-red-out sm" id="btnCloseSet">✕ Close</button>
+    </div>
+    <div class="mbody">
+      <div class="sgrid">
+        <div class="full">
+          <label>Weekly Test Google Apps Script Web App URL (Deploy <code>Weekly_Test_OMR_AppsScript.gs</code>)</label>
+          <input id="sApiUrl" type="url" placeholder="https://script.google.com/macros/s/.../exec">
+        </div>
+        <div>
+          <label>Bubble Darkness Threshold (Default 0.46)</label>
+          <input id="sThresh" type="number" step="0.02" min="0.25" max="0.75">
+        </div>
+        <div>
+          <label>Default Version if Student Leaves Blank</label>
+          <select id="sDefVer"><option value="1">Version 1 (V1) — Recommended</option></select>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;margin-top:14px">
+        <button type="button" class="btn b-out sm" id="btnTestApi">🔗 Test Drive Script Connection</button>
+        <button type="button" class="btn b-green" id="btnSaveSet">💾 Save Settings</button>
+      </div>
+      <div id="setTestMsg" style="margin-top:8px;font-size:12.5px;font-weight:700"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  if (new URLSearchParams(location.search).get("embed") === "1") {
+    document.getElementById("topHdr").style.display = "none";
+  }
+
+  /* =========================================================================
+     1. EXAM PATTERNS, GEOMETRY (300 DPI A4) & EMBEDDED MASTER DB TEMPLATE
+     ========================================================================= */
+  const MASTER_DB_TEMPLATE_B64 = "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";
+  const DEFAULT_WEEKLY_API_URL = "";
+
+  const PATTERNS = {
+    NEET: {
+      label: "NEET", totalQ: 180, correct: 4, wrong: -1, maxMarks: 720,
+      rowsPerCol: 45, qRowY0: 1375, qRowStepY: 42, qBubR: 15, qOptOffX: 138, qOptStepX: 78,
+      subjects: [
+        { name: "Physics", start: 1, end: 45 },
+        { name: "Chemistry", start: 46, end: 90 },
+        { name: "Botany", start: 91, end: 135 },
+        { name: "Zoology", start: 136, end: 180 }
+      ]
+    },
+    KCET: {
+      label: "KCET", totalQ: 100, correct: 1, wrong: 0, maxMarks: 100,
+      rowsPerCol: 25, qRowY0: 1405, qRowStepY: 74, qBubR: 20, qOptOffX: 140, qOptStepX: 82,
+      subjects: [
+        { name: "Physics", start: 1, end: 25 },
+        { name: "Chemistry", start: 26, end: 50 },
+        { name: "Mathematics", start: 51, end: 75 },
+        { name: "Biology", start: 76, end: 100 }
+      ]
+    },
+    "WEEKLY-60": {
+      label: "WEEKLY-60", totalQ: 60, correct: 1, wrong: 0, maxMarks: 60,
+      rowsPerCol: 15, qRowY0: 1440, qRowStepY: 118, qBubR: 22, qOptOffX: 140, qOptStepX: 82,
+      subjects: [
+        { name: "Physics", start: 1, end: 15 },
+        { name: "Chemistry", start: 16, end: 30 },
+        { name: "Mathematics", start: 31, end: 45 },
+        { name: "Biology", start: 46, end: 60 }
+      ]
+    }
+  };
+
+  const PAGE_W = 2480, PAGE_H = 3508, FID_SIZE = 70;
+  const FID = { TL: [145, 145], TR: [2335, 145], BR: [2335, 3363], BL: [145, 3363] };
+  const ORIGIN_X = 145, ORIGIN_Y = 145, WARP_W = 2190, WARP_H = 3218;
+  const SATS_DIGITS = 9, SATS_BOX_X0 = 195, SATS_BOX_Y0 = 735, SATS_COL_STEP = 66, SATS_ROW_Y0 = 845, SATS_ROW_STEP = 40, SATS_BUB_R = 16;
+  const VER_OPTIONS = [1, 2, 3, 4], VER_COL_X = 935, VER_ROW_Y0 = 865, VER_ROW_STEP = 82, VER_BUB_R = 20;
+  const Q_GRID_X0 = 195, Q_COL_WIDTH = 535, Q_OPTIONS = ["A", "B", "C", "D"];
+
+  const $ = s => document.querySelector(s);
+  const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const getSatsCenter = (col, d) => [SATS_BOX_X0 + col * SATS_COL_STEP + 26, SATS_ROW_Y0 + d * SATS_ROW_STEP];
+  const getVerCenter = idx => [VER_COL_X, VER_ROW_Y0 + idx * VER_ROW_STEP];
+  const getQCenter = (pat, qNum, oi) => {
+    const col = Math.floor((qNum - 1) / pat.rowsPerCol);
+    const row = (qNum - 1) % pat.rowsPerCol;
+    return [Q_GRID_X0 + col * Q_COL_WIDTH + pat.qOptOffX + oi * pat.qOptStepX, pat.qRowY0 + row * pat.qRowStepY];
+  };
+  const pageToWarped = ([x, y]) => [x - ORIGIN_X, y - ORIGIN_Y];
+  const normId = v => String(v || "").trim().toUpperCase().replace(/\s+/g, "");
+  const noZero = v => { const s = normId(v); return /^\d+$/.test(s) ? (s.replace(/^0+/, "") || "0") : s; };
+
+  /* =========================================================================
+     2. PERSISTENT STATE (SETTINGS, MASTER DB, 4-VERSION KEYS, REVIEW DB)
+     ========================================================================= */
+  const SET_KEY = "pragathi_weekly_offline_omr_cfg_v1";
+  const MASTER_KEY = "pragathi_weekly_master_db_v1";
+  const KEYS_STORE = "pragathi_weekly_4ver_keys_v1";
+
+  let CFG = (() => {
+    const def = { apiUrl: DEFAULT_WEEKLY_API_URL, fillThreshold: 0.46 };
+    try { return { ...def, ...(JSON.parse(localStorage.getItem(SET_KEY) || "{}")) }; }
+    catch { return def; }
+  })();
+  let MASTER_DB = (() => {
+    try { return JSON.parse(localStorage.getItem(MASTER_KEY) || "[]"); }
+    catch { return []; }
+  })();
+  let ANSWER_KEYS = (() => {
+    try {
+      const k = JSON.parse(localStorage.getItem(KEYS_STORE) || "{}");
+      return { "1": k["1"] || {}, "2": k["2"] || {}, "3": k["3"] || {}, "4": k["4"] || {} };
+    } catch { return { "1": {}, "2": {}, "3": {}, "4": {} }; }
+  })();
+  let ACTIVE_KEY_VER = "1";
+
+  function saveCfg() { localStorage.setItem(SET_KEY, JSON.stringify(CFG)); renderCfgBanner(); }
+  function saveKeys() { localStorage.setItem(KEYS_STORE, JSON.stringify(ANSWER_KEYS)); updateKeyCounts(); }
+  function curPat() { return PATTERNS[$("#examType").value] || PATTERNS.NEET; }
+
+  // IndexedDB Review Folder
+  const DB_NAME = "PragathiWeeklyOfflineOmrDB", STORE_NAME = "sheets";
+  let dbProm = null;
+  function openDb() {
+    if (dbProm) return dbProm;
+    dbProm = new Promise((res, rej) => {
+      const req = indexedDB.open(DB_NAME, 1);
+      req.onupgradeneeded = e => { if (!e.target.result.objectStoreNames.contains(STORE_NAME)) e.target.result.createObjectStore(STORE_NAME, { keyPath: "id" }); };
+      req.onsuccess = e => res(e.target.result);
+      req.onerror = e => rej(e.target.error);
+    });
+    return dbProm;
+  }
+  const dbPut = async rec => { const db = await openDb(); return new Promise((r, j) => { const tx = db.transaction(STORE_NAME, "readwrite"); tx.objectStore(STORE_NAME).put(rec); tx.oncomplete = r; tx.onerror = () => j(tx.error); }); };
+  const dbDel = async id => { const db = await openDb(); return new Promise((r, j) => { const tx = db.transaction(STORE_NAME, "readwrite"); tx.objectStore(STORE_NAME).delete(id); tx.oncomplete = r; tx.onerror = () => j(tx.error); }); };
+  const dbClear = async () => { const db = await openDb(); return new Promise((r, j) => { const tx = db.transaction(STORE_NAME, "readwrite"); tx.objectStore(STORE_NAME).clear(); tx.oncomplete = r; tx.onerror = () => j(tx.error); }); };
+  const dbAll = async () => { const db = await openDb(); return new Promise((r, j) => { const tx = db.transaction(STORE_NAME, "readonly"); const g = tx.objectStore(STORE_NAME).getAll(); g.onsuccess = () => r(g.result || []); g.onerror = () => j(g.error); }); };
+
+  let RECORDS = [];
+  let FILTER = "all";
+  let ACTIVE_REV_ID = null;
+  let PUBLISH_STATE = { status: "idle", text: "Not published yet", sub: "Saves Excel into exam subfolder & updates website", pct: 0 };
+  const FILE_CACHE = new Map();
+
+  function lookupMasterStudent(idStr) {
+    if (!idStr || !MASTER_DB.length) return null;
+    const n = normId(idStr), nz = noZero(idStr);
+    if (!n || n.includes("?")) return null;
+    return MASTER_DB.find(st =>
+      normId(st.satsNo) === n || noZero(st.satsNo) === nz ||
+      (st.regNo && (normId(st.regNo) === n || noZero(st.regNo) === nz))
+    ) || null;
+  }
+
+  /* =========================================================================
+     3. 4-VERSION ANSWER KEY GRID & EXCEL IMPORT / TEMPLATE EXPORT
+     ========================================================================= */
+  function updateKeyCounts() {
+    const pat = curPat();
+    for (const v of ["1", "2", "3", "4"]) {
+      let c = 0;
+      for (let q = 1; q <= pat.totalQ; q++) if (Q_OPTIONS.includes(ANSWER_KEYS[v][String(q)])) c++;
+      $(`#vc${v}`).textContent = `(${c}/${pat.totalQ})`;
+    }
+  }
+
+  function renderKeyGrid() {
+    const pat = curPat();
+    const vMap = ANSWER_KEYS[ACTIVE_KEY_VER] || {};
+    const grid = $("#keyGrid");
+    grid.innerHTML = "";
+    for (let q = 1; q <= pat.totalQ; q++) {
+      const cell = document.createElement("div");
+      cell.className = "kcell";
+      cell.innerHTML = `<span>${q}</span><input maxlength="1" data-q="${q}" value="${esc(vMap[String(q)] || "")}">`;
+      grid.appendChild(cell);
+    }
+    updateKeyCounts();
+  }
+
+  $("#keyGrid").oninput = e => {
+    const inp = e.target.closest("input[data-q]");
+    if (!inp) return;
+    let v = inp.value.trim().toUpperCase().slice(0, 1);
+    if (!Q_OPTIONS.includes(v)) v = "";
+    inp.value = v;
+    if (v) ANSWER_KEYS[ACTIVE_KEY_VER][inp.dataset.q] = v;
+    else delete ANSWER_KEYS[ACTIVE_KEY_VER][inp.dataset.q];
+    saveKeys();
+    regradeAllRecords();
+  };
+
+  $("#keyVerTabs").onclick = e => {
+    const b = e.target.closest("button.vtab");
+    if (!b) return;
+    ACTIVE_KEY_VER = b.dataset.v;
+    $("#keyVerTabs").querySelectorAll("button.vtab").forEach(x => x.classList.toggle("on", x === b));
+    renderKeyGrid();
+  };
+
+  $("#btnQuickPaste").onclick = () => {
+    const pat = curPat();
+    const txt = prompt(`Paste answer key letters for Version ${ACTIVE_KEY_VER} (up to ${pat.totalQ} letters A/B/C/D, spaces/newlines ignored):`);
+    if (!txt) return;
+    const letters = txt.toUpperCase().replace(/[^ABCD]/g, "");
+    ANSWER_KEYS[ACTIVE_KEY_VER] = {};
+    for (let i = 0; i < Math.min(pat.totalQ, letters.length); i++) {
+      ANSWER_KEYS[ACTIVE_KEY_VER][String(i + 1)] = letters[i];
+    }
+    saveKeys();
+    renderKeyGrid();
+    regradeAllRecords();
+  };
+
+  $("#btnDlKeyTpl").onclick = () => {
+    const pat = curPat();
+    const wb = XLSX.utils.book_new();
+    for (const v of ["1", "2", "3", "4"]) {
+      const rows = [];
+      for (let q = 1; q <= pat.totalQ; q++) {
+        const subj = (pat.subjects.find(s => q >= s.start && q <= s.end) || {}).name || "";
+        rows.push({ "Q.No": q, "Subject": subj, "Correct Answer": ANSWER_KEYS[v][String(q)] || "" });
+      }
+      const ws = XLSX.utils.json_to_sheet(rows);
+      ws["!cols"] = [{ wch: 8 }, { wch: 16 }, { wch: 16 }];
+      XLSX.utils.book_append_sheet(wb, ws, `V${v}`);
+    }
+    XLSX.writeFile(wb, `Answer_Keys_V1_to_V4_${pat.label}_${pat.totalQ}Qs.xlsx`);
+  };
+
+  $("#keyExcelFile").onchange = async e => {
+    const f = e.target.files[0];
+    if (!f) return;
+    try {
+      const wb = XLSX.read(await f.arrayBuffer(), { type: "array" });
+      const loaded = [];
+      wb.SheetNames.forEach((sName, sIdx) => {
+        const m = sName.match(/([1-4])/);
+        const ver = m ? m[1] : (sIdx < 4 ? String(sIdx + 1) : null);
+        if (!ver) return;
+        const rows = XLSX.utils.sheet_to_json(wb.Sheets[sName], { header: 1, defval: "" });
+        if (!rows.length) return;
+        // Auto-detect Q.No & Answer columns
+        let qCol = 0, aCol = 2, startRow = 0;
+        const hdr = rows[0].map(c => String(c || "").toUpperCase());
+        const foundAns = hdr.findIndex(h => h.includes("ANS") || h.includes("KEY") || h.includes("OPT"));
+        const foundQ = hdr.findIndex(h => h.includes("Q") || h.includes("NO"));
+        if (foundAns !== -1) { aCol = foundAns; startRow = 1; }
+        else if (rows[0].length === 2) { qCol = 0; aCol = 1; startRow = isNaN(parseInt(rows[0][0], 10)) ? 1 : 0; }
+        else if (isNaN(parseInt(rows[0][0], 10))) { startRow = 1; }
+        if (foundQ !== -1) qCol = foundQ;
+
+        const map = {};
+        let cnt = 0;
+        for (let r = startRow; r < rows.length; r++) {
+          const row = rows[r];
+          const qn = parseInt(row[qCol], 10);
+          const ans = String(row[aCol] || "").trim().toUpperCase().slice(0, 1);
+          if (qn >= 1 && qn <= 180 && Q_OPTIONS.includes(ans)) { map[String(qn)] = ans; cnt++; }
+        }
+        if (cnt > 0) { ANSWER_KEYS[ver] = map; loaded.push(`V${ver}:${cnt}`); }
+      });
+      if (!loaded.length) throw new Error("No valid answers found. Expected sheets named V1, V2, V3, V4 with Q.No & Correct Answer (A/B/C/D).");
+      saveKeys();
+      renderKeyGrid();
+      regradeAllRecords();
+      alert(`✅ Loaded Answer Keys: ${loaded.join(" | ")}`);
+    } catch (err) {
+      alert("❌ Key Excel Error: " + err.message);
+    } finally { e.target.value = ""; }
+  };
+
+  /* =========================================================================
+     4. MASTER STUDENT DATABASE TEMPLATE DOWNLOAD & EXCEL UPLOAD
+     ========================================================================= */
+  $("#btnDlMasterTpl").onclick = () => {
+    const bin = atob(MASTER_DB_TEMPLATE_B64);
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    const url = URL.createObjectURL(new Blob([bytes], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
+    const a = document.createElement("a");
+    a.href = url; a.download = "Student_Master_Database_Template.xlsx";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+
+  function renderMasterDbStatus() {
+    $("#masterDbStatus").innerHTML = MASTER_DB.length
+      ? `✅ Loaded <b>${MASTER_DB.length}</b> students from Master Database (saved locally for instant SATS / Reg No. matching).`
+      : `ℹ️ No Master Database loaded yet. Download the sample template or upload your student Excel sheet.`;
+  }
+
+  $("#masterDbFile").onchange = async e => {
+    const f = e.target.files[0];
+    if (!f) return;
+    try {
+      const wb = XLSX.read(await f.arrayBuffer(), { type: "array" });
+      const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1, defval: "" });
+      let hIdx = 0;
+      for (let i = 0; i < Math.min(15, rows.length); i++) {
+        const up = rows[i].map(c => String(c || "").toUpperCase());
+        if (up.some(v => v.includes("SATS") || v.includes("REG") || v.includes("ROLL")) && up.some(v => v.includes("NAME"))) { hIdx = i; break; }
+      }
+      const hdr = rows[hIdx].map(c => String(c || "").trim().toUpperCase());
+      const iSats = hdr.findIndex(h => h.includes("SATS"));
+      const iReg = hdr.findIndex(h => h.includes("REGISTER") || h.includes("ROLL"));
+      const iName = hdr.findIndex(h => h.includes("STUDENT NAME") || h === "NAME");
+      const iFather = hdr.findIndex(h => h.includes("FATHER"));
+      const iMob = hdr.findIndex(h => h.includes("MOBILE") || h.includes("CONTACT") || h.includes("PHONE"));
+      const iCls = hdr.findIndex(h => h.includes("CLASS"));
+      const iSec = hdr.findIndex(h => h.includes("SECTION"));
+      if (iName === -1 || (iSats === -1 && iReg === -1)) throw new Error("Master Excel must have 'STUDENT NAME' and 'SATS NO' or 'REGISTER NO'.");
+
+      const list = [];
+      for (let r = hIdx + 1; r < rows.length; r++) {
+        const row = rows[r];
+        const name = String(row[iName] || "").trim().toUpperCase();
+        const sats = iSats !== -1 ? String(row[iSats] || "").trim().replace(/\.0$/, "") : "";
+        const reg = iReg !== -1 ? String(row[iReg] || "").trim().replace(/\.0$/, "") : "";
+        if (!name || (!sats && !reg)) continue;
+        list.push({
+          satsNo: sats, regNo: reg, studentName: name,
+          fatherName: iFather !== -1 ? String(row[iFather] || "").trim().toUpperCase() : "",
+          mobileNo: iMob !== -1 ? String(row[iMob] || "").trim().replace(/\.0$/, "") : "",
+          className: iCls !== -1 ? String(row[iCls] || "").trim() : "",
+          section: iSec !== -1 ? String(row[iSec] || "").trim() : ""
+        });
+      }
+      if (!list.length) throw new Error("No student rows found.");
+      MASTER_DB = list;
+      localStorage.setItem(MASTER_KEY, JSON.stringify(MASTER_DB));
+      renderMasterDbStatus();
+      // Backfill any already-scanned sheets
+      for (const rec of RECORDS) {
+        const st = lookupMasterStudent(rec.satsNo || rec.regNo);
+        if (st) {
+          if (!rec.studentName) rec.studentName = st.studentName;
+          if (!rec.fatherName) rec.fatherName = st.fatherName;
+          if (!rec.regNo) rec.regNo = st.regNo;
+          if (!rec.satsNo || rec.satsNo.includes("?")) rec.satsNo = st.satsNo;
+          if (!rec.className) rec.className = st.className;
+          if (!rec.section) rec.section = st.section;
+          if (!rec.mobileNo) rec.mobileNo = st.mobileNo;
+          await dbPut(rec);
+        }
+      }
+      renderAll();
+    } catch (err) {
+      alert("❌ Master Database Error: " + err.message);
+    } finally { e.target.value = ""; }
+  };
+
+  $("#btnClearDb").onclick = () => {
+    if (!MASTER_DB.length || !confirm("Clear saved Master Student Database?")) return;
+    MASTER_DB = []; localStorage.removeItem(MASTER_KEY); renderMasterDbStatus();
+  };
+
+  /* =========================================================================
+     5. 300-DPI 4-VERSION PRINTABLE OMR GENERATOR (Times New Roman, Empty Date, No Room No)
+     ========================================================================= */
+  function loadLogoImage() {
+    return new Promise(res => {
+      const im = new Image(); im.crossOrigin = "anonymous";
+      im.onload = () => res(im);
+      im.onerror = () => { const im2 = new Image(); im2.onload = () => res(im2); im2.onerror = () => res(null); im2.src = "favicon.png"; };
+      im.src = "media/logo-pragathi.png";
+    });
+  }
+
+  function toGrayscaleCanvas(img, w, h) {
+    const gc = document.createElement("canvas");
+    gc.width = w; gc.height = h;
+    const gctx = gc.getContext("2d");
+    gctx.drawImage(img, 0, 0, w, h);
+    try {
+      const id = gctx.getImageData(0, 0, w, h);
+      const d = id.data;
+      for (let i = 0; i < d.length; i += 4) {
+        if (d[i + 3] === 0) continue;
+        // Convert to clean high-contrast monochrome (saves color toner & keeps crest sharp)
+        const lum = Math.round(d[i] * 0.299 + d[i + 1] * 0.587 + d[i + 2] * 0.114);
+        const v = lum > 220 ? 255 : Math.min(255, Math.max(0, Math.round(lum * 1.15)));
+        d[i] = d[i + 1] = d[i + 2] = v;
+      }
+      gctx.putImageData(id, 0, 0);
+    } catch {}
+    return gc;
+  }
+
+  function defaultOmrTitle() {
+    const pat = curPat();
+    const nm = ($("#examName").value || "WEEKLY TEST").trim().toUpperCase();
+    return `${nm} (${pat.label} · ${pat.totalQ} Qs) — OMR ANSWER SHEET`;
+  }
+
+  async function renderWeeklyOmrCanvas(pat, opts = {}) {
+    // Ink-Saver Monochrome (pure white bg, black outlines only) + 100% Times New Roman + Custom Title
+    const c = document.createElement("canvas");
+    c.width = PAGE_W; c.height = PAGE_H;
+    const ctx = c.getContext("2d");
+
+    const BLACK = "#000000", DARK = "#222222", BUB_TXT = "#333333";
+    const TNR = '"Times New Roman", Times, Georgia, serif';
+
+    ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, PAGE_W, PAGE_H);
+    ctx.textBaseline = "top";
+
+    const rect = (x0, y0, x1, y1, fill, stroke, lw = 2) => {
+      if (fill) { ctx.fillStyle = fill; ctx.fillRect(x0, y0, x1 - x0, y1 - y0); }
+      if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lw; ctx.strokeRect(x0, y0, x1 - x0, y1 - y0); }
+    };
+    const centerTxt = (cx, y, txt, font, color = BLACK) => {
+      ctx.font = font; ctx.fillStyle = color; ctx.textAlign = "center";
+      ctx.fillText(txt, cx, y); ctx.textAlign = "left";
+    };
+    const fitCenterTxt = (cx, y, txt, maxW, maxPx, minPx, bold = true, color = BLACK) => {
+      let sz = maxPx;
+      while (sz > minPx) {
+        ctx.font = `${bold ? "bold " : ""}${sz}px ${TNR}`;
+        if (ctx.measureText(txt).width <= maxW) break;
+        sz -= 2;
+      }
+      ctx.font = `${bold ? "bold " : ""}${sz}px ${TNR}`;
+      ctx.fillStyle = color; ctx.textAlign = "center";
+      ctx.fillText(txt, cx, y + Math.round((maxPx - sz) * 0.45));
+      ctx.textAlign = "left";
+    };
+    const circle = (cx, cy, r, fill, stroke, lw = 2.5) => {
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+      if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lw; ctx.stroke(); }
+    };
+
+    // 1. 4 Corner Fiducial Markers (MUST stay solid black for automatic alignment)
+    for (const [cx, cy] of Object.values(FID)) {
+      const x0 = cx - FID_SIZE / 2, y0 = cy - FID_SIZE / 2;
+      rect(x0, y0, x0 + FID_SIZE, y0 + FID_SIZE, BLACK, null);
+      rect(x0 - 12, y0 - 12, x0 + FID_SIZE + 12, y0 + FID_SIZE + 12, null, BLACK, 2);
+    }
+
+    // 2. Header Block (Pure White Fill, Crisp Black Outlines, Monochrome Logo, 100% Times New Roman)
+    const hdrX0 = 200, hdrY0 = 115, hdrX1 = 2280, hdrY1 = 350;
+    rect(hdrX0, hdrY0, hdrX1, hdrY1, null, BLACK, 3.5);
+    const logo = await loadLogoImage();
+    let logoW = 0;
+    if (logo) {
+      const logoH = 200;
+      logoW = Math.round(logo.width * (logoH / logo.height));
+      const monoLogo = toGrayscaleCanvas(logo, logoW, logoH);
+      ctx.drawImage(monoLogo, hdrX0 + 20, hdrY0 + 18, logoW, logoH);
+    }
+    const tcx = Math.round((hdrX0 + logoW + 26 + hdrX1 - 20) / 2);
+    centerTxt(tcx, 126, "DECCAN EDUCATION SOCIETY (R.)", `bold 27px ${TNR}`, BLACK);
+    centerTxt(tcx, 160, "PRAGATHI P.U. COLLEGE, GURUMATKAL", `bold 54px ${TNR}`, BLACK);
+    centerTxt(tcx, 224, "Tq: Gurumatkal, Dist: Yadgir, Karnataka - 585214  |  College Code: KY0434", `25px ${TNR}`, BLACK);
+
+    // Custom OMR Title Banner (White fill + crisp double/bold black border — ZERO solid ink fill!)
+    const banX0 = hdrX0 + logoW + 30, banX1 = hdrX1 - 22;
+    rect(banX0, 266, banX1, 336, null, BLACK, 3);
+    const customTitle = (opts.customTitle || $("#omrTitle").value || defaultOmrTitle()).trim();
+    fitCenterTxt(tcx, 282, customTitle, (banX1 - banX0) - 32, 33, 20, true, BLACK);
+
+    // 3. Part A: Candidate Details (EMPTY Exam Date Box, NO Room No, ZERO Color Fills)
+    rect(165, 365, 2315, 635, null, BLACK, 3);
+    rect(165, 365, 2315, 412, null, BLACK, 2.5);
+    ctx.font = `bold 25px ${TNR}`; ctx.fillStyle = BLACK;
+    ctx.fillText("PART A : CANDIDATE DETAILS (WRITE IN CAPITAL LETTERS USING BLACK / BLUE BALL PEN)", 190, 376);
+
+    ctx.font = `bold 24px ${TNR}`; ctx.fillStyle = BLACK;
+    ctx.fillText("1. STUDENT NAME :", 190, 442); rect(470, 428, 2285, 484, null, DARK, 2);
+    ctx.fillText("2. FATHER'S NAME :", 190, 510); rect(470, 496, 1540, 552, null, DARK, 2);
+    ctx.fillText("3. CLASS :", 1570, 510); rect(1735, 496, 2285, 552, null, DARK, 2);
+    ctx.fillText("4. EXAM DATE :", 190, 578); rect(430, 564, 1140, 620, null, DARK, 2);
+    ctx.fillText("5. CONTACT NO :", 1185, 578); rect(1460, 564, 2285, 620, null, DARK, 2);
+
+    // 4. Middle Section (y=650..1245): SATS/Reg Grid + Paper Version (1–4) + Instructions
+    const midY0 = 650, midY1 = 1245;
+
+    // 4A. 9-Digit SATS / Register No Grid (NO shaded row stripes)
+    rect(165, midY0, 815, midY1, null, BLACK, 3);
+    rect(165, midY0, 815, midY0 + 46, null, BLACK, 2.5);
+    centerTxt((165 + 815) / 2, midY0 + 11, "SATS / REGISTER NUMBER", `bold 24px ${TNR}`, BLACK);
+    centerTxt((165 + 815) / 2, midY0 + 54, "Write digits & darken circles completely:", `bold 20px ${TNR}`, BLACK);
+
+    for (let col = 0; col < SATS_DIGITS; col++) {
+      const bx = SATS_BOX_X0 + col * SATS_COL_STEP;
+      rect(bx, SATS_BOX_Y0, bx + 52, SATS_BOX_Y0 + 58, null, BLACK, 2.5);
+      for (let d = 0; d < 10; d++) {
+        const [cx, cy] = getSatsCenter(col, d);
+        circle(cx, cy, SATS_BUB_R, null, DARK, 2);
+        centerTxt(cx, cy - 10, String(d), `bold 19px ${TNR}`, BUB_TXT);
+      }
+    }
+
+    // 4B. Question Paper Version (1, 2, 3, 4) — Student fills blank box & darkens circle
+    rect(835, midY0, 1295, midY1, null, BLACK, 3);
+    rect(835, midY0, 1295, midY0 + 46, null, BLACK, 2.5);
+    centerTxt((835 + 1295) / 2, midY0 + 11, "PAPER VERSION (1–4)", `bold 24px ${TNR}`, BLACK);
+    centerTxt((835 + 1295) / 2, midY0 + 58, "Write & Darken Paper Version (1–4):", `bold 20px ${TNR}`, BLACK);
+    rect(975, 745, 1155, 810, null, BLACK, 2.5);
+
+    VER_OPTIONS.forEach((vn, idx) => {
+      const [cx, cy] = getVerCenter(idx);
+      rect(865, cy - 30, 1265, cy + 30, null, DARK, 1.8);
+      circle(cx, cy, VER_BUB_R, null, DARK, 2.5);
+      centerTxt(cx, cy - 11, String(vn), `bold 22px ${TNR}`, BUB_TXT);
+      ctx.font = `bold 26px ${TNR}`; ctx.fillStyle = BLACK;
+      ctx.fillText(`VERSION - ${vn}`, cx + 44, cy - 13);
+    });
+
+    // 4C. Instructions & Signatures (NO solid fill bars)
+    rect(1315, midY0, 2315, midY1, null, BLACK, 3);
+    rect(1315, midY0, 2315, midY0 + 46, null, BLACK, 2.5);
+    centerTxt((1315 + 2315) / 2, midY0 + 11, "INSTRUCTIONS & SIGNATURES", `bold 24px ${TNR}`, BLACK);
+    ctx.font = `21px ${TNR}`; ctx.fillStyle = BLACK;
+    [
+      "1. Use Black or Dark Blue Ball Point Pen only. Darken circles completely.",
+      "2. Darken ONLY ONE circle per question. Multiple marks are invalid.",
+      `3. Marking Scheme: +${pat.correct} for Correct, ${pat.wrong} for Wrong (Max ${pat.maxMarks} Marks).`,
+      "4. Darken your 9-digit SATS / Register No. & Paper Version (1/2/3/4).",
+      "5. Do NOT fold, staple, or write near the 4 black corner alignment squares."
+    ].forEach((ln, i) => ctx.fillText(ln, 1340, midY0 + 62 + i * 38));
+
+    rect(1340, 915, 2290, 1020, null, DARK, 2);
+    ctx.font = `bold 21px ${TNR}`; ctx.fillStyle = BLACK;
+    ctx.fillText("CORRECT :", 1365, 955);
+    ["A", "B", "C", "D"].forEach((ch, i) => {
+      const ex = 1520 + i * 60, ey = 966;
+      if (i === 1) circle(ex, ey, 17, BLACK, BLACK, 2);
+      else { circle(ex, ey, 17, null, DARK, 2); centerTxt(ex, ey - 10, ch, `bold 19px ${TNR}`, BUB_TXT); }
+    });
+    ctx.fillStyle = BLACK; ctx.fillText("WRONG :", 1790, 955);
+    ["cross", "tick", "half", "dot"].forEach((m, i) => {
+      const ex = 1930 + i * 84, ey = 966;
+      circle(ex, ey, 17, null, DARK, 2);
+      ctx.strokeStyle = BLACK; ctx.fillStyle = BLACK; ctx.lineWidth = 3;
+      if (m === "cross") { ctx.beginPath(); ctx.moveTo(ex - 11, ey - 11); ctx.lineTo(ex + 11, ey + 11); ctx.moveTo(ex - 11, ey + 11); ctx.lineTo(ex + 11, ey - 11); ctx.stroke(); }
+      else if (m === "tick") { ctx.beginPath(); ctx.moveTo(ex - 10, ey); ctx.lineTo(ex - 2, ey + 9); ctx.lineTo(ex + 12, ey - 9); ctx.stroke(); }
+      else if (m === "half") { ctx.beginPath(); ctx.arc(ex, ey, 17, Math.PI / 2, Math.PI * 1.5); ctx.closePath(); ctx.fill(); }
+      else circle(ex, ey, 6, BLACK, null);
+    });
+
+    const sigY0 = 1045, sigY1 = 1228, midSig = 1815;
+    rect(1340, sigY0, midSig - 12, sigY1, null, BLACK, 2);
+    rect(1340, sigY1 - 40, midSig - 12, sigY1, null, BLACK, 2);
+    centerTxt((1340 + midSig - 12) / 2, sigY1 - 31, "CANDIDATE'S SIGNATURE", `bold 20px ${TNR}`, BLACK);
+    rect(midSig + 12, sigY0, 2290, sigY1, null, BLACK, 2);
+    rect(midSig + 12, sigY1 - 40, 2290, sigY1, null, BLACK, 2);
+    centerTxt((midSig + 12 + 2290) / 2, sigY1 - 31, "INVIGILATOR'S SIGNATURE", `bold 20px ${TNR}`, BLACK);
+
+    // 5. Part B: Answer Bubble Grid (60 / 100 / 180 Questions — Pure White, Zero Color Fills)
+    rect(165, 1265, 2315, 3295, null, BLACK, 3);
+    rect(165, 1265, 2315, 1312, null, BLACK, 2.5);
+    ctx.font = `bold 24px ${TNR}`; ctx.fillStyle = BLACK;
+    ctx.fillText(`PART B : ANSWERS FOR ${pat.totalQ} QUESTIONS (DARKEN ONLY ONE CIRCLE A, B, C, OR D)`, 190, 1277);
+
+    const bubR = pat.qBubR;
+    const fQ = pat.totalQ === 180 ? `bold 22px ${TNR}` : `bold 25px ${TNR}`;
+    const fB = pat.totalQ === 180 ? `bold 18px ${TNR}` : `bold 22px ${TNR}`;
+    const yOffB = pat.totalQ === 180 ? 9 : 11;
+
+    for (let col = 0; col < 4; col++) {
+      const cx0 = Q_GRID_X0 + col * Q_COL_WIDTH, cx1 = cx0 + Q_COL_WIDTH - 22;
+      const subj = pat.subjects[col] || { name: `Section ${col + 1}`, start: col * pat.rowsPerCol + 1, end: (col + 1) * pat.rowsPerCol };
+      rect(cx0 - 8, 1320, cx1, 3278, null, DARK, 2);
+      rect(cx0 - 8, 1320, cx1, 1354, null, DARK, 2);
+      centerTxt((cx0 - 8 + cx1) / 2, 1326, `${subj.name.toUpperCase()} (Q${subj.start}–Q${subj.end})`, `bold 21px ${TNR}`, BLACK);
+
+      for (let r = 0; r < pat.rowsPerCol; r++) {
+        const qNum = col * pat.rowsPerCol + r + 1;
+        const [, cy] = getQCenter(pat, qNum, 0);
+        // Subtle light hairline every 5 questions for easy eye tracking (zero ink fill!)
+        if (r > 0 && r % 5 === 0) {
+          ctx.strokeStyle = "#b0b0b0"; ctx.lineWidth = 1;
+          ctx.beginPath();
+          const ly = cy - Math.floor(pat.qRowStepY / 2);
+          ctx.moveTo(cx0 - 4, ly); ctx.lineTo(cx1 - 4, ly);
+          ctx.stroke();
+        }
+        ctx.font = fQ; ctx.fillStyle = BLACK;
+        ctx.fillText(String(qNum).padStart(3, "0"), cx0 + 16, cy - (pat.totalQ === 180 ? 11 : 13));
+        Q_OPTIONS.forEach((ch, oi) => {
+          const [bx, by] = getQCenter(pat, qNum, oi);
+          circle(bx, by, bubR, null, DARK, 2);
+          centerTxt(bx, by - yOffB, ch, fB, BUB_TXT);
+        });
+      }
+    }
+
+    centerTxt(PAGE_W / 2, 3318, "PRAGATHI P.U. COLLEGE, GURUMATKAL  •  OFFLINE WEEKLY TEST OMR SYSTEM  •  DO NOT FOLD", `bold 22px ${TNR}`, BLACK);
+
+    // Optional synthetic filled test overlay
+    if (opts.sampleFill) {
+      const sf = opts.sampleFill;
+      ctx.font = `bold 28px ${TNR}`; ctx.fillStyle = "#111111";
+      ctx.fillText(sf.name || "TEST STUDENT", 485, 442);
+      ctx.fillText(sf.father || "FATHER NAME", 485, 510);
+      const satsStr = String(sf.sats || "179937017").padStart(9, "0").slice(0, 9);
+      for (let i = 0; i < 9; i++) {
+        const d = parseInt(satsStr[i], 10);
+        const [bx, by] = getSatsCenter(i, d);
+        ctx.fillText(satsStr[i], SATS_BOX_X0 + i * SATS_COL_STEP + 16, SATS_BOX_Y0 + 16);
+        circle(bx, by, SATS_BUB_R - 1, "#111116", null);
+      }
+      if (sf.version >= 1 && sf.version <= 4) {
+        const [vx, vy] = getVerCenter(sf.version - 1);
+        circle(vx, vy, VER_BUB_R - 2, "#111116", null);
+      }
+      const key = ANSWER_KEYS[String(sf.version || 1)] || ANSWER_KEYS["1"];
+      for (let q = 1; q <= pat.totalQ; q++) {
+        let ans = key[String(q)] || Q_OPTIONS[q % 4];
+        if (q % 11 === 0) ans = Q_OPTIONS[(Q_OPTIONS.indexOf(ans) + 1) % 4];
+        if (q % 19 === 0) continue;
+        const [qx, qy] = getQCenter(pat, q, Q_OPTIONS.indexOf(ans));
+        circle(qx, qy, bubR - 1, "#111116", null);
+      }
+    }
+    return c;
+  }
+
+  function getEnteredOmrTitle() {
+    let t = ($("#omrTitle").value || "").trim();
+    if (!t) {
+      t = prompt("Enter the Title to print on the OMR Sheet:", defaultOmrTitle());
+      if (!t || !t.trim()) return null;
+      $("#omrTitle").value = t.trim();
+      t = t.trim();
+    }
+    return t;
+  }
+
+  $("#btnGenPdf").onclick = async () => {
+    const title = getEnteredOmrTitle();
+    if (!title) return;
+    $("#btnGenPdf").disabled = true;
+    try {
+      const pat = curPat();
+      const c = await renderWeeklyOmrCanvas(pat, { customTitle: title });
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+      pdf.addImage(c.toDataURL("image/png"), "PNG", 0, 0, 210, 297);
+      const safeT = title.replace(/[^A-Za-z0-9]+/g, "_").replace(/^_|_$/g, "").slice(0, 48) || pat.label;
+      pdf.save(`Pragathi_OMR_${safeT}.pdf`);
+    } finally { $("#btnGenPdf").disabled = false; }
+  };
+
+  $("#btnGenPng").onclick = async () => {
+    const title = getEnteredOmrTitle();
+    if (!title) return;
+    $("#btnGenPng").disabled = true;
+    try {
+      const pat = curPat();
+      const c = await renderWeeklyOmrCanvas(pat, { customTitle: title });
+      const safeT = title.replace(/[^A-Za-z0-9]+/g, "_").replace(/^_|_$/g, "").slice(0, 48) || pat.label;
+      const a = document.createElement("a");
+      a.download = `Pragathi_OMR_${safeT}.png`;
+      a.href = c.toDataURL("image/png");
+      a.click();
+    } finally { $("#btnGenPng").disabled = false; }
+  };
+
+  /* =========================================================================
+     6. PERSPECTIVE WARP, BUBBLE READER & GRADING ENGINE (V1..V4 + V1 FALLBACK)
+     ========================================================================= */
+  function solveHomography(srcPts, dstPts) {
+    const A = [], B = [];
+    for (let i = 0; i < 4; i++) {
+      const [x, y] = dstPts[i], [u, v] = srcPts[i];
+      A.push([x, y, 1, 0, 0, 0, -u * x, -u * y]); B.push(u);
+      A.push([0, 0, 0, x, y, 1, -v * x, -v * y]); B.push(v);
+    }
+    for (let col = 0; col < 8; col++) {
+      let piv = col;
+      for (let r = col + 1; r < 8; r++) if (Math.abs(A[r][col]) > Math.abs(A[piv][col])) piv = r;
+      [A[col], A[piv]] = [A[piv], A[col]]; [B[col], B[piv]] = [B[piv], B[col]];
+      const div = A[col][col] || 1e-12;
+      for (let c = col; c < 8; c++) A[col][c] /= div;
+      B[col] /= div;
+      for (let r = 0; r < 8; r++) {
+        if (r === col) continue;
+        const f = A[r][col];
+        for (let c = col; c < 8; c++) A[r][c] -= f * A[col][c];
+        B[r] -= f * B[col];
+      }
+    }
+    return [B[0], B[1], B[2], B[3], B[4], B[5], B[6], B[7], 1];
+  }
+
+  function otsuThreshold(gray) {
+    const hist = new Uint32Array(256);
+    for (let i = 0; i < gray.length; i++) hist[gray[i]]++;
+    const total = gray.length;
+    let sum = 0; for (let t = 0; t < 256; t++) sum += t * hist[t];
+    let sumB = 0, wB = 0, varMax = 0, thresh = 140;
+    for (let t = 0; t < 256; t++) {
+      wB += hist[t]; if (!wB) continue;
+      const wF = total - wB; if (!wF) break;
+      sumB += t * hist[t];
+      const v = wB * wF * (sumB / wB - (sum - sumB) / wF) ** 2;
+      if (v > varMax) { varMax = v; thresh = t; }
+    }
+    return thresh;
+  }
+
+  function detectFiducials(srcCanvas) {
+    const sw = srcCanvas.width, sh = srcCanvas.height;
+    const scale = Math.min(1, 750 / Math.max(sw, sh));
+    const w = Math.max(1, Math.round(sw * scale)), h = Math.max(1, Math.round(sh * scale));
+    const tmp = document.createElement("canvas"); tmp.width = w; tmp.height = h;
+    const tctx = tmp.getContext("2d"); tctx.drawImage(srcCanvas, 0, 0, w, h);
+    const data = tctx.getImageData(0, 0, w, h).data;
+    const gray = new Uint8Array(w * h);
+    for (let i = 0, p = 0; i < gray.length; i++, p += 4) gray[i] = (data[p] * 77 + data[p + 1] * 150 + data[p + 2] * 29) >> 8;
+    const th = otsuThreshold(gray);
+    const bin = new Uint8Array(w * h);
+    for (let i = 0; i < gray.length; i++) bin[i] = gray[i] < th ? 1 : 0;
+
+    const visited = new Uint8Array(w * h), stack = new Int32Array(w * h), cands = [];
+    const minA = w * h * 0.00012, maxA = w * h * 0.006;
+    for (let idx = 0; idx < bin.length; idx++) {
+      if (!bin[idx] || visited[idx]) continue;
+      let sp = 0; stack[sp++] = idx; visited[idx] = 1;
+      let cnt = 0, sx = 0, sy = 0, minX = w, maxX = 0, minY = h, maxY = 0;
+      while (sp > 0) {
+        const cur = stack[--sp], y = (cur / w) | 0, x = cur - y * w;
+        cnt++; sx += x; sy += y;
+        if (x < minX) minX = x; if (x > maxX) maxX = x; if (y < minY) minY = y; if (y > maxY) maxY = y;
+        if (x > 0 && bin[cur - 1] && !visited[cur - 1]) { visited[cur - 1] = 1; stack[sp++] = cur - 1; }
+        if (x + 1 < w && bin[cur + 1] && !visited[cur + 1]) { visited[cur + 1] = 1; stack[sp++] = cur + 1; }
+        if (y > 0 && bin[cur - w] && !visited[cur - w]) { visited[cur - w] = 1; stack[sp++] = cur - w; }
+        if (y + 1 < h && bin[cur + w] && !visited[cur + w]) { visited[cur + w] = 1; stack[sp++] = cur + w; }
+      }
+      if (cnt > minA && cnt < maxA) {
+        const bw = maxX - minX + 1, bh = maxY - minY + 1, asp = bw / bh, ext = cnt / (bw * bh);
+        if (asp >= 0.65 && asp <= 1.45 && ext >= 0.62) cands.push([sx / cnt / scale, sy / cnt / scale]);
+      }
+    }
+    const targets = [[0, 0], [sw, 0], [sw, sh], [0, sh]];
+    if (cands.length >= 4) {
+      return targets.map(([tx, ty]) => cands.reduce((a, b) => ((b[0] - tx) ** 2 + (b[1] - ty) ** 2) < ((a[0] - tx) ** 2 + (a[1] - ty) ** 2) ? b : a));
+    }
+    const sx = sw / PAGE_W, sy = sh / PAGE_H;
+    return [[FID.TL[0] * sx, FID.TL[1] * sy], [FID.TR[0] * sx, FID.TR[1] * sy], [FID.BR[0] * sx, FID.BR[1] * sy], [FID.BL[0] * sx, FID.BL[1] * sy]];
+  }
+
+  function warpCanonical(srcCanvas) {
+    const H = solveHomography(detectFiducials(srcCanvas), [[0, 0], [WARP_W - 1, 0], [WARP_W - 1, WARP_H - 1], [0, WARP_H - 1]]);
+    const sw = srcCanvas.width, sh = srcCanvas.height;
+    const sData = new Uint32Array(srcCanvas.getContext("2d").getImageData(0, 0, sw, sh).data.buffer);
+    const wCanvas = document.createElement("canvas"); wCanvas.width = WARP_W; wCanvas.height = WARP_H;
+    const wctx = wCanvas.getContext("2d"), wImg = wctx.createImageData(WARP_W, WARP_H);
+    const d32 = new Uint32Array(wImg.data.buffer), d8 = wImg.data, gray = new Uint8Array(WARP_W * WARP_H);
+    const [h0, h1, h2, h3, h4, h5, h6, h7, h8] = H;
+    let p = 0;
+    for (let y = 0; y < WARP_H; y++) {
+      const ny = h1 * y + h2, vy = h4 * y + h5, wy = h7 * y + h8;
+      for (let x = 0; x < WARP_W; x++, p++) {
+        const den = h6 * x + wy, sx = ((h0 * x + ny) / den + 0.5) | 0, sy = ((h3 * x + vy) / den + 0.5) | 0;
+        d32[p] = (sx >= 0 && sx < sw && sy >= 0 && sy < sh) ? sData[sy * sw + sx] : 0xffffffff;
+        const i4 = p << 2;
+        gray[p] = (d8[i4] * 77 + d8[i4 + 1] * 150 + d8[i4 + 2] * 29) >> 8;
+      }
+    }
+    wctx.putImageData(wImg, 0, 0);
+    const hist = new Uint32Array(256); for (let i = 0; i < gray.length; i += 4) hist[gray[i]]++;
+    let acc = 0, p85 = 240, tgt = (gray.length >> 2) * 0.85;
+    for (let t = 0; t < 256; t++) { acc += hist[t]; if (acc >= tgt) { p85 = t; break; } }
+    const binTh = Math.min(172, Math.max(125, Math.round(p85 * 0.68)));
+    const binInv = new Uint8Array(WARP_W * WARP_H);
+    for (let i = 0; i < gray.length; i++) binInv[i] = gray[i] < binTh ? 1 : 0;
+    return { wCanvas, binInv };
+  }
+
+  function measureFill(binInv, wx, wy, r) {
+    const x0 = Math.max(0, wx - r), x1 = Math.min(WARP_W - 1, wx + r);
+    const y0 = Math.max(0, wy - r), y1 = Math.min(WARP_H - 1, wy + r);
+    const r2 = r * r; let tot = 0, dark = 0;
+    for (let y = y0; y <= y1; y++) {
+      const dy2 = (y - wy) * (y - wy), off = y * WARP_W;
+      for (let x = x0; x <= x1; x++) if ((x - wx) * (x - wx) + dy2 <= r2) { tot++; if (binInv[off + x]) dark++; }
+    }
+    return tot ? dark / tot : 0;
+  }
+
+  function getKeyForVersion(ver) {
+    const vStr = String(ver || "1");
+    const vk = ANSWER_KEYS[vStr];
+    if (vk && Object.keys(vk).length > 0) return { key: vk, usedVer: vStr };
+    return { key: ANSWER_KEYS["1"] || {}, usedVer: "1" };
+  }
+
+  function gradeRecord(responses, version, pat) {
+    const { key } = getKeyForVersion(version);
+    const subjectStats = {};
+    pat.subjects.forEach(s => { subjectStats[s.name] = { total: s.end - s.start + 1, correct: 0, wrong: 0, unattempted: 0, marks: 0, maxMarks: (s.end - s.start + 1) * pat.correct }; });
+    let correct = 0, wrong = 0, unattempted = 0;
+    for (let q = 1; q <= pat.totalQ; q++) {
+      const ans = responses[`Q${q}`] || "UNATTEMPTED";
+      const k = String(key[String(q)] || "").toUpperCase();
+      const sObj = pat.subjects.find(s => q >= s.start && q <= s.end) || pat.subjects[0];
+      const st = subjectStats[sObj.name];
+      if (Q_OPTIONS.includes(ans)) {
+        if (k && ans === k) { correct++; st.correct++; st.marks += pat.correct; }
+        else if (k) { wrong++; st.wrong++; st.marks += pat.wrong; }
+        else { unattempted++; st.unattempted++; }
+      } else {
+        unattempted++; st.unattempted++;
+      }
+    }
+    const totalMarks = correct * pat.correct + wrong * pat.wrong;
+    const percentage = pat.maxMarks ? Number(((totalMarks / pat.maxMarks) * 100).toFixed(2)) : 0;
+    return { subjectStats, totalMarks, maxMarks: pat.maxMarks, percentage, correctCount: correct, wrongCount: wrong, unattemptedCount: unattempted };
+  }
+
+  async function scanOneFile(fileObj, fileName) {
+    const pat = curPat();
+    const url = URL.createObjectURL(fileObj);
+    let srcCanvas;
+    try {
+      const img = await new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = () => rej(new Error("Image decode failed")); im.src = url; });
+      const scale = Math.min(1, 2600 / Math.max(img.naturalWidth, img.naturalHeight));
+      srcCanvas = document.createElement("canvas");
+      srcCanvas.width = Math.round(img.naturalWidth * scale); srcCanvas.height = Math.round(img.naturalHeight * scale);
+      srcCanvas.getContext("2d").drawImage(img, 0, 0, srcCanvas.width, srcCanvas.height);
+    } finally { URL.revokeObjectURL(url); }
+
+    const { wCanvas, binInv } = warpCanonical(srcCanvas);
+    const thresh = Number(CFG.fillThreshold || 0.46);
+    const ctx = wCanvas.getContext("2d");
+    const drawC = (x, y, r, color, lw = 3.5) => { ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.stroke(); };
+
+    // 1. Read 9-digit SATS / Register Number
+    let rawId = "";
+    for (let col = 0; col < SATS_DIGITS; col++) {
+      const fills = [];
+      for (let d = 0; d < 10; d++) {
+        const [wx, wy] = pageToWarped(getSatsCenter(col, d));
+        fills.push([measureFill(binInv, wx, wy, SATS_BUB_R - 3), d, wx, wy]);
+      }
+      fills.sort((a, b) => b[0] - a[0]);
+      if (fills[0][0] >= thresh && (fills[0][0] - fills[1][0]) >= 0.11) {
+        rawId += String(fills[0][1]);
+        drawC(fills[0][2], fills[0][3], SATS_BUB_R, "#16a34a", 3.5);
+      } else {
+        rawId += "?";
+      }
+    }
+    // Strip leading '?' if student wrote shorter Register No right-aligned (or trailing '?')
+    const cleanId = rawId.replace(/^\?+|\?+$/g, "") || rawId;
+
+    // 2. Read Paper Version (1..4) — IF UNSELECTED, AUTOMATICALLY CONSIDER AS V1!
+    const vFills = VER_OPTIONS.map((vn, idx) => {
+      const [wx, wy] = pageToWarped(getVerCenter(idx));
+      return [measureFill(binInv, wx, wy, VER_BUB_R - 4), String(vn), wx, wy];
+    }).sort((a, b) => b[0] - a[0]);
+    let detectedVer = "1", verNote = "";
+    if (vFills[0][0] >= thresh && (vFills[0][0] - vFills[1][0]) >= 0.11) {
+      detectedVer = vFills[0][1];
+      drawC(vFills[0][2], vFills[0][3], VER_BUB_R, "#16a34a", 4.5);
+    } else {
+      detectedVer = "1";
+      verNote = "Version blank → Defaulted to V1";
+      const v1 = vFills.find(x => x[1] === "1");
+      if (v1) drawC(v1[2], v1[3], VER_BUB_R, "#2563eb", 3.5);
+    }
+
+    // 3. Read & Annotate all 60 / 100 / 180 Questions
+    const { key } = getKeyForVersion(detectedVer);
+    const responses = {};
+    const mRad = Math.max(10, pat.qBubR - 3);
+    for (let q = 1; q <= pat.totalQ; q++) {
+      const optFills = Q_OPTIONS.map((ch, oi) => {
+        const [wx, wy] = pageToWarped(getQCenter(pat, q, oi));
+        return [measureFill(binInv, wx, wy, mRad), ch, wx, wy];
+      });
+      const marked = optFills.filter(o => o[0] >= thresh);
+      const corr = String(key[String(q)] || "").toUpperCase();
+      if (marked.length === 0) {
+        responses[`Q${q}`] = "UNATTEMPTED";
+        const co = optFills.find(o => o[1] === corr);
+        if (co) drawC(co[2], co[3], pat.qBubR, "#eab308", 3);
+      } else if (marked.length > 1) {
+        responses[`Q${q}`] = "MULTIPLE";
+        marked.forEach(m => drawC(m[2], m[3], pat.qBubR, "#f97316", 3.5));
+      } else {
+        const ans = marked[0][1];
+        responses[`Q${q}`] = ans;
+        if (corr && ans === corr) drawC(marked[0][2], marked[0][3], pat.qBubR, "#16a34a", 4);
+        else if (corr) {
+          drawC(marked[0][2], marked[0][3], pat.qBubR, "#dc2626", 4);
+          const co = optFills.find(o => o[1] === corr);
+          if (co) drawC(co[2], co[3], pat.qBubR - 3, "#2563eb", 2.5);
+        } else drawC(marked[0][2], marked[0][3], pat.qBubR, "#2563eb", 3.5);
+      }
+    }
+
+    const graded = gradeRecord(responses, detectedVer, pat);
+    const st = lookupMasterStudent(cleanId);
+
+    ctx.fillStyle = "#122858"; ctx.fillRect(20, 12, WARP_W - 40, 72);
+    ctx.fillStyle = "#ffffff"; ctx.font = "bold 32px Arial,sans-serif";
+    ctx.fillText(`ID: ${cleanId} | ${st ? st.studentName : "Not in DB"} | V${detectedVer} | Score: ${graded.totalMarks}/${graded.maxMarks} (${graded.percentage}%)`, 38, 34);
+
+    const annC = document.createElement("canvas");
+    annC.width = 960; annC.height = Math.round(WARP_H * (960 / WARP_W));
+    annC.getContext("2d").drawImage(wCanvas, 0, 0, annC.width, annC.height);
+
+    return {
+      satsNo: st ? st.satsNo : (cleanId.length === 9 ? cleanId : cleanId),
+      regNo: st ? st.regNo : (cleanId.length < 9 ? cleanId : ""),
+      studentName: st ? st.studentName : "",
+      fatherName: st ? st.fatherName : "",
+      className: st ? st.className : $("#examClass").value,
+      section: st ? st.section : "",
+      mobileNo: st ? st.mobileNo : "",
+      paperVersion: detectedVer,
+      verNote,
+      responses,
+      ...graded,
+      annotatedDataUrl: annC.toDataURL("image/jpeg", 0.78),
+      sourceFile: fileName
+    };
+  }
+
+  async function regradeAllRecords() {
+    const pat = curPat();
+    for (const r of RECORDS) {
+      if (r.responses) {
+        Object.assign(r, gradeRecord(r.responses, r.paperVersion, pat));
+        await dbPut(r);
+      }
+    }
+    renderAll();
+  }
+
+  /* =========================================================================
+     7. BACKGROUND BULK READER WORKER
+     ========================================================================= */
+  let readerRunning = false, curFile = "";
+  async function kickReader() {
+    if (readerRunning) return;
+    readerRunning = true;
+    try {
+      while (true) {
+        const next = RECORDS.find(r => r.status === "queued_read");
+        if (!next) break;
+        next.status = "reading"; curFile = next.sourceFile;
+        await dbPut(next); renderAll();
+        try {
+          const f = FILE_CACHE.get(next.id);
+          if (!f) throw new Error("Image missing from session — re-upload.");
+          const res = await scanOneFile(f, next.sourceFile);
+          Object.assign(next, res, { status: "ready_review", errorMsg: "" });
+          FILE_CACHE.delete(next.id);
+        } catch (err) {
+          next.status = "read_error"; next.errorMsg = err.message || String(err);
+        }
+        await dbPut(next); renderAll();
+        await new Promise(r => setTimeout(r, 20)); // keep UI completely responsive
+      }
+    } finally {
+      readerRunning = false; curFile = ""; renderAll();
+    }
+  }
+
+  async function enqueueFiles(fileList) {
+    const imgs = [...fileList].filter(f => f.type.startsWith("image/") && !f.name.toLowerCase().startsWith("graded_"));
+    if (!imgs.length) return;
+    for (const f of imgs) {
+      const id = `womr_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+      const rec = { id, sourceFile: f.name, status: "queued_read", createdAt: Date.now() };
+      FILE_CACHE.set(id, f);
+      RECORDS.unshift(rec);
+      await dbPut(rec);
+    }
+    renderAll();
+    kickReader();
+  }
+
+  /* =========================================================================
+     8. EXCEL BUILDER (3 SHEETS) & PUBLISH TO GOOGLE DRIVE FOLDER
+     ========================================================================= */
+  function buildRankedWorkbook() {
+    const pat = curPat();
+    const ready = RECORDS.filter(r => r.status === "confirmed" || r.status === "ready_review");
+    ready.sort((a, b) => Number(b.totalMarks || 0) - Number(a.totalMarks || 0) || Number(b.correctCount || 0) - Number(a.correctCount || 0));
+
+    let prevScore = null, curRank = 0;
+    const ranked = ready.map((r, i) => {
+      if (r.totalMarks !== prevScore) { curRank = i + 1; prevScore = r.totalMarks; }
+      return { ...r, rank: curRank };
+    });
+
+    // Sheet 1: Summary Ranklist
+    const sumRows = ranked.map(r => {
+      const obj = {
+        "Rank": r.rank,
+        "SATS No": r.satsNo || "",
+        "Register No": r.regNo || "",
+        "Student Name": r.studentName || "",
+        "Father Name": r.fatherName || "",
+        "Class": r.className || $("#examClass").value,
+        "Section": r.section || "",
+        "Paper Version": `V${r.paperVersion || 1}`
+      };
+      pat.subjects.forEach(s => {
+        const st = (r.subjectStats && r.subjectStats[s.name]) || { correct: 0, wrong: 0, marks: 0 };
+        obj[`${s.name} Marks`] = st.marks;
+      });
+      obj["Correct"] = r.correctCount;
+      obj["Wrong"] = r.wrongCount;
+      obj["Unattempted"] = r.unattemptedCount;
+      obj["Total Marks"] = r.totalMarks;
+      obj["Max Marks"] = r.maxMarks;
+      obj["Percentage %"] = r.percentage;
+      return obj;
+    });
+
+    // Sheet 2: Question-by-Question Student Responses
+    const respRows = ranked.map(r => {
+      const obj = { "SATS No": r.satsNo || "", "Register No": r.regNo || "", "Student Name": r.studentName || "", "Version": `V${r.paperVersion || 1}` };
+      for (let q = 1; q <= pat.totalQ; q++) {
+        const a = (r.responses && r.responses[`Q${q}`]) || "";
+        obj[`Q${q}`] = Q_OPTIONS.includes(a) ? a : (a === "MULTIPLE" ? "MULTI" : "");
+      }
+      return obj;
+    });
+
+    // Sheet 3: Answer Keys V1-V4
+    const keyRows = [];
+    for (let q = 1; q <= pat.totalQ; q++) {
+      const subj = (pat.subjects.find(s => q >= s.start && q <= s.end) || {}).name || "";
+      keyRows.push({
+        "Q.No": q, "Subject": subj,
+        "V1": ANSWER_KEYS["1"][String(q)] || "",
+        "V2": ANSWER_KEYS["2"][String(q)] || "",
+        "V3": ANSWER_KEYS["3"][String(q)] || "",
+        "V4": ANSWER_KEYS["4"][String(q)] || ""
+      });
+    }
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sumRows), "SUMMARY_RANKLIST");
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(respRows), "STUDENT_RESPONSES");
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(keyRows), "ANSWER_KEYS_V1_V4");
+    return { wb, ranked };
+  }
+
+  $("#btnExportXlsx").onclick = () => {
+    const { wb, ranked } = buildRankedWorkbook();
+    if (!ranked.length) return alert("No evaluated OMR sheets to export yet.");
+    const safeName = ($("#examName").value || "WEEKLY_TEST").replace(/[^A-Za-z0-9\-]+/g, "_");
+    XLSX.writeFile(wb, `${safeName}_${curPat().label}_Results.xlsx`);
+  };
+
+  $("#btnPublishDrive").onclick = async () => {
+    const apiUrl = (CFG.apiUrl || "").trim();
+    if (!apiUrl || !apiUrl.startsWith("http")) {
+      alert("⚠️ Please paste your deployed Weekly Test Google Apps Script Web App URL in ⚙️ Settings first.");
+      $("#btnSettings").click();
+      return;
+    }
+    const examName = ($("#examName").value || "").trim();
+    const examDate = ($("#examDate").value || "").trim();
+    if (!examName || !examDate) return alert("⚠️ Enter both Test Name and Exam Date before publishing.");
+
+    const { wb, ranked } = buildRankedWorkbook();
+    if (!ranked.length) return alert("⚠️ No evaluated OMR sheets to publish yet.");
+
+    const pat = curPat();
+    const safeName = examName.replace(/[^A-Za-z0-9\-]+/g, "_");
+    const excelFileName = `${safeName}_${pat.label}_Results.xlsx`;
+    const excelBase64 = XLSX.write(wb, { bookType: "xlsx", type: "base64" });
+
+    // Trigger local Excel backup download as well
+    XLSX.writeFile(wb, excelFileName);
+
+    const banner = $("#pubBanner");
+    banner.className = "pub-banner info";
+    banner.innerHTML = `⏳ Publishing <b>${esc(examName)}</b> (${ranked.length} students + Excel sheet + Q1–Q${pat.totalQ} report data) to Google Drive folder…`;
+    PUBLISH_STATE = { status: "uploading", text: "Publishing…", sub: `Uploading ${excelFileName} to Drive…`, pct: 45 };
+    renderCorner();
+    $("#btnPublishDrive").disabled = true;
+
+    try {
+      const payload = {
+        action: "publishWeeklyExam",
+        examName, examDate,
+        examClass: $("#examClass").value,
+        examType: pat.label,
+        totalQuestions: pat.totalQ,
+        maxMarks: pat.maxMarks,
+        correctMarks: pat.correct,
+        wrongMarks: pat.wrong,
+        subjects: pat.subjects,
+        answerKeys: ANSWER_KEYS,
+        excelFileName,
+        excelBase64,
+        results: ranked.map(r => ({
+          rank: r.rank,
+          satsNo: r.satsNo || "",
+          regNo: r.regNo || "",
+          studentName: r.studentName || "",
+          fatherName: r.fatherName || "",
+          className: r.className || $("#examClass").value,
+          section: r.section || "",
+          mobileNo: r.mobileNo || "",
+          paperVersion: String(r.paperVersion || "1"),
+          subjectStats: r.subjectStats || {},
+          totalMarks: r.totalMarks,
+          maxMarks: r.maxMarks,
+          percentage: r.percentage,
+          correctCount: r.correctCount,
+          wrongCount: r.wrongCount,
+          unattemptedCount: r.unattemptedCount,
+          responses: r.responses || {}
+        }))
+      };
+
+      const resp = await fetch(apiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      });
+      const j = await resp.json();
+      if (!resp.ok || j.status !== "success") throw new Error(j.message || `HTTP ${resp.status}`);
+
+      banner.className = "pub-banner ok";
+      banner.innerHTML = `✅ Published <b>${esc(examName)}</b> (${ranked.length} students) to Google Drive subfolder <code>${esc(j.folderName)}</code>! ` +
+        (j.folderUrl ? `<a href="${esc(j.folderUrl)}" target="_blank" rel="noopener">📁 Open Exam Folder</a> &nbsp;|&nbsp; ` : "") +
+        (j.excelUrl ? `<a href="${esc(j.excelUrl)}" target="_blank" rel="noopener">📊 Open Published Excel</a> &nbsp;|&nbsp; ` : "") +
+        `<a href="weekly-test-result.html" target="_blank" rel="noopener">🏆 View Live Weekly Test Result Portal →</a>`;
+      PUBLISH_STATE = { status: "done", text: `✅ Published (${ranked.length})`, sub: `${examName} live on Drive & Website`, pct: 100 };
+    } catch (err) {
+      banner.className = "pub-banner err";
+      banner.innerHTML = `❌ Publish failed: ${esc(err.message || err)} (Local Excel copy was still downloaded.)`;
+      PUBLISH_STATE = { status: "error", text: "❌ Publish Error", sub: err.message || String(err), pct: 0 };
+    } finally {
+      $("#btnPublishDrive").disabled = false;
+      renderCorner();
+    }
+  };
+
+  /* =========================================================================
+     9. RENDERING, CORNER STATUS & REVIEW MODAL
+     ========================================================================= */
+  function renderCfgBanner() {
+    const pat = curPat();
+    $("#cfgSummary").innerHTML =
+      `<b>Pattern:</b> ${pat.label} (${pat.totalQ} Qs, +${pat.correct}/${pat.wrong}) &nbsp;|&nbsp; ` +
+      `<b>Drive Publisher API:</b> ${CFG.apiUrl ? "✅ Configured" : "⚠️ Set Web App URL in Settings"} &nbsp;|&nbsp; ` +
+      `<b>Master DB:</b> ${MASTER_DB.length} students`;
+  }
+
+  function renderCorner() {
+    const total = RECORDS.length;
+    const reading = RECORDS.filter(r => r.status === "queued_read" || r.status === "reading").length;
+    const errs = RECORDS.filter(r => r.status === "read_error").length;
+    const readDone = total - reading - errs;
+    const readyRev = RECORDS.filter(r => r.status === "ready_review").length;
+    const confirmed = RECORDS.filter(r => r.status === "confirmed").length;
+
+    $("#kTotal").textContent = total; $("#kReading").textContent = reading;
+    $("#kReview").textContent = readyRev; $("#kConfirmed").textContent = confirmed; $("#kErrors").textContent = errs;
+    $("#revNextCnt").textContent = readyRev;
+
+    const rPct = total ? Math.round((readDone / total) * 100) : 0;
+    $("#csReadTxt").textContent = reading > 0 ? `Reading (${readDone}/${total})` : (total ? `Done (${readDone}/${total})` : "Idle (0/0)");
+    $("#csReadBar").style.width = rPct + "%";
+    $("#csReadSub").textContent = curFile ? `Reading: ${curFile}` : (total ? "All OMRs read" : "Waiting for OMR images…");
+    $("#csRevTxt").textContent = `${readyRev} pending · ${confirmed} confirmed`;
+    $("#csUpTxt").textContent = PUBLISH_STATE.text;
+    $("#csUpBar").style.width = PUBLISH_STATE.pct + "%";
+    $("#csUpSub").textContent = PUBLISH_STATE.sub;
+
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({
+        type: "offline-omr-status",
+        total, readingCnt: reading, readDone, readyRev, confirmed, pubStatus: PUBLISH_STATE.status
+      }, "*");
+    }
+  }
+
+  function renderTable() {
+    const q = ($("#qSearch").value || "").trim().toLowerCase();
+    const list = RECORDS.filter(r => {
+      if (FILTER === "ready_review" && r.status !== "ready_review") return false;
+      if (FILTER === "confirmed" && r.status !== "confirmed") return false;
+      if (FILTER === "error" && r.status !== "read_error") return false;
+      if (q && ![r.sourceFile, r.satsNo, r.regNo, r.studentName, r.fatherName].join(" ").toLowerCase().includes(q)) return false;
+      return true;
+    });
+    const tb = $("#queueTbody");
+    if (!list.length) {
+      tb.innerHTML = `<tr><td colspan="12" class="c" style="padding:24px;color:var(--mut)">${RECORDS.length ? "No sheets match this filter." : "No OMR sheets uploaded yet."}</td></tr>`;
+      return;
+    }
+    const badge = r => r.status === "queued_read" ? '<span class="badge bg-wait">⏳ Queued</span>' :
+      r.status === "reading" ? '<span class="badge bg-read">🔄 Reading…</span>' :
+      r.status === "ready_review" ? '<span class="badge bg-rev">🟡 Review</span>' :
+      r.status === "confirmed" ? '<span class="badge bg-ok">✅ Confirmed</span>' :
+      `<span class="badge bg-err" title="${esc(r.errorMsg)}">❌ Error</span>`;
+
+    tb.innerHTML = list.map((r, i) => {
+      const subSum = r.subjectStats ? Object.entries(r.subjectStats).map(([k, v]) => `${k.slice(0, 3)}:${v.marks}`).join(" · ") : "—";
+      return `<tr>
+        <td class="c">${i + 1}</td>
+        <td style="max-width:155px;word-break:break-word"><b>${esc(r.sourceFile)}</b></td>
+        <td><b>${esc(r.satsNo || "—")}</b>${r.regNo ? `<br><small>Reg: ${esc(r.regNo)}</small>` : ""}</td>
+        <td class="c"><b>V${esc(r.paperVersion || 1)}</b>${r.verNote ? `<br><small style="color:#1d4ed8">auto</small>` : ""}</td>
+        <td><b>${esc(r.studentName || "—")}</b></td>
+        <td>${esc(r.fatherName || "—")}</td>
+        <td>${esc(r.className || "—")}</td>
+        <td><small>${esc(subSum)}</small></td>
+        <td class="c">${r.totalMarks !== undefined ? `<b style="color:var(--maroon)">${r.totalMarks}/${r.maxMarks}</b>` : "—"}</td>
+        <td class="c">${r.percentage !== undefined ? `<b>${r.percentage}%</b>` : "—"}</td>
+        <td>${badge(r)}</td>
+        <td class="c" style="white-space:nowrap">
+          ${["ready_review", "confirmed"].includes(r.status) ? `<button type="button" class="btn b-navy sm" data-rev="${r.id}">✏️ Review</button>` : ""}
+          <button type="button" class="btn b-red-out sm" data-del="${r.id}">🗑️</button>
+        </td>
+      </tr>`;
+    }).join("");
+  }
+
+  function renderAll() { renderCfgBanner(); renderCorner(); renderTable(); }
+
+  function openReview(id) {
+    const rec = RECORDS.find(r => r.id === id);
+    if (!rec) return;
+    ACTIVE_REV_ID = id;
+    const pat = curPat();
+    $("#revTitle").textContent = `Review OMR — ${rec.sourceFile}`;
+    $("#revFullImg").src = rec.annotatedDataUrl || "";
+    $("#revFullImg").classList.remove("zoomed");
+    $("#eSats").value = rec.satsNo || "";
+    $("#eReg").value = rec.regNo || "";
+    $("#eVer").value = String(rec.paperVersion || "1");
+    $("#eName").value = rec.studentName || "";
+    $("#eFather").value = rec.fatherName || "";
+    $("#eClass").value = rec.className || $("#examClass").value;
+    $("#eDbNote").textContent = rec.verNote || "";
+
+    const grid = $("#eAnsGrid");
+    grid.innerHTML = "";
+    for (let q = 1; q <= pat.totalQ; q++) {
+      const raw = (rec.responses && rec.responses[`Q${q}`]) || "UNATTEMPTED";
+      const val = Q_OPTIONS.includes(raw) ? raw : (raw === "MULTIPLE" ? "M" : "");
+      const cell = document.createElement("div");
+      cell.className = "ans-cell";
+      cell.innerHTML = `<span>${q}</span><input maxlength="1" data-q="${q}" value="${val}">`;
+      grid.appendChild(cell);
+    }
+
+    const recalc = () => {
+      const ver = $("#eVer").value;
+      const { key } = getKeyForVersion(ver);
+      const resp = {};
+      grid.querySelectorAll("input[data-q]").forEach(inp => {
+        const q = inp.dataset.q;
+        let v = inp.value.trim().toUpperCase().slice(0, 1);
+        if (v !== inp.value) inp.value = v;
+        resp[`Q${q}`] = Q_OPTIONS.includes(v) ? v : (v === "M" ? "MULTIPLE" : "UNATTEMPTED");
+        const c = String(key[q] || "").toUpperCase();
+        inp.className = Q_OPTIONS.includes(v) ? (c ? (v === c ? "ok" : "bad") : "") : "blk";
+      });
+      const g = gradeRecord(resp, ver, pat);
+      const subTxt = Object.entries(g.subjectStats).map(([k, v]) => `${k}:${v.marks}`).join(" · ");
+      $("#eScoreBar").textContent = `Score: ${g.totalMarks}/${g.maxMarks} (${g.percentage}%) | V${ver} | ${subTxt} | Right:${g.correctCount} Wrong:${g.wrongCount} Blank:${g.unattemptedCount}`;
+    };
+    grid.oninput = recalc;
+    $("#eVer").onchange = recalc;
+    recalc();
+    $("#reviewModal").classList.add("open");
+  }
+
+  async function saveReview(confirmOk) {
+    const rec = RECORDS.find(r => r.id === ACTIVE_REV_ID);
+    if (!rec) return;
+    const pat = curPat();
+    const resp = {};
+    $("#eAnsGrid").querySelectorAll("input[data-q]").forEach(inp => {
+      const v = inp.value.trim().toUpperCase();
+      resp[`Q${inp.dataset.q}`] = Q_OPTIONS.includes(v) ? v : (v === "M" ? "MULTIPLE" : "UNATTEMPTED");
+    });
+    const ver = $("#eVer").value;
+    Object.assign(rec, gradeRecord(resp, ver, pat), {
+      satsNo: $("#eSats").value.trim(),
+      regNo: $("#eReg").value.trim(),
+      paperVersion: ver,
+      studentName: $("#eName").value.trim().toUpperCase(),
+      fatherName: $("#eFather").value.trim().toUpperCase(),
+      className: $("#eClass").value.trim(),
+      responses: resp,
+      status: confirmOk ? "confirmed" : rec.status
+    });
+    await dbPut(rec);
+    renderAll();
+    if (confirmOk) {
+      const next = RECORDS.find(r => r.status === "ready_review");
+      if (next) openReview(next.id);
+      else $("#reviewModal").classList.remove("open");
+    } else $("#reviewModal").classList.remove("open");
+  }
+
+  // Event wiring
+  const today = new Date();
+  $("#examDate").value = `${String(today.getDate()).padStart(2, "0")}/${String(today.getMonth() + 1).padStart(2, "0")}/${today.getFullYear()}`;
+  let omrTitleTouched = false;
+  $("#omrTitle").value = defaultOmrTitle();
+  $("#omrTitle").oninput = () => { omrTitleTouched = ($("#omrTitle").value.trim().length > 0); };
+  $("#examName").oninput = () => { if (!omrTitleTouched) $("#omrTitle").value = defaultOmrTitle(); };
+  $("#examType").onchange = () => {
+    if (!omrTitleTouched) $("#omrTitle").value = defaultOmrTitle();
+    renderKeyGrid(); renderCfgBanner(); regradeAllRecords();
+  };
+
+  const dz = $("#dropzone");
+  $("#btnPickFiles").onclick = e => { e.stopPropagation(); $("#fileInput").click(); };
+  $("#btnPickFolder").onclick = e => { e.stopPropagation(); $("#folderInput").click(); };
+  dz.onclick = e => { if (e.target.tagName !== "BUTTON") $("#fileInput").click(); };
+  dz.ondragover = e => { e.preventDefault(); dz.classList.add("drag"); };
+  dz.ondragleave = () => dz.classList.remove("drag");
+  dz.ondrop = e => { e.preventDefault(); dz.classList.remove("drag"); enqueueFiles(e.dataTransfer.files); };
+  $("#fileInput").onchange = e => { enqueueFiles(e.target.files); e.target.value = ""; };
+  $("#folderInput").onchange = e => { enqueueFiles(e.target.files); e.target.value = ""; };
+
+  $("#btnSelfTest").onclick = async e => {
+    e.stopPropagation();
+    const pat = curPat();
+    // Ensure V1 key has sample answers if empty so test immediately shows scores
+    if (!Object.keys(ANSWER_KEYS["1"]).length) {
+      for (let q = 1; q <= pat.totalQ; q++) ANSWER_KEYS["1"][String(q)] = Q_OPTIONS[q % 4];
+      saveKeys(); renderKeyGrid();
+    }
+    const c = await renderWeeklyOmrCanvas(pat, { sampleFill: { sats: "179937017", version: 1, name: "SAMPLE STUDENT", father: "SAMPLE FATHER" } });
+    c.toBlob(blob => enqueueFiles([new File([blob], `Sample_${pat.label}_V1_179937017.png`, { type: "image/png" })]), "image/png");
+  };
+
+  $("#btnReviewNext").onclick = () => {
+    const next = RECORDS.find(r => r.status === "ready_review");
+    if (!next) return alert("No pending sheets in Review Folder.");
+    openReview(next.id);
+  };
+  $("#btnConfirmAll").onclick = async () => {
+    const ready = RECORDS.filter(r => r.status === "ready_review");
+    if (!ready.length) return alert("No pending sheets to confirm.");
+    for (const r of ready) { r.status = "confirmed"; await dbPut(r); }
+    renderAll();
+  };
+  $("#btnClearQueue").onclick = async () => {
+    if (!RECORDS.length || !confirm("Clear all OMR sheets from this Review Folder to start a new test?")) return;
+    RECORDS = []; await dbClear(); renderAll();
+  };
+  $("#queueTbody").onclick = async e => {
+    const bRev = e.target.closest("button[data-rev]"); if (bRev) return openReview(bRev.dataset.rev);
+    const bDel = e.target.closest("button[data-del]");
+    if (bDel) { RECORDS = RECORDS.filter(r => r.id !== bDel.dataset.del); await dbDel(bDel.dataset.del); renderAll(); }
+  };
+  $("#filterPills").onclick = e => {
+    const b = e.target.closest("button[data-f]"); if (!b) return;
+    FILTER = b.dataset.f;
+    $("#filterPills").querySelectorAll("button[data-f]").forEach(x => x.classList.toggle("on", x === b));
+    renderTable();
+  };
+  $("#qSearch").oninput = renderTable;
+  $("#csToggle").onclick = () => { const c = $("#csBody").classList.toggle("collapsed"); $("#csCaret").textContent = c ? "▸" : "▾"; };
+
+  $("#btnCloseRev").onclick = () => $("#reviewModal").classList.remove("open");
+  $("#btnConfirmOk").onclick = () => saveReview(true);
+  $("#btnSaveDraft").onclick = () => saveReview(false);
+  $("#btnSkipNext").onclick = () => {
+    const ready = RECORDS.filter(r => r.status === "ready_review");
+    const i = ready.findIndex(r => r.id === ACTIVE_REV_ID);
+    if (ready.length > 1) openReview(ready[(i + 1) % ready.length].id);
+    else $("#reviewModal").classList.remove("open");
+  };
+  $("#btnLookupDb").onclick = () => {
+    const st = lookupMasterStudent($("#eSats").value || $("#eReg").value);
+    if (!st) { $("#eDbNote").textContent = "Not found in Master DB."; return; }
+    $("#eSats").value = st.satsNo || $("#eSats").value;
+    $("#eReg").value = st.regNo || $("#eReg").value;
+    $("#eName").value = st.studentName || "";
+    $("#eFather").value = st.fatherName || "";
+    $("#eClass").value = st.className || $("#eClass").value;
+    $("#eDbNote").textContent = "✅ Matched from Master DB!";
+  };
+  $("#btnToggleZoom").onclick = () => $("#revFullImg").classList.toggle("zoomed");
+  $("#revFullImg").onclick = () => $("#revFullImg").classList.toggle("zoomed");
+
+  $("#btnSettings").onclick = () => {
+    $("#sApiUrl").value = CFG.apiUrl || "";
+    $("#sThresh").value = CFG.fillThreshold || 0.46;
+    $("#setTestMsg").textContent = "";
+    $("#settingsModal").classList.add("open");
+  };
+  $("#btnCloseSet").onclick = () => $("#settingsModal").classList.remove("open");
+  $("#btnSaveSet").onclick = () => {
+    CFG.apiUrl = $("#sApiUrl").value.trim();
+    CFG.fillThreshold = Math.max(0.25, Math.min(0.75, Number($("#sThresh").value || 0.46)));
+    saveCfg();
+    // Sync URL to localStorage key also readable by weekly-test-result.html on same origin
+    if (CFG.apiUrl) localStorage.setItem("pragathi_weekly_result_api_url", CFG.apiUrl);
+    $("#settingsModal").classList.remove("open");
+  };
+  $("#btnTestApi").onclick = async () => {
+    const u = $("#sApiUrl").value.trim();
+    if (!u) return alert("Paste the Google Apps Script Web App URL first.");
+    $("#setTestMsg").style.color = "#1d4ed8"; $("#setTestMsg").textContent = "⏳ Testing connection…";
+    try {
+      const r = await fetch(`${u}${u.includes("?") ? "&" : "?"}action=ping&_t=${Date.now()}`);
+      const j = await r.json();
+      if (j && j.status === "success") {
+        $("#setTestMsg").style.color = "#15803d";
+        $("#setTestMsg").textContent = `✅ Connected to Drive folder: ${j.folderName || "Weekly Test Folder"}`;
+      } else throw new Error((j && j.message) || "Unexpected reply");
+    } catch (err) {
+      $("#setTestMsg").style.color = "#b91c1c"; $("#setTestMsg").textContent = "❌ " + err.message;
+    }
+  };
+
+  // Boot
+  (async () => {
+    renderMasterDbStatus();
+    renderKeyGrid();
+    try {
+      const saved = await dbAll();
+      saved.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+      RECORDS = saved;
+    } catch {}
+    renderAll();
+  })();
+})();
+</script>
+</body>
+</html>

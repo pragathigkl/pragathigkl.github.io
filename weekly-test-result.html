@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Weekly Test Result · Pragathi P.U. College, Gurumatkal</title>
+<meta name="description" content="Official Weekly Test OMR Report Card portal for Pragathi P.U. College, Gurumatkal (KY0434).">
+<link rel="icon" type="image/png" href="favicon.png"><link rel="shortcut icon" type="image/png" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700;900&family=Libre+Baskerville:wght@700&family=Noto+Sans+Kannada:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js" defer></script>
+<style>
+.wt-search-card{max-width:780px;margin:0 auto 24px;background:#fff;border:1px solid var(--line);border-top:4px solid var(--navy);border-radius:10px;padding:22px 24px;box-shadow:0 4px 14px rgba(0,0,0,.05)}
+.wt-form-grid{display:grid;grid-template-columns:1.35fr 1fr auto;gap:12px;align-items:end;margin-top:12px}
+.wt-form-grid label{margin:0 0 4px;font-size:13px;color:var(--navy);font-weight:700}
+.wt-status{max-width:780px;margin:0 auto 18px;padding:11px 16px;border-radius:8px;font-size:14px;font-weight:600;display:none}
+.wt-status.info{display:block;background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a8a}
+.wt-status.err{display:block;background:#fef2f2;border:1px solid #fecaca;color:#991b1b}
+.rc-actions{max-width:210mm;margin:0 auto 14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+
+/* Strictly Times New Roman Report Card (Page 1 & Page 2) */
+.rc-wrap{display:none;margin:0 auto 30px}
+.rc-page{
+  width:210mm;max-width:100%;margin:0 auto 20px;background:#fff;color:#000;
+  border:2px solid #0b2a5b;box-shadow:0 6px 22px rgba(0,0,0,.12);
+  padding:12mm 14mm 12mm;box-sizing:border-box;
+  font-family:"Times New Roman",Times,Georgia,serif !important;
+}
+.rc-page *{font-family:"Times New Roman",Times,Georgia,serif !important}
+.rc-hdr{display:flex;align-items:center;gap:14px;border-bottom:3px double #0b2a5b;padding-bottom:10px;margin-bottom:12px}
+.rc-hdr img{width:76px;height:76px;object-fit:contain;flex-shrink:0}
+.rc-hdr-txt{flex:1;text-align:center}
+.rc-hdr-soc{font-size:12pt;font-weight:700;color:#8e1b2e;letter-spacing:.5px;margin:0}
+.rc-hdr-col{font-size:21pt;font-weight:700;color:#0b2a5b;margin:2px 0;letter-spacing:.4px;line-height:1.15}
+.rc-hdr-addr{font-size:10.5pt;color:#222;margin:2px 0 0}
+.rc-title-bar{background:#0b2a5b;color:#fff;text-align:center;font-size:13pt;font-weight:700;padding:6px 10px;letter-spacing:.6px;margin-bottom:12px;text-transform:uppercase}
+.rc-meta{width:100%;border-collapse:collapse;margin-bottom:14px;font-size:11.5pt}
+.rc-meta td{border:1px solid #334155;padding:6px 9px}
+.rc-meta td.lbl{background:#f1f5f9;font-weight:700;color:#0b2a5b;width:19%;white-space:nowrap}
+.rc-meta td.val{font-weight:700;color:#000;width:31%}
+.rc-kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.rc-kpi{border:1.5px solid #0b2a5b;border-radius:4px;padding:8px 6px;text-align:center;background:#fafcff}
+.rc-kpi small{display:block;font-size:9.5pt;font-weight:700;color:#475569;text-transform:uppercase}
+.rc-kpi b{display:block;font-size:18pt;color:#0b2a5b;margin-top:2px;line-height:1.15}
+.rc-kpi.maroon b{color:#8e1b2e}
+.rc-kpi.green b{color:#15803d}
+.rc-sec-hdr{font-size:12pt;font-weight:700;color:#0b2a5b;border-bottom:1.5px solid #0b2a5b;padding-bottom:3px;margin:14px 0 8px;text-transform:uppercase}
+.rc-tbl{width:100%;border-collapse:collapse;font-size:11pt;margin-bottom:14px}
+.rc-tbl th,.rc-tbl td{border:1px solid #334155;padding:6px 8px;text-align:center}
+.rc-tbl th{background:#0b2a5b;color:#fff;font-weight:700}
+.rc-tbl td.l{text-align:left;font-weight:700}
+.rc-tbl tr.tot td{background:#e8effa;font-weight:700;font-size:11.5pt;color:#0b2a5b}
+.rc-sign-row{display:flex;justify-content:space-between;align-items:flex-end;margin-top:34px;padding-top:10px;font-size:11pt}
+.rc-sign{width:170px;text-align:center;border-top:1px solid #111;padding-top:4px;font-weight:700}
+.rc-foot-note{margin-top:14px;border-top:1px dashed #94a3b8;padding-top:6px;font-size:9.5pt;color:#444;display:flex;justify-content:space-between}
+
+/* Page 2: Question-by-Question Multi-Column Response Table */
+.rc-p2-banner{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #0b2a5b;padding-bottom:6px;margin-bottom:10px;font-size:11pt}
+.rc-q-cols{display:grid;gap:8px;align-items:start}
+.rc-q-cols.c4{grid-template-columns:repeat(4,1fr)}
+.rc-q-cols.c3{grid-template-columns:repeat(3,1fr)}
+.rc-qtbl{width:100%;border-collapse:collapse;font-size:9.5pt}
+.rc-qtbl th,.rc-qtbl td{border:1px solid #475569;padding:2.5px 3px;text-align:center}
+.rc-qtbl th{background:#0b2a5b;color:#fff;font-size:9pt}
+.rc-qtbl td.ok{background:#e8f7ee;color:#14532d;font-weight:700}
+.rc-qtbl td.bad{background:#fdecee;color:#991b1b;font-weight:700}
+.rc-qtbl td.blk{background:#fefce8;color:#854d0e}
+
+@media(max-width:860px){
+  .wt-form-grid{grid-template-columns:1fr}
+  .rc-page{padding:14px}
+  .rc-kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .rc-q-cols.c4,.rc-q-cols.c3{grid-template-columns:repeat(2,1fr)}
+}
+@page{size:A4 portrait;margin:8mm}
+@media print{
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+  #hdr,#ftr,.noprint{display:none !important}
+  body{background:#fff !important}
+  section{padding:0 !important}
+  .wrap{max-width:none !important;padding:0 !important;margin:0 !important}
+  .rc-wrap{display:block !important;margin:0 !important}
+  .rc-page{width:100% !important;border:1.5px solid #0b2a5b !important;box-shadow:none !important;margin:0 !important;padding:8mm 10mm !important;page-break-after:always;break-after:page}
+  .rc-page:last-child{page-break-after:auto;break-after:auto}
+}
+</style>
+</head>
+<body data-page="results">
+<div id="hdr"></div>
+
+<section style="min-height:64vh">
+  <div class="wrap">
+    <div class="h noprint">
+      <h2>Weekly Test Result Portal</h2>
+      <p style="margin:6px 0 0;color:var(--mut)">Select a published Weekly Test (recent first) and enter your SATS Number or Register Number to view and download your 2-page Report Card.</p>
+    </div>
+
+    <div class="wt-search-card noprint">
+      <form id="wtForm">
+        <div class="wt-form-grid">
+          <div>
+            <label for="wtExamSel">Select Weekly Test &amp; Date (Recent First)</label>
+            <select id="wtExamSel" required>
+              <option value="">⏳ Loading published weekly tests…</option>
+            </select>
+          </div>
+          <div>
+            <label for="wtQuery">SATS Number / Register Number</label>
+            <input id="wtQuery" type="text" required placeholder="Enter SATS or Register No." autocomplete="off">
+          </div>
+          <div>
+            <button type="submit" class="btn b3" id="wtSubmitBtn" style="margin:0;height:44px;white-space:nowrap">🔍 Get Report Card</button>
+          </div>
+        </div>
+      </form>
+      <div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;font-size:13px;color:var(--mut)">
+        <span id="wtExamMeta">Pulling published tests directly from College Drive folder…</span>
+        <a href="results.html" style="font-weight:700">← Back to Results Menu</a>
+      </div>
+    </div>
+
+    <div id="wtStatus" class="wt-status noprint"></div>
+
+    <!-- 2-Page Times New Roman Report Card Container -->
+    <div id="rcWrap" class="rc-wrap">
+      <div class="rc-actions noprint">
+        <span style="font-size:14px;color:var(--navy);font-weight:700">📄 Official 2-Page Report Card (Page 1: Score Card · Page 2: Q.No, Student Answer &amp; Correct Answer)</span>
+        <div>
+          <button type="button" class="btn b3" id="btnDlPdf" style="margin:0 6px 0 0">📥 Download Report Card (PDF)</button>
+          <button type="button" class="btn b4" id="btnPrintRc" style="margin:0">🖨️ Print (A4)</button>
+        </div>
+      </div>
+
+      <!-- PAGE 1: SCORE CARD -->
+      <div class="rc-page" id="rcPage1"></div>
+
+      <!-- PAGE 2: QUESTION-BY-QUESTION ANALYSIS -->
+      <div class="rc-page" id="rcPage2"></div>
+    </div>
+  </div>
+</section>
+
+<div id="ftr"></div>
+<script src="site.js"></script>
+<script>
+(() => {
+  // Paste your deployed Weekly_Test_OMR_AppsScript.gs Web App URL in site.js (C.weeklyResult)
+  const getApiUrl = () => (C.weeklyResult || localStorage.getItem("pragathi_weekly_result_api_url") || "").trim();
+  const $ = s => document.querySelector(s);
+  const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  let EXAMS = [];
+  let LAST_REPORT = null;
+
+  function jsonp(url, ms = 15000) {
+    return new Promise((res, rej) => {
+      const cb = "wtcb_" + Date.now() + Math.floor(Math.random() * 1e4);
+      const s = document.createElement("script");
+      const t = setTimeout(() => { cleanup(); rej(new Error("Request timed out.")); }, ms);
+      function cleanup() { clearTimeout(t); delete window[cb]; s.remove(); }
+      window[cb] = d => { cleanup(); res(d); };
+      s.onerror = () => { cleanup(); rej(new Error("Network error.")); };
+      s.src = `${url}${url.includes("?") ? "&" : "?"}callback=${cb}`;
+      document.body.appendChild(s);
+    });
+  }
+
+  async function apiGet(params) {
+    const base = getApiUrl();
+    if (!base) throw new Error("Weekly Test Result API URL is not configured yet. Please paste your deployed Weekly Test Apps Script URL in site.js (C.weeklyResult).");
+    const qs = new URLSearchParams(params).toString();
+    const url = `${base}${base.includes("?") ? "&" : "?"}${qs}&_t=${Date.now()}`;
+    try {
+      const r = await fetch(url);
+      if (r.ok) return await r.json();
+    } catch {}
+    return await jsonp(url);
+  }
+
+  function showStatus(msg, type = "info") {
+    const el = $("#wtStatus");
+    el.className = "wt-status noprint " + type;
+    el.textContent = msg;
+  }
+  function hideStatus() { $("#wtStatus").className = "wt-status noprint"; }
+
+  async function loadExamDropdown() {
+    const sel = $("#wtExamSel");
+    try {
+      const d = await apiGet({ action: "listExams" });
+      if (!d || d.status !== "success") throw new Error((d && d.message) || "Failed to load exam list");
+      EXAMS = d.exams || [];
+      if (!EXAMS.length) {
+        sel.innerHTML = `<option value="">No Weekly Test results published yet</option>`;
+        $("#wtExamMeta").textContent = "Published tests will appear here automatically (recent first).";
+        return;
+      }
+      sel.innerHTML = EXAMS.map(ex => {
+        const dt = ex.examDate ? ` — ${ex.examDate}` : "";
+        return `<option value="${esc(ex.examId)}">${esc(ex.examName)} (${esc(ex.examType)})${esc(dt)}</option>`;
+      }).join("");
+      $("#wtExamMeta").textContent = `${EXAMS.length} published test(s) available · Most recent test selected automatically.`;
+    } catch (err) {
+      sel.innerHTML = `<option value="">Unable to load tests</option>`;
+      showStatus(err.message || String(err), "err");
+    }
+  }
+
+  function renderReportCard(data) {
+    LAST_REPORT = data;
+    const ex = data.exam, st = data.student, qs = data.questions || [];
+    const attempted = Number(st.correctCount || 0) + Number(st.wrongCount || 0);
+    const acc = attempted > 0 ? ((st.correctCount / attempted) * 100).toFixed(1) : "0.0";
+
+    const subjRows = (ex.subjects || []).map(sub => {
+      const ss = (st.subjectStats && st.subjectStats[sub.name]) || { total: sub.end - sub.start + 1, correct: 0, wrong: 0, unattempted: 0, marks: 0, maxMarks: (sub.end - sub.start + 1) * ex.correctMarks };
+      const sPct = ss.maxMarks ? ((ss.marks / ss.maxMarks) * 100).toFixed(1) : "0.0";
+      return `<tr>
+        <td class="l">${esc(sub.name)} <small>(Q${sub.start}–Q${sub.end})</small></td>
+        <td>${ss.total}</td>
+        <td>${ss.correct}</td>
+        <td>${ss.wrong}</td>
+        <td>${ss.unattempted}</td>
+        <td><b>${ss.marks}</b></td>
+        <td>${ss.maxMarks}</td>
+        <td><b>${sPct}%</b></td>
+      </tr>`;
+    }).join("");
+
+    // PAGE 1: Official Times New Roman Report Card
+    $("#rcPage1").innerHTML = `
+      <div class="rc-hdr">
+        <img src="media/logo-pragathi.png" alt="Pragathi P.U. College Logo">
+        <div class="rc-hdr-txt">
+          <p class="rc-hdr-soc">DECCAN EDUCATION SOCIETY (R.)</p>
+          <p class="rc-hdr-col">PRAGATHI P.U. COLLEGE, GURUMATKAL</p>
+          <p class="rc-hdr-addr">Near Yashodha Petroleums, Hyderabad Road, Gurumatkal, Dist. Yadgir, Karnataka – 585214 · College Code: KY0434</p>
+        </div>
+      </div>
+      <div class="rc-title-bar">WEEKLY TEST PERFORMANCE REPORT CARD — ${esc(ex.examName)} (${esc(ex.examType)})</div>
+
+      <table class="rc-meta">
+        <tr>
+          <td class="lbl">Student Name</td><td class="val">${esc(st.studentName || "—")}</td>
+          <td class="lbl">SATS Number</td><td class="val">${esc(st.satsNo || "—")}</td>
+        </tr>
+        <tr>
+          <td class="lbl">Father's Name</td><td class="val">${esc(st.fatherName || "—")}</td>
+          <td class="lbl">Register / Roll No.</td><td class="val">${esc(st.regNo || "—")}</td>
+        </tr>
+        <tr>
+          <td class="lbl">Class &amp; Section</td><td class="val">${esc(st.className || ex.examClass)}${st.section ? " (" + esc(st.section) + ")" : ""}</td>
+          <td class="lbl">Exam Date</td><td class="val">${esc(ex.examDate || "—")}</td>
+        </tr>
+        <tr>
+          <td class="lbl">Test Name</td><td class="val">${esc(ex.examName)} (${esc(ex.examType)})</td>
+          <td class="lbl">Paper Version</td><td class="val">Version ${esc(st.paperVersion || "1")} (V${esc(st.paperVersion || "1")})</td>
+        </tr>
+      </table>
+
+      <div class="rc-kpi-grid">
+        <div class="rc-kpi maroon"><small>Total Marks Obtained</small><b>${st.totalMarks} / ${st.maxMarks}</b></div>
+        <div class="rc-kpi"><small>Overall Percentage</small><b>${Number(st.percentage || 0).toFixed(2)}%</b></div>
+        <div class="rc-kpi green"><small>Class Rank</small><b>#${st.rank || "—"} <span style="font-size:11pt;color:#475569">/ ${ex.totalStudents || "—"}</span></b></div>
+        <div class="rc-kpi"><small>Accuracy Rate</small><b>${acc}%</b></div>
+      </div>
+
+      <div class="rc-sec-hdr">Subject-Wise Performance Breakdown (Marking: +${ex.correctMarks} Correct, ${ex.wrongMarks} Wrong)</div>
+      <table class="rc-tbl">
+        <thead>
+          <tr><th>Subject</th><th>Total Qs</th><th>Right</th><th>Wrong</th><th>Unattempted</th><th>Marks</th><th>Max Marks</th><th>%</th></tr>
+        </thead>
+        <tbody>
+          ${subjRows}
+          <tr class="tot">
+            <td class="l">GRAND TOTAL</td>
+            <td>${ex.totalQuestions}</td>
+            <td>${st.correctCount}</td>
+            <td>${st.wrongCount}</td>
+            <td>${st.unattemptedCount}</td>
+            <td>${st.totalMarks}</td>
+            <td>${st.maxMarks}</td>
+            <td>${Number(st.percentage || 0).toFixed(2)}%</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="border:1px solid #cbd5e1;background:#f8fafc;padding:9px 12px;font-size:10.5pt;line-height:1.5">
+        <b>Note to Parents &amp; Students:</b> Please review Page 2 of this Report Card for the complete Question-by-Question Answer Comparison (Question Number, Student Answer vs. Official Correct Answer) to strengthen weak concepts before the next weekly test.
+      </div>
+
+      <div class="rc-sign-row">
+        <div class="rc-sign">Parent's Signature</div>
+        <div class="rc-sign">Exam Coordinator</div>
+        <div class="rc-sign">Principal</div>
+      </div>
+      <div class="rc-foot-note">
+        <span>Pragathi P.U. College, Gurumatkal (KY0434) · Official OMR Evaluation Report</span>
+        <span>Page 1 of 2</span>
+      </div>
+    `;
+
+    // PAGE 2: Question-by-Question Analysis (Q.No | Student Answer | Correct Answer | Status)
+    const numCols = qs.length <= 60 ? 3 : 4;
+    const perCol = Math.ceil(qs.length / numCols);
+    let colsHtml = "";
+    for (let c = 0; c < numCols; c++) {
+      const slice = qs.slice(c * perCol, (c + 1) * perCol);
+      colsHtml += `<table class="rc-qtbl">
+        <thead><tr><th>Q.No</th><th>Student</th><th>Correct</th><th>Res</th></tr></thead>
+        <tbody>${slice.map(item => {
+          const cls = item.status === "CORRECT" ? "ok" : (item.status === "WRONG" ? "bad" : "blk");
+          const sym = item.status === "CORRECT" ? "✓" : (item.status === "WRONG" ? "✗" : "—");
+          return `<tr><td><b>${item.qNo}</b></td><td class="${cls}">${esc(item.studentAns)}</td><td><b>${esc(item.correctAns)}</b></td><td class="${cls}">${sym}</td></tr>`;
+        }).join("")}</tbody>
+      </table>`;
+    }
+
+    $("#rcPage2").innerHTML = `
+      <div class="rc-p2-banner">
+        <div>
+          <b style="font-size:13pt;color:#0b2a5b">PRAGATHI P.U. COLLEGE, GURUMATKAL — QUESTION-WISE RESPONSE ANALYSIS</b><br>
+          <span><b>Student:</b> ${esc(st.studentName || "—")} &nbsp;|&nbsp; <b>SATS:</b> ${esc(st.satsNo || "—")} &nbsp;|&nbsp; <b>Reg No:</b> ${esc(st.regNo || "—")}</span>
+        </div>
+        <div style="text-align:right">
+          <b>${esc(ex.examName)} (${esc(ex.examType)})</b><br>
+          <span>Date: ${esc(ex.examDate || "—")} &nbsp;|&nbsp; Version: <b>V${esc(st.paperVersion || "1")}</b> &nbsp;|&nbsp; Score: <b>${st.totalMarks}/${st.maxMarks}</b></span>
+        </div>
+      </div>
+      <div class="rc-q-cols c${numCols}">${colsHtml}</div>
+      <div class="rc-foot-note">
+        <span>Legend: ✓ Correct (+${ex.correctMarks}) &nbsp;|&nbsp; ✗ Wrong (${ex.wrongMarks}) &nbsp;|&nbsp; — Unattempted / Multiple (0)</span>
+        <span>Page 2 of 2</span>
+      </div>
+    `;
+
+    $("#rcWrap").style.display = "block";
+    hideStatus();
+    $("#rcWrap").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  /* =========================================================================
+     2-PAGE TIMES NEW ROMAN PDF DOWNLOAD (jsPDF Built-in "times" Font)
+     ========================================================================= */
+  async function loadLogoDataUrl() {
+    return new Promise(res => {
+      const im = new Image(); im.crossOrigin = "anonymous";
+      im.onload = () => {
+        const c = document.createElement("canvas"); c.width = im.naturalWidth; c.height = im.naturalHeight;
+        c.getContext("2d").drawImage(im, 0, 0);
+        try { res(c.toDataURL("image/png")); } catch { res(null); }
+      };
+      im.onerror = () => res(null);
+      im.src = "media/logo-pragathi.png";
+    });
+  }
+
+  async function downloadReportCardPdf() {
+    if (!LAST_REPORT) return;
+    const btn = $("#btnDlPdf");
+    btn.disabled = true; btn.textContent = "⏳ Building PDF…";
+    try {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+      const ex = LAST_REPORT.exam, st = LAST_REPORT.student, qs = LAST_REPORT.questions || [];
+      const logoUrl = await loadLogoDataUrl();
+      const attempted = Number(st.correctCount || 0) + Number(st.wrongCount || 0);
+      const acc = attempted > 0 ? ((st.correctCount / attempted) * 100).toFixed(1) : "0.0";
+
+      // ---------- PAGE 1: OFFICIAL REPORT CARD (TIMES NEW ROMAN) ----------
+      doc.setDrawColor(11, 42, 91); doc.setLineWidth(0.7);
+      doc.rect(8, 8, 194, 281);
+
+      if (logoUrl) doc.addImage(logoUrl, "PNG", 13, 12, 22, 20);
+      doc.setFont("times", "bold"); doc.setFontSize(11); doc.setTextColor(142, 27, 46);
+      doc.text("DECCAN EDUCATION SOCIETY (R.)", 112, 16, { align: "center" });
+      doc.setFontSize(19); doc.setTextColor(11, 42, 91);
+      doc.text("PRAGATHI P.U. COLLEGE, GURUMATKAL", 112, 24, { align: "center" });
+      doc.setFont("times", "normal"); doc.setFontSize(9.5); doc.setTextColor(35, 35, 35);
+      doc.text("Near Yashodha Petroleums, Hyderabad Road, Gurumatkal, Dist. Yadgir, Karnataka - 585214 | College Code: KY0434", 112, 30, { align: "center" });
+
+      doc.setFillColor(11, 42, 91);
+      doc.rect(12, 35, 186, 8.5, "F");
+      doc.setFont("times", "bold"); doc.setFontSize(11.5); doc.setTextColor(255, 255, 255);
+      doc.text(`WEEKLY TEST PERFORMANCE REPORT CARD - ${ex.examName} (${ex.examType})`, 105, 40.7, { align: "center" });
+
+      doc.autoTable({
+        startY: 47,
+        margin: { left: 12, right: 12 },
+        theme: "grid",
+        styles: { font: "times", fontSize: 10.5, cellPadding: 2.5, lineColor: [60, 75, 95], lineWidth: 0.25, textColor: [0, 0, 0] },
+        body: [
+          [{ content: "Student Name", styles: { fillColor: [241, 245, 249], fontStyle: "bold", textColor: [11, 42, 91] } }, { content: st.studentName || "-", styles: { fontStyle: "bold" } },
+           { content: "SATS Number", styles: { fillColor: [241, 245, 249], fontStyle: "bold", textColor: [11, 42, 91] } }, { content: st.satsNo || "-", styles: { fontStyle: "bold" } }],
+          [{ content: "Father's Name", styles: { fillColor: [241, 245, 249], fontStyle: "bold", textColor: [11, 42, 91] } }, { content: st.fatherName || "-", styles: { fontStyle: "bold" } },
+           { content: "Register / Roll No.", styles: { fillColor: [241, 245, 249], fontStyle: "bold", textColor: [11, 42, 91] } }, { content: st.regNo || "-", styles: { fontStyle: "bold" } }],
+          [{ content: "Class & Section", styles: { fillColor: [241, 245, 249], fontStyle: "bold", textColor: [11, 42, 91] } }, { content: `${st.className || ex.examClass}${st.section ? " (" + st.section + ")" : ""}`, styles: { fontStyle: "bold" } },
+           { content: "Exam Date", styles: { fillColor: [241, 245, 249], fontStyle: "bold", textColor: [11, 42, 91] } }, { content: ex.examDate || "-", styles: { fontStyle: "bold" } }],
+          [{ content: "Test Name", styles: { fillColor: [241, 245, 249], fontStyle: "bold", textColor: [11, 42, 91] } }, { content: `${ex.examName} (${ex.examType})`, styles: { fontStyle: "bold" } },
+           { content: "Paper Version", styles: { fillColor: [241, 245, 249], fontStyle: "bold", textColor: [11, 42, 91] } }, { content: `Version ${st.paperVersion || 1} (V${st.paperVersion || 1})`, styles: { fontStyle: "bold" } }]
+        ],
+        columnStyles: { 0: { cellWidth: 34 }, 1: { cellWidth: 62 }, 2: { cellWidth: 34 }, 3: { cellWidth: 56 } }
+      });
+
+      const yKpi = doc.lastAutoTable.finalY + 6;
+      const kpis = [
+        ["TOTAL MARKS", `${st.totalMarks} / ${st.maxMarks}`, [142, 27, 46]],
+        ["PERCENTAGE", `${Number(st.percentage || 0).toFixed(2)}%`, [11, 42, 91]],
+        ["CLASS RANK", `#${st.rank || "-"} / ${ex.totalStudents || "-"}`, [21, 128, 61]],
+        ["ACCURACY", `${acc}%`, [11, 42, 91]]
+      ];
+      kpis.forEach(([lbl, val, col], idx) => {
+        const x = 12 + idx * 47.2;
+        doc.setDrawColor(11, 42, 91); doc.setFillColor(248, 250, 255); doc.setLineWidth(0.35);
+        doc.roundedRect(x, yKpi, 44.5, 19, 1.5, 1.5, "FD");
+        doc.setFont("times", "bold"); doc.setFontSize(8.5); doc.setTextColor(71, 85, 105);
+        doc.text(lbl, x + 22.25, yKpi + 6, { align: "center" });
+        doc.setFontSize(14.5); doc.setTextColor(col[0], col[1], col[2]);
+        doc.text(val, x + 22.25, yKpi + 14.5, { align: "center" });
+      });
+
+      const ySubHdr = yKpi + 26;
+      doc.setFont("times", "bold"); doc.setFontSize(11); doc.setTextColor(11, 42, 91);
+      doc.text(`SUBJECT-WISE PERFORMANCE BREAKDOWN (Marking: +${ex.correctMarks} Correct, ${ex.wrongMarks} Wrong)`, 12, ySubHdr);
+
+      const subBody = (ex.subjects || []).map(sub => {
+        const ss = (st.subjectStats && st.subjectStats[sub.name]) || { total: sub.end - sub.start + 1, correct: 0, wrong: 0, unattempted: 0, marks: 0, maxMarks: (sub.end - sub.start + 1) * ex.correctMarks };
+        const sPct = ss.maxMarks ? ((ss.marks / ss.maxMarks) * 100).toFixed(1) + "%" : "0.0%";
+        return [`${sub.name} (Q${sub.start}-Q${sub.end})`, String(ss.total), String(ss.correct), String(ss.wrong), String(ss.unattempted), String(ss.marks), String(ss.maxMarks), sPct];
+      });
+      subBody.push([
+        { content: "GRAND TOTAL", styles: { fontStyle: "bold", fillColor: [232, 239, 250], textColor: [11, 42, 91] } },
+        { content: String(ex.totalQuestions), styles: { fontStyle: "bold", fillColor: [232, 239, 250] } },
+        { content: String(st.correctCount), styles: { fontStyle: "bold", fillColor: [232, 239, 250] } },
+        { content: String(st.wrongCount), styles: { fontStyle: "bold", fillColor: [232, 239, 250] } },
+        { content: String(st.unattemptedCount), styles: { fontStyle: "bold", fillColor: [232, 239, 250] } },
+        { content: String(st.totalMarks), styles: { fontStyle: "bold", fillColor: [232, 239, 250], textColor: [142, 27, 46] } },
+        { content: String(st.maxMarks), styles: { fontStyle: "bold", fillColor: [232, 239, 250] } },
+        { content: `${Number(st.percentage || 0).toFixed(2)}%`, styles: { fontStyle: "bold", fillColor: [232, 239, 250], textColor: [11, 42, 91] } }
+      ]);
+
+      doc.autoTable({
+        startY: ySubHdr + 3,
+        margin: { left: 12, right: 12 },
+        theme: "grid",
+        head: [["Subject", "Total Qs", "Right", "Wrong", "Left", "Marks", "Max", "%"]],
+        body: subBody,
+        styles: { font: "times", fontSize: 10.5, halign: "center", cellPadding: 2.8, lineColor: [60, 75, 95], lineWidth: 0.25, textColor: [0, 0, 0] },
+        headStyles: { fillColor: [11, 42, 91], textColor: [255, 255, 255], fontStyle: "bold" },
+        columnStyles: { 0: { halign: "left", fontStyle: "bold" } }
+      });
+
+      const yNote = doc.lastAutoTable.finalY + 8;
+      doc.setDrawColor(180, 190, 205); doc.setFillColor(248, 250, 252);
+      doc.rect(12, yNote, 186, 14, "FD");
+      doc.setFont("times", "normal"); doc.setFontSize(9.5); doc.setTextColor(30, 30, 30);
+      doc.text("Note: Refer to Page 2 for the complete Question-by-Question Answer Comparison (Question Number, Student Answer vs. Official Correct Answer).", 15, yNote + 6, { maxWidth: 180 });
+
+      const ySig = 258;
+      doc.setDrawColor(30, 30, 30); doc.setLineWidth(0.3);
+      [[18, 62, "Parent's Signature"], [82, 128, "Exam Coordinator"], [148, 192, "Principal"]].forEach(([x1, x2, lbl]) => {
+        doc.line(x1, ySig, x2, ySig);
+        doc.setFont("times", "bold"); doc.setFontSize(10.5); doc.setTextColor(0, 0, 0);
+        doc.text(lbl, (x1 + x2) / 2, ySig + 5, { align: "center" });
+      });
+      doc.setFont("times", "normal"); doc.setFontSize(8.5); doc.setTextColor(90, 90, 90);
+      doc.text("Pragathi P.U. College, Gurumatkal (KY0434) | Official Weekly Test Report Card", 12, 285);
+      doc.text("Page 1 of 2", 198, 285, { align: "right" });
+
+      // ---------- PAGE 2: QUESTION-BY-QUESTION ANALYSIS (TIMES NEW ROMAN) ----------
+      doc.addPage("a4", "portrait");
+      doc.setDrawColor(11, 42, 91); doc.setLineWidth(0.7);
+      doc.rect(8, 8, 194, 281);
+
+      doc.setFont("times", "bold"); doc.setFontSize(12); doc.setTextColor(11, 42, 91);
+      doc.text("PRAGATHI P.U. COLLEGE, GURUMATKAL — QUESTION-WISE RESPONSE ANALYSIS", 105, 14.5, { align: "center" });
+      doc.setFont("times", "normal"); doc.setFontSize(9.5); doc.setTextColor(0, 0, 0);
+      doc.text(`Student: ${st.studentName || "-"}  |  SATS: ${st.satsNo || "-"}  |  Reg: ${st.regNo || "-"}  |  ${ex.examName} (${ex.examType})  |  Date: ${ex.examDate || "-"}  |  Ver: V${st.paperVersion || 1}`, 105, 20, { align: "center" });
+
+      const numCols = qs.length <= 60 ? 3 : 4;
+      const perCol = Math.ceil(qs.length / numCols);
+      const colW = (186 - (numCols - 1) * 3) / numCols;
+
+      for (let c = 0; c < numCols; c++) {
+        const slice = qs.slice(c * perCol, (c + 1) * perCol);
+        const startX = 12 + c * (colW + 3);
+        doc.autoTable({
+          startY: 23,
+          margin: { left: startX, right: 210 - (startX + colW), bottom: 14 },
+          tableWidth: colW,
+          theme: "grid",
+          head: [["Q.No", "Stud", "Key", "Res"]],
+          body: slice.map(it => {
+            const sym = it.status === "CORRECT" ? "R" : (it.status === "WRONG" ? "W" : "-");
+            const bg = it.status === "CORRECT" ? [232, 247, 238] : (it.status === "WRONG" ? [253, 236, 238] : [254, 252, 232]);
+            const fg = it.status === "CORRECT" ? [20, 83, 45] : (it.status === "WRONG" ? [153, 27, 27] : [133, 77, 14]);
+            return [
+              { content: String(it.qNo), styles: { fontStyle: "bold" } },
+              { content: it.studentAns, styles: { fillColor: bg, textColor: fg, fontStyle: "bold" } },
+              { content: it.correctAns, styles: { fontStyle: "bold" } },
+              { content: sym, styles: { fillColor: bg, textColor: fg, fontStyle: "bold" } }
+            ];
+          }),
+          styles: { font: "times", fontSize: qs.length > 100 ? 7.6 : 9, cellPadding: qs.length > 100 ? 0.95 : 1.6, halign: "center", lineColor: [90, 105, 125], lineWidth: 0.2, textColor: [0, 0, 0] },
+          headStyles: { fillColor: [11, 42, 91], textColor: [255, 255, 255], fontStyle: "bold", fontSize: qs.length > 100 ? 7.6 : 8.8 }
+        });
+      }
+
+      doc.setFont("times", "normal"); doc.setFontSize(8.5); doc.setTextColor(90, 90, 90);
+      doc.text(`Legend: R = Right (+${ex.correctMarks}) | W = Wrong (${ex.wrongMarks}) | - = Unattempted / Multiple (0)`, 12, 285);
+      doc.text("Page 2 of 2", 198, 285, { align: "right" });
+
+      const fname = `${(st.satsNo || st.regNo || "Student").replace(/[^A-Za-z0-9_-]+/g, "")}_${(ex.examName || "WeeklyTest").replace(/[^A-Za-z0-9_-]+/g, "_")}_ReportCard.pdf`;
+      doc.save(fname);
+    } finally {
+      btn.disabled = false; btn.textContent = "📥 Download Report Card (PDF)";
+    }
+  }
+
+  $("#wtForm").onsubmit = async e => {
+    e.preventDefault();
+    const examId = $("#wtExamSel").value;
+    const query = $("#wtQuery").value.trim();
+    if (!examId) return showStatus("Please select a published Weekly Test first.", "err");
+    if (!query) return showStatus("Please enter your SATS Number or Register Number.", "err");
+
+    $("#rcWrap").style.display = "none";
+    $("#wtSubmitBtn").disabled = true;
+    showStatus(`⏳ Fetching Report Card for ${query}…`, "info");
+    try {
+      const d = await apiGet({ action: "getStudentReport", examId, query });
+      if (d && d.status === "success" && d.student) {
+        renderReportCard(d);
+      } else {
+        showStatus((d && d.message) || "No report card found for this SATS / Register Number.", "err");
+      }
+    } catch (err) {
+      showStatus("Error fetching report card: " + (err.message || err), "err");
+    } finally {
+      $("#wtSubmitBtn").disabled = false;
+    }
+  };
+
+  $("#btnDlPdf").onclick = downloadReportCardPdf;
+  $("#btnPrintRc").onclick = () => window.print();
+
+  loadExamDropdown();
+})();
+</script>
+</body>
+</html>

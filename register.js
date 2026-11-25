@@ -77,7 +77,7 @@ async function start(){
 }
 
 function out(){
- const d=$("#omrPersistentHost");if(d)d.remove();const p=$("#parentOmrCorner");if(p)p.remove();OMR_LAST_STATUS=null;
+ const d=$("#omrPersistentHost");if(d)d.remove();const d2=$("#offlineOmrHost");if(d2)d2.remove();const p=$("#parentOmrCorner");if(p)p.remove();OMR_LAST_STATUS=null;OFFLINE_LAST_STATUS=null;
  KEY=null;ALL=[];PG=[];PGRES=[];PGRES_LOADED=false;PG_LOADED=false;
  for(const u of Object.values(imgs))URL.revokeObjectURL(u);
  for(const u of Object.values(crops))URL.revokeObjectURL(u);
@@ -85,7 +85,8 @@ function out(){
  gate();
 }
 
-let OMR_ACTIVE_SUB="results", OMR_LAST_STATUS=null, OMR_LAST_UPLOADED=0;
+let PGTSE_ACTIVE_SUB="results", EXAM_ACTIVE_SUB="online";
+let OMR_LAST_STATUS=null, OMR_LAST_UPLOADED=0, OFFLINE_LAST_STATUS=null;
 
 function ensureOmrDock(){
  let dock=$("#omrPersistentHost");
@@ -100,48 +101,73 @@ function ensureOmrDock(){
  return dock;
 }
 
+function ensureOfflineOmrDock(){
+ let dock=$("#offlineOmrHost");
+ if(!dock){
+  dock=document.createElement("div");
+  dock.id="offlineOmrHost";
+  dock.className="wrap";
+  dock.style.display="none";
+  dock.innerHTML=`<div style="background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.06);margin-top:4px"><iframe id="offlineOmrFrame" src="offline-omr-exam.html?embed=1" title="Offline Exam (OMR Based)" style="width:100%;height:88vh;min-height:780px;border:none;display:block"></iframe></div>`;
+  app.parentNode.insertBefore(dock, app.nextSibling);
+ }
+ return dock;
+}
+
 function hideOmrDock(){
- const dock=$("#omrPersistentHost");
- if(dock)dock.style.display="none";
+ const d1=$("#omrPersistentHost");if(d1)d1.style.display="none";
+ const d2=$("#offlineOmrHost");if(d2)d2.style.display="none";
  updateParentCornerPill();
 }
 
 function updateParentCornerPill(){
- const dock=$("#omrPersistentHost");
- const dockVisible=dock&&dock.style.display!=="none";
+ const d1=$("#omrPersistentHost"), d2=$("#offlineOmrHost");
+ const vis1=d1&&d1.style.display!=="none", vis2=d2&&d2.style.display!=="none";
  let pill=$("#parentOmrCorner");
- const st=OMR_LAST_STATUS;
- const busy=st&&(st.readingCnt>0||st.upQueued>0||st.upErr>0);
- if(!st||dockVisible||!busy){
+ const st1=OMR_LAST_STATUS, st2=OFFLINE_LAST_STATUS;
+ const busy1=st1&&!vis1&&(st1.readingCnt>0||st1.upQueued>0||st1.upErr>0);
+ const busy2=st2&&!vis2&&(st2.readingCnt>0||st2.pubStatus==="uploading");
+ if(!busy1&&!busy2){
   if(pill)pill.style.display="none";
   return;
  }
  if(!pill){
   pill=document.createElement("div");
   pill.id="parentOmrCorner";
-  pill.title="Click to return to PGTSE-2027 → Read OMR";
-  pill.onclick=()=>pgOmrView();
   document.body.appendChild(pill);
  }
  pill.style.display="block";
- pill.innerHTML=`<div class="poc-hdr">⚡ PGTSE-2027 Background OMR</div>
-  <div>📖 Read: <b>${st.readDone}/${st.total}</b> ${st.readingCnt>0?`(${st.readingCnt} reading…)`:""}</div>
-  <div>🟡 Review: <b>${st.readyRev}</b> ready</div>
-  <div>☁️ Sheets: <b>${st.upDone}</b> uploaded${st.upQueued>0?` (${st.upQueued} uploading…)`:""}${st.upErr>0?` · <span style="color:#fca5a5">${st.upErr} failed</span>`:""}</div>`;
+ if(busy2){
+  pill.title="Click to return to Exam → Offline Exam (OMR Based)";
+  pill.onclick=()=>offlineExamView();
+  pill.innerHTML=`<div class="poc-hdr">⚡ Offline OMR Background</div>
+   <div>📖 Read: <b>${st2.readDone}/${st2.total}</b> ${st2.readingCnt>0?`(${st2.readingCnt} reading…)`:""}</div>
+   <div>🟡 Review: <b>${st2.readyRev}</b> pending · <b>${st2.confirmed}</b> OK</div>`;
+ } else {
+  pill.title="Click to return to PGTSE-2027 → Read OMR";
+  pill.onclick=()=>pgOmrView();
+  pill.innerHTML=`<div class="poc-hdr">⚡ PGTSE-2027 Background OMR</div>
+   <div>📖 Read: <b>${st1.readDone}/${st1.total}</b> ${st1.readingCnt>0?`(${st1.readingCnt} reading…)`:""}</div>
+   <div>🟡 Review: <b>${st1.readyRev}</b> ready</div>
+   <div>☁️ Sheets: <b>${st1.upDone}</b> uploaded${st1.upQueued>0?` (${st1.upQueued} uploading…)`:""}${st1.upErr>0?` · <span style="color:#fca5a5">${st1.upErr} failed</span>`:""}</div>`;
+ }
 }
 
 window.addEventListener("message", e=>{
- if(!e.data||e.data.type!=="pgtse-omr-status")return;
- OMR_LAST_STATUS=e.data;
- if(e.data.upDone>OMR_LAST_UPLOADED){
-  OMR_LAST_UPLOADED=e.data.upDone;
-  PGRES_LOADED=false;
+ if(!e.data)return;
+ if(e.data.type==="pgtse-omr-status"){
+  OMR_LAST_STATUS=e.data;
+  if(e.data.upDone>OMR_LAST_UPLOADED){ OMR_LAST_UPLOADED=e.data.upDone; PGRES_LOADED=false; }
+  updateParentCornerPill();
+ } else if(e.data.type==="offline-omr-status"){
+  OFFLINE_LAST_STATUS=e.data;
+  updateParentCornerPill();
  }
- updateParentCornerPill();
 });
 
 const pgtseSubTabs=sub=>`<div class="subtabs" id="pgSubTabs">
  <button data-sub="omr" class="${sub==="omr"?"on":""}">📷 Read OMR</button>
+ <button data-sub="apps" class="${sub==="apps"?"on":""}">📝 PGTSE-2027 Applications</button>
  <button data-sub="results" class="${sub==="results"?"on":""}">🏆 Complete Results</button>
 </div>`;
 
@@ -151,7 +177,23 @@ function bindPgtseSubTabs(){
   const b=e.target.closest("button[data-sub]");
   if(!b)return;
   if(b.dataset.sub==="omr")pgOmrView();
+  else if(b.dataset.sub==="apps")pgtse();
   else pgResView();
+ };
+}
+
+const examSubTabs=sub=>`<div class="subtabs" id="exSubTabs">
+ <button data-sub="online" class="${sub==="online"?"on":""}">🖥️ Online Exam (Invigilator)</button>
+ <button data-sub="offline" class="${sub==="offline"?"on":""}">📄 Offline Exam (OMR Based)</button>
+</div>`;
+
+function bindExamSubTabs(){
+ const st=$("#exSubTabs");
+ if(st)st.onclick=e=>{
+  const b=e.target.closest("button[data-sub]");
+  if(!b)return;
+  if(b.dataset.sub==="online")onlineExamView();
+  else offlineExamView();
  };
 }
 
@@ -159,8 +201,7 @@ const tabs=a=>`<div class="tabs" id="vt">
  <button data-v="dash" class="${a==="dash"?"on":""}">📊 Dashboard</button>
  <button data-v="pgres" class="${a==="pgres"?"on":""}">🏆 PGTSE-2027</button>
  <button data-v="reg" class="${a==="reg"?"on":""}">📚 Admission Register (${ALL.length})</button>
- <button data-v="pg" class="${a==="pg"?"on":""}">📝 PGTSE-2027 Applications</button>
- <button data-v="oexam" class="${a==="oexam"?"on":""}">🖥️ Online Exam (Invigilator)</button>
+ <button data-v="exam" class="${a==="exam"?"on":""}">📝 Exam</button>
 </div>`;
 
 function bindTabs(){
@@ -169,12 +210,18 @@ function bindTabs(){
   const b=e.target.closest("button[data-v]");
   if(!b)return;
   const v=b.dataset.v;
-  if(v!=="pgres")hideOmrDock();
+  hideOmrDock();
   if(v==="dash")homeDash();
-  else if(v==="pgres"){ if(OMR_ACTIVE_SUB==="omr")pgOmrView(); else pgResView(); }
+  else if(v==="pgres"){
+   if(PGTSE_ACTIVE_SUB==="omr")pgOmrView();
+   else if(PGTSE_ACTIVE_SUB==="apps")pgtse();
+   else pgResView();
+  }
   else if(v==="reg")regDash();
-  else if(v==="pg")pgtse();
-  else if(v==="oexam")onlineExamView();
+  else if(v==="exam"){
+   if(EXAM_ACTIVE_SUB==="offline")offlineExamView();
+   else onlineExamView();
+  }
  };
 }
 
@@ -217,7 +264,7 @@ function homeDash(){
   usedCats.map(cat=>`<td class="c"><b><a href="#" class="cell" style="color:#fff" data-y="" data-c="" data-cat="${cat}">${grand[cat]}</a></b></td>`).join("")+
   `<td class="c" style="background:var(--gold);color:#000"><b><a href="#" class="cell" style="color:#000" data-y="" data-c="" data-cat="">${ALL.length}</a></b></td></tr>`;
 
- app.innerHTML=tabs("dash")+hd("College Dashboard & Overview",`<button class="btn b3 sm" style="background:#0e9f48" id="goOnlineExam">🖥️ Online Exam Module</button> <button class="btn b3 sm" id="goPgtseOmr">📷 Read OMR</button> <button class="btn b3 sm" id="goPgtseRes">🏆 PGTSE-2027 Results</button> <button class="btn b4 sm" id="goReg">📚 Admission Register</button>`)+`
+ app.innerHTML=tabs("dash")+hd("College Dashboard & Overview",`<button class="btn b3 sm" style="background:#0e9f48" id="goOnlineExam">🖥️ Online Exam</button> <button class="btn b3 sm" style="background:var(--maroon)" id="goOfflineExam">📄 Offline Exam (OMR)</button> <button class="btn b3 sm" id="goPgtseOmr">📷 Read OMR</button> <button class="btn b3 sm" id="goPgtseRes">🏆 PGTSE-2027 Results</button> <button class="btn b4 sm" id="goReg">📚 Admission Register</button>`)+`
  <div class="kpi-grid">
   <div class="kpi-card"><small>Total Register Students</small><b>${ALL.length}</b><span>Across ${yrs.length} academic years (${yrs[0]} to ${yrs[yrs.length-1]})</span></div>
   <div class="kpi-card maroon"><small>Boys / Girls Strength</small><b>${boys} / ${girls}</b><span>Boys: ${boys} · Girls: ${girls}</span></div>
@@ -252,6 +299,7 @@ function homeDash(){
  $("#dashPgtseCard").onclick=pgResView;
  $("#goReg").onclick=regDash;
  $("#goOnlineExam").onclick=onlineExamView;
+ $("#goOfflineExam").onclick=offlineExamView;
  app.querySelectorAll("a.cell").forEach(a=>{
   a.onclick=e=>{
    e.preventDefault();
@@ -629,7 +677,8 @@ async function loadPgtseResultsQuiet(){
 }
 
 function pgOmrView(){
- OMR_ACTIVE_SUB="omr";
+ PGTSE_ACTIVE_SUB="omr";
+ hideOmrDock();
  app.innerHTML=tabs("pgres")+pgtseSubTabs("omr")+hd("PGTSE-2027 — Read OMR & Sheet Generator",`<a class="btn b3 sm" href="pgtse-omr-reader.html" target="_blank" rel="noopener">↗ Open Full Screen</a>`);
  bindTabs();
  bindPgtseSubTabs();
@@ -640,7 +689,7 @@ function pgOmrView(){
 }
 
 async function pgResView(){
- OMR_ACTIVE_SUB="results";
+ PGTSE_ACTIVE_SUB="results";
  hideOmrDock();
  app.innerHTML=tabs("pgres")+pgtseSubTabs("results")+hd("PGTSE-2027 Complete Results & Dashboard",`<button class="btn b4" id="resRefresh">🔄 Refresh Results</button>`)+`<p>⏳ Loading complete PGTSE-2027 OMR evaluation results from Google Sheets…</p>`;
  bindTabs();bindPgtseSubTabs();$("#lo").onclick=out;$("#resRefresh").onclick=()=>{PGRES_LOADED=false;pgResView()};
@@ -908,7 +957,7 @@ async function loadPgtseAppsQuiet(){
  }
 }
 
-function pgShell(extra,body){app.innerHTML=tabs("pg")+hd("PGTSE 2027 Applications",extra)+body;bindTabs();$("#lo").onclick=out}
+function pgShell(extra,body){PGTSE_ACTIVE_SUB="apps";app.innerHTML=tabs("pgres")+pgtseSubTabs("apps")+hd("PGTSE-2027 Applications",extra)+body;bindTabs();bindPgtseSubTabs();$("#lo").onclick=out}
 
 async function pgtse(){
  hideOmrDock();
@@ -976,13 +1025,27 @@ function pgPrint(){
    6. ONLINE EXAM INVIGILATOR MODULE (EMBEDDED + FULL-SCREEN OPTION)
    ========================================================================= */
 function onlineExamView(){
+ EXAM_ACTIVE_SUB="online";
  hideOmrDock();
- app.innerHTML=tabs("oexam")+hd("Online Exam — Invigilator Module",`<a class="btn b3 sm" href="online-exam-admin.html" target="_blank" rel="noopener">↗ Open Full Screen</a> <a class="btn b4 sm" href="online-exam.html" target="_blank" rel="noopener">📝 Student Exam Link</a>`)+`
+ app.innerHTML=tabs("exam")+examSubTabs("online")+hd("Online Exam — Invigilator Module",`<a class="btn b3 sm" href="online-exam-admin.html" target="_blank" rel="noopener">↗ Open Full Screen</a> <a class="btn b4 sm" href="online-exam.html" target="_blank" rel="noopener">📝 Student Exam Link</a>`)+`
  <div style="background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.06)">
   <iframe src="online-exam-admin.html?embed=1" title="Online Exam Invigilator Module" style="width:100%;height:88vh;min-height:780px;border:none;display:block"></iframe>
  </div>`;
  bindTabs();
+ bindExamSubTabs();
  $("#lo").onclick=out;
+}
+
+function offlineExamView(){
+ EXAM_ACTIVE_SUB="offline";
+ hideOmrDock();
+ app.innerHTML=tabs("exam")+examSubTabs("offline")+hd("Offline Exam (OMR Based) — 4-Version Evaluator & Publisher",`<a class="btn b3 sm" href="offline-omr-exam.html" target="_blank" rel="noopener">↗ Open Full Screen</a> <a class="btn b4 sm" href="weekly-test-result.html" target="_blank" rel="noopener">📊 Weekly Test Result Page</a>`);
+ bindTabs();
+ bindExamSubTabs();
+ $("#lo").onclick=out;
+ const dock=ensureOfflineOmrDock();
+ dock.style.display="block";
+ updateParentCornerPill();
 }
 
 restore().then(ok=>ok?start():gate());

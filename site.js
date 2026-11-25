@@ -1,7 +1,7 @@
 const C={name:"Pragathi P.U. College",kn:"ಪ್ರಗತಿ ಪದವಿ ಪೂರ್ವ ಕಾಲೇಜು",soc:"Deccan Education Society (R.)",socKn:"ಡೆಕ್ಕನ್ ಶಿಕ್ಷಣ ಸಂಸ್ಥೆ (ರಿ.)",
 repo:"pragathigkl/pragathigkl.github.io",
 phones:[["+91 98864 35014","919886435014"],["+91 98458 33574","919845833574"],["+91 99024 32498","919902432498"],["+91 90360 88843","919036088843"]],
-email:"pragathipugkl434@gmail.com",pgtse:"https://script.google.com/macros/s/AKfycbzblNXU5L-h3tojP7Wb8rxMUnI0BCKq23XCBcVAgjZl0MtZpFoQmzUDhfmsegY0F9jTzw/exec",pgtseResult:"https://script.google.com/macros/s/AKfycbzXedUOZjoAt0qqRR9mrdUSU65NAUY9ajzsE2ZVfAT9VUsJLgP5On3nSWZBjuevxd0E/exec",onlineExam:"https://script.google.com/macros/s/AKfycbxpc6cTq78vPJ37zL05SMysrn4B6bnAPzxfOoz6iOTYV9muJWmZOqTd1qCUTEnaWAO0/exec",ig:"https://www.instagram.com/pragathi_pu_college_gkl/",fb:"https://www.facebook.com/PragathiPUCollegeGurumatkal",
+email:"pragathipugkl434@gmail.com",pgtse:"https://script.google.com/macros/s/AKfycbzblNXU5L-h3tojP7Wb8rxMUnI0BCKq23XCBcVAgjZl0MtZpFoQmzUDhfmsegY0F9jTzw/exec",pgtseResult:"https://script.google.com/macros/s/AKfycbzXedUOZjoAt0qqRR9mrdUSU65NAUY9ajzsE2ZVfAT9VUsJLgP5On3nSWZBjuevxd0E/exec",onlineExam:"https://script.google.com/macros/s/AKfycbxpc6cTq78vPJ37zL05SMysrn4B6bnAPzxfOoz6iOTYV9muJWmZOqTd1qCUTEnaWAO0/exec",weeklyResult:"",ig:"https://www.instagram.com/pragathi_pu_college_gkl/",fb:"https://www.facebook.com/PragathiPUCollegeGurumatkal",
 maps:"https://www.google.com/maps/search/?api=1&query=Near+Yashodha+Petroleums+Hyderabad+Road+Gurumatkal+585214",
 map:"https://www.openstreetmap.org/export/embed.html?bbox=77.355%2C16.845%2C77.425%2C16.895&layer=mapnik&marker=16.8678%2C77.3909"};
 
@@ -52,7 +52,7 @@ $("#hdr").innerHTML=`<div class="top"><div class="wrap"><span>📞 ${C.phones.ma
 <li><a href="${H}#information">Information</a></li>
 <li><a href="${H}#faculty">Faculty</a></li>
 <li><a href="${H}#academic-performance">Academic Performance</a></li>
-<li><a href="results.html" class="${pg==="results"?"on":""}">Results</a></li>
+<li class="sub"><a href="results.html" class="${pg==="results"?"on":""}">Results ▾</a><ul class="dd"><li><a href="weekly-test-result.html">Weekly Test Result</a></li><li><a href="pgtse-result.html">PGTSE-2027 Result</a></li><li><a href="results.html">All Results</a></li></ul></li>
 <li><a href="notifications.html" class="${pg==="notifications"?"on":""}">Notifications</a></li>
 <li><a href="${H}#admission">Admission</a></li>
 <li class="pgn sub"><a href="pgtse-2027.html" class="${pg==="pgtse"?"on":""}">PGTSE 2027 ▾</a><ul class="dd"><li><a href="pgtse-2027.html">Apply Online</a></li><li><a href="pgtse-result.html">Result</a></li></ul></li>
@@ -62,7 +62,7 @@ $("#hdr").innerHTML=`<div class="top"><div class="wrap"><span>📞 ${C.phones.ma
 <li class="login"><a href="college-login.html">College Login</a></li></ul></div></nav>`;
 
 $("#ftr").innerHTML=`<footer><div class="wrap"><div><h4>${C.name}, Gurumatkal</h4><p>${C.soc}<br>Near Yashodha Petroleums, Hyderabad Road, Gurumatkal, Dist. Yadgir, Karnataka — 585214</p><p><a href="${C.maps}">Open in Google Maps</a></p></div>
-<div><h4>Quick links</h4><a href="index.html#information">Information</a><br><a href="index.html#academic-performance">Academic Performance</a><br><a href="index.html#sslc-vs-puc">SSLC vs II PUC Growth</a><br><a href="index.html#college-profile">College Details &amp; Facilities</a><br><a href="results.html">Exam Results</a><br><a href="notifications.html">Notifications &amp; Circulars</a><br><a href="index.html#admission">Admission enquiry</a><br><a href="pgtse-2027.html">PGTSE 2027 (Class X)</a><br><a href="pgtse-result.html">PGTSE 2027 Result</a><br><a href="online-exam.html">Online Exam Portal</a><br><a href="study-material.html">Study Material</a><br><a href="media/pragathi-pamphlet-2025-26.pdf">Pamphlet (PDF)</a></div>
+<div><h4>Quick links</h4><a href="index.html#information">Information</a><br><a href="index.html#academic-performance">Academic Performance</a><br><a href="index.html#sslc-vs-puc">SSLC vs II PUC Growth</a><br><a href="index.html#college-profile">College Details &amp; Facilities</a><br><a href="weekly-test-result.html">Weekly Test Result</a><br><a href="results.html">Exam Results</a><br><a href="notifications.html">Notifications &amp; Circulars</a><br><a href="index.html#admission">Admission enquiry</a><br><a href="pgtse-2027.html">PGTSE 2027 (Class X)</a><br><a href="pgtse-result.html">PGTSE 2027 Result</a><br><a href="online-exam.html">Online Exam Portal</a><br><a href="study-material.html">Study Material</a><br><a href="media/pragathi-pamphlet-2025-26.pdf">Pamphlet (PDF)</a></div>
 <div><h4>Call the office</h4>${C.phones.map(p=>`<a href="tel:+${p[1]}">${p[0]}</a>`).join("<br>")}</div></div><div class="copy">© ${new Date().getFullYear()} ${C.name}, Gurumatkal · ${C.soc}</div></footer>`;
 
 $("#burger").onclick=e=>{const o=$("#menu").classList.toggle("open");e.target.setAttribute("aria-expanded",o)};
@@ -230,7 +230,7 @@ if(pg==="results"){
  fetchRepoFolderFiles("results",/\.html?$/i).then(items=>{
   const box=$("#resultsPortalBox");
   if(!items.length){
-   box.innerHTML=`<div class="empty-state"><div style="font-size:40px">📊</div><h3>Results Portal Ready</h3><p>No exam result files have been published yet. Future uploaded exam result pages will automatically appear here.</p><p style="margin-top:16px"><a class="btn b3" href="index.html#academic-performance">View 3-Year Academic Performance →</a> <a class="btn b4" href="pgtse-result.html">PGTSE-2027 Result</a></p></div>`;
+   box.innerHTML=`<div class="empty-state"><div style="font-size:40px">📊</div><h3>Results Portal Ready</h3><p>No exam result files have been published yet. Future uploaded exam result pages will automatically appear here.</p><p style="margin-top:16px"><a class="btn b3" href="index.html#academic-performance">View 3-Year Academic Performance →</a> <a class="btn b4" href="weekly-test-result.html">Weekly Test Result</a> <a class="btn b4" href="pgtse-result.html">PGTSE-2027 Result</a></p></div>`;
    return;
   }
   box.innerHTML=`<div class="scroll"><table><tr><th class="c" style="width:52px">#</th><th>Published Exam Result</th><th style="width:160px" class="c">Open</th></tr>
