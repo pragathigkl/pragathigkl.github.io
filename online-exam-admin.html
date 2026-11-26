@@ -311,6 +311,7 @@
           </div>
 
           <div style="display:flex; gap:9px; flex-wrap:wrap;">
+            <button type="button" id="btnPublishOnlineWeb" class="btn btn-gold" style="box-shadow:0 2px 8px rgba(0,0,0,.25);" onclick="publishOnlineExamToWebsite()">🚀 Publish to Website (Weekly Result)</button>
             <button type="button" class="btn btn-red" onclick="generateAndDownloadMarklistPDF()">📄 Download Result Sheet (PDF)</button>
             <button type="button" class="btn btn-green" onclick="downloadResultsExcel()">📥 Download Excel (.xlsx)</button>
             <button type="button" class="btn btn-blue" onclick="openKdeModal()">📱 Send Results to Parents (KDE Connect)</button>
@@ -329,6 +330,7 @@
           <button type="button" class="btn btn-blue" style="padding:6px 12px; font-size:12px;" onclick="updateLiveAllowedIps()">💾 Update IP Rule</button>
           <button type="button" class="btn btn-red" style="padding:6px 12px; font-size:12px; margin-left:auto;" onclick="endActiveExam()">🛑 End Exam</button>
         </div>
+        <div id="onlinePubStatus" style="display:none; margin-top:10px; padding:9px 13px; border-radius:7px; font-size:13px; font-weight:700;"></div>
       </div>
 
       <div class="stats-bar">
@@ -1400,6 +1402,153 @@ Total: {total_marks}/{max_marks} ({percentage}%) | Rank: {rank}</textarea>
         excel_base64: wbBase64
       });
     } catch (e) {}
+  }
+
+  const WEEKLY_RESULT_API_URL = "https://script.google.com/macros/s/AKfycbwKcUZlSB6Dry2twvmPiT2gXS7dOcd0J3AoqNxU3arFuYECnQEdHj_OMyDQE5ZXXLscYw/exec";
+
+  function formatOnlineDateDmy(dateStr) {
+    const s = String(dateStr || "").trim();
+    if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(s)) return s;
+    const months = { JAN:"01", FEB:"02", MAR:"03", APR:"04", MAY:"05", JUN:"06", JUL:"07", AUG:"08", SEP:"09", OCT:"10", NOV:"11", DEC:"12" };
+    const m = s.match(/^(\d{1,2})[\-\/\s]([A-Za-z]{3})[A-Za-z]*[\-\/\s](\d{2,4})$/);
+    if (m && months[m[2].toUpperCase()]) {
+      const dd = ("0" + m[1]).slice(-2);
+      const mm = months[m[2].toUpperCase()];
+      const yy = m[3].length === 2 ? "20" + m[3] : m[3];
+      return `${dd}/${mm}/${yy}`;
+    }
+    const d = new Date();
+    return `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}/${d.getFullYear()}`;
+  }
+
+  async function publishOnlineExamToWebsite() {
+    if (!ACTIVE_CONFIG) { alert("⚠️ No active online exam loaded."); return; }
+    const btn = document.getElementById("btnPublishOnlineWeb");
+    const box = document.getElementById("onlinePubStatus");
+    btn.disabled = true;
+    btn.innerText = "⏳ Publishing Online Result...";
+    box.style.display = "block";
+    box.style.background = "#dbeafe"; box.style.color = "#1e3a8a";
+    box.innerHTML = "⏳ Syncing latest Online Exam submissions and publishing to Website (Results → WEEKLY TEST RESULT)...";
+
+    try {
+      await refreshDashboardData();
+      if (!CACHED_RANKED_RESULTS.length) {
+        throw new Error("No submitted online exam results found yet.");
+      }
+
+      const subjectsRaw = ACTIVE_CONFIG.subjects || ["Physics", "Chemistry", "Mathematics", "Biology"];
+      const cMark = Number(ACTIVE_CONFIG.correct_marks || 1);
+      const wMark = Number(ACTIVE_CONFIG.wrong_marks || 0);
+      const subjCounts = ACTIVE_CONFIG.subject_counts || {};
+      let curStart = 1;
+      const subjectMeta = subjectsRaw.map(name => {
+        const cnt = Number(subjCounts[name] || Math.round(Number(ACTIVE_CONFIG.total_questions || 0) / subjectsRaw.length));
+        const obj = { name, start: curStart, end: curStart + cnt - 1 };
+        curStart += cnt;
+        return obj;
+      });
+
+      const rowsForXlsx = CACHED_RANKED_RESULTS.map(s => {
+        const o = {
+          "Rank": s.test_rank || 0,
+          "SATS No": s.sats_no || "",
+          "Register No": s.reg_no || "",
+          "Student Name": s.student_name || "",
+          "Father Name": s.father_name || "",
+          "Class": s.batch || ACTIVE_CONFIG.exam_class || "",
+          "Mode": "ONLINE"
+        };
+        subjectsRaw.forEach(sub => {
+          const st = (s.subj_stats && s.subj_stats[sub]) || { marks: 0 };
+          o[`${sub} Marks`] = Number(st.marks || 0);
+        });
+        o["Correct"] = Number(s.total_correct || 0);
+        o["Wrong"] = Number(s.total_wrong || 0);
+        o["Unattempted"] = Math.max(0, Number(ACTIVE_CONFIG.total_questions || 0) - Number(s.total_correct || 0) - Number(s.total_wrong || 0));
+        o["Total Marks"] = Number(s.total_score || 0);
+        o["Max Marks"] = Number(s.max_marks || ACTIVE_CONFIG.max_marks || 0);
+        o["Percentage %"] = Number(s.percentage || 0);
+        return o;
+      });
+
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rowsForXlsx), "SUMMARY_RANKLIST");
+      const safeName = `${ACTIVE_CONFIG.exam_name}_${ACTIVE_CONFIG.exam_type}_ONLINE`.replace(/[^A-Za-z0-9_-]+/g, "_");
+      const excelFileName = `Results_${safeName}.xlsx`;
+      const excelBase64 = XLSX.write(wb, { bookType: "xlsx", type: "base64" });
+
+      const formattedResults = CACHED_RANKED_RESULTS.map(s => {
+        const sStats = {};
+        subjectMeta.forEach(sm => {
+          const rawSt = (s.subj_stats && s.subj_stats[sm.name]) || {};
+          const totQ = sm.end - sm.start + 1;
+          const right = Number(rawSt.correct || 0);
+          const wrong = Number(rawSt.wrong || 0);
+          const unatt = rawSt.unattempted !== undefined ? Number(rawSt.unattempted) : Math.max(0, totQ - right - wrong);
+          const marks = rawSt.marks !== undefined ? Number(rawSt.marks) : (right * cMark + wrong * wMark);
+          sStats[sm.name] = { total: totQ, correct: right, wrong, unattempted: unatt, marks, maxMarks: totQ * cMark };
+        });
+        const totalQ = Number(ACTIVE_CONFIG.total_questions || 0);
+        const corr = Number(s.total_correct || 0);
+        const wrg = Number(s.total_wrong || 0);
+        return {
+          rank: Number(s.test_rank || 0),
+          satsNo: String(s.sats_no || "").trim(),
+          regNo: String(s.reg_no || "").trim(),
+          studentName: String(s.student_name || "").trim(),
+          fatherName: String(s.father_name || "").trim(),
+          className: String(s.batch || ACTIVE_CONFIG.exam_class || "").trim(),
+          section: String(s.group || "").trim(),
+          mobileNo: String(s.contact_no || "").trim(),
+          paperVersion: "1",
+          subjectStats: sStats,
+          totalMarks: Number(s.total_score || 0),
+          maxMarks: Number(s.max_marks || ACTIVE_CONFIG.max_marks || 0),
+          percentage: Number(s.percentage || 0),
+          correctCount: corr,
+          wrongCount: wrg,
+          unattemptedCount: Math.max(0, totalQ - corr - wrg),
+          responses: s.responses || {}
+        };
+      });
+
+      const payload = {
+        action: "publishWeeklyExam",
+        examName: String(ACTIVE_CONFIG.exam_name || "WEEKLY TEST").trim(),
+        examDate: formatOnlineDateDmy(ACTIVE_CONFIG.exam_date),
+        examClass: String(ACTIVE_CONFIG.exam_class || "II PUC").trim(),
+        examType: String(ACTIVE_CONFIG.exam_type || "NEET").trim(),
+        examMode: "ONLINE",
+        totalQuestions: Number(ACTIVE_CONFIG.total_questions || 0),
+        maxMarks: Number(ACTIVE_CONFIG.max_marks || 0),
+        correctMarks: cMark,
+        wrongMarks: wMark,
+        subjects: subjectMeta,
+        answerKeys: {},
+        excelFileName,
+        excelBase64,
+        results: formattedResults
+      };
+
+      const resp = await fetch(WEEKLY_RESULT_API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      });
+      const j = await resp.json();
+      if (!resp.ok || j.status !== "success") throw new Error(j.message || `HTTP ${resp.status}`);
+
+      box.style.background = "#dcfce7"; box.style.color = "#14532d";
+      box.innerHTML = `✅ Published <b>${escapeHtml(ACTIVE_CONFIG.exam_class)} ${escapeHtml(ACTIVE_CONFIG.exam_name)} (${escapeHtml(payload.examDate)}) (ONLINE)</b> — ${formattedResults.length} students live! ` +
+        `<a href="weekly-test-result.html" target="_blank" rel="noopener" style="color:#0b2a5b; text-decoration:underline; margin-left:6px;">🏆 Open Weekly Test Result Portal →</a>`;
+    } catch (err) {
+      box.style.background = "#fee2e2"; box.style.color = "#991b1b";
+      box.innerHTML = `❌ Publish failed: ${escapeHtml(err.message || String(err))}`;
+    } finally {
+      btn.disabled = false;
+      btn.innerText = "🚀 Publish to Website (Weekly Result)";
+    }
   }
 
   // ============================================================================

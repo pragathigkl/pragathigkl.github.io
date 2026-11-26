@@ -192,6 +192,21 @@ if(pg==="home"){
   mq.innerHTML=pdfLinks+` &nbsp;|&nbsp; <a class="notice-all" href="notifications.html">View All Notifications →</a> &nbsp;|&nbsp; `+mq.innerHTML;
  });
 
+
+ // 5. Auto-discover any extra campus photos uploaded to media/gallery/ in GitHub
+ fetchRepoFolderFiles("media/gallery",/\.(jpe?g|png|webp)$/i).then(items=>{
+  const tr=$("#campusGalleryTrack");
+  if(!tr||!items.length)return;
+  const existing=new Set([...tr.querySelectorAll("img")].map(i=>decodeURIComponent((i.getAttribute("src")||"").split("/").pop()||"").toLowerCase()));
+  const extras=items.filter(it=>!existing.has(it.name.toLowerCase()));
+  if(!extras.length)return;
+  const allBase=[...tr.querySelectorAll("a.gal-item")];
+  const half=allBase.slice(0,Math.ceil(allBase.length/2)).map(a=>a.outerHTML);
+  const extraHtml=extras.map(it=>`<a class="gal-item" href="${it.url}" target="_blank" rel="noopener" title="${escHtml(it.title)}"><img src="${it.url}" alt="${escHtml(it.title)}" loading="lazy"><span>${escHtml(it.title)}</span></a>`);
+  const combined=half.concat(extraHtml).join("");
+  tr.innerHTML=combined+combined;
+ });
+
  $("#enq").onsubmit=e=>{e.preventDefault();const f=Object.fromEntries(new FormData(e.target));
   const t=["Admission enquiry — Pragathi P.U. College, Gurumatkal",`Student: ${f.student}`,`Seeking: ${f.prog}`,`Parent / guardian: ${f.parent}`,`Mobile: ${f.phone}`,f.school&&`Previous school: ${f.school}`,f.msg&&`Message: ${f.msg}`].filter(Boolean).join("\n");
   window.open(`https://wa.me/${C.phones[0][1]}?text=${encodeURIComponent(t)}`,"_blank")};

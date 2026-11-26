@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Weekly Test Result · Pragathi P.U. College, Gurumatkal</title>
-<meta name="description" content="Official Weekly Test OMR Report Card portal for Pragathi P.U. College, Gurumatkal (KY0434).">
+<meta name="description" content="Official Online &amp; Offline Weekly Test Report Card portal for Pragathi P.U. College, Gurumatkal (KY0434).">
 <link rel="icon" type="image/png" href="favicon.png"><link rel="shortcut icon" type="image/png" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700;900&family=Libre+Baskerville:wght@700&family=Noto+Sans+Kannada:wght@500;700&display=swap" rel="stylesheet">
@@ -12,15 +12,15 @@
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js" defer></script>
 <style>
-.wt-search-card{max-width:780px;margin:0 auto 24px;background:#fff;border:1px solid var(--line);border-top:4px solid var(--navy);border-radius:10px;padding:22px 24px;box-shadow:0 4px 14px rgba(0,0,0,.05)}
-.wt-form-grid{display:grid;grid-template-columns:1.35fr 1fr auto;gap:12px;align-items:end;margin-top:12px}
+.wt-search-card{max-width:860px;margin:0 auto 24px;background:#fff;border:1px solid var(--line);border-top:4px solid var(--navy);border-radius:10px;padding:22px 24px;box-shadow:0 4px 14px rgba(0,0,0,.05)}
+.wt-form-grid{display:grid;grid-template-columns:1.55fr 1fr auto;gap:12px;align-items:end;margin-top:12px}
 .wt-form-grid label{margin:0 0 4px;font-size:13px;color:var(--navy);font-weight:700}
-.wt-status{max-width:780px;margin:0 auto 18px;padding:11px 16px;border-radius:8px;font-size:14px;font-weight:600;display:none}
+.wt-status{max-width:860px;margin:0 auto 18px;padding:11px 16px;border-radius:8px;font-size:14px;font-weight:600;display:none}
 .wt-status.info{display:block;background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a8a}
 .wt-status.err{display:block;background:#fef2f2;border:1px solid #fecaca;color:#991b1b}
 .rc-actions{max-width:210mm;margin:0 auto 14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
 
-/* Strictly Times New Roman Report Card (Page 1 & Page 2) */
+/* Strictly Times New Roman Report Card (Page 1 & optional Page 2) */
 .rc-wrap{display:none;margin:0 auto 30px}
 .rc-page{
   width:210mm;max-width:100%;margin:0 auto 20px;background:#fff;color:#000;
@@ -35,11 +35,18 @@
 .rc-hdr-soc{font-size:12pt;font-weight:700;color:#8e1b2e;letter-spacing:.5px;margin:0}
 .rc-hdr-col{font-size:21pt;font-weight:700;color:#0b2a5b;margin:2px 0;letter-spacing:.4px;line-height:1.15}
 .rc-hdr-addr{font-size:10.5pt;color:#222;margin:2px 0 0}
-.rc-title-bar{background:#0b2a5b;color:#fff;text-align:center;font-size:13pt;font-weight:700;padding:6px 10px;letter-spacing:.6px;margin-bottom:12px;text-transform:uppercase}
-.rc-meta{width:100%;border-collapse:collapse;margin-bottom:14px;font-size:11.5pt}
+.rc-title-bar{background:#0b2a5b;color:#fff;text-align:center;font-size:12.5pt;font-weight:700;padding:6px 10px;letter-spacing:.5px;margin-bottom:12px;text-transform:uppercase}
+
+/* Student Details Table + Passport Photo Row */
+.rc-profile-row{display:flex;gap:12px;align-items:stretch;margin-bottom:14px}
+.rc-meta{flex:1;width:100%;border-collapse:collapse;font-size:11.5pt}
 .rc-meta td{border:1px solid #334155;padding:6px 9px}
-.rc-meta td.lbl{background:#f1f5f9;font-weight:700;color:#0b2a5b;width:19%;white-space:nowrap}
-.rc-meta td.val{font-weight:700;color:#000;width:31%}
+.rc-meta td.lbl{background:#f1f5f9;font-weight:700;color:#0b2a5b;width:21%;white-space:nowrap}
+.rc-meta td.val{font-weight:700;color:#000;width:29%}
+.rc-photo-box{width:108px;flex-shrink:0;border:1.5px solid #0b2a5b;background:#f8fafc;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:3px}
+.rc-photo-box img{width:100%;height:100%;max-height:132px;object-fit:cover;display:block}
+.rc-photo-placeholder{font-size:9.5pt;color:#64748b;text-align:center;font-weight:700;padding:6px}
+
 .rc-kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
 .rc-kpi{border:1.5px solid #0b2a5b;border-radius:4px;padding:8px 6px;text-align:center;background:#fafcff}
 .rc-kpi small{display:block;font-size:9.5pt;font-weight:700;color:#475569;text-transform:uppercase}
@@ -71,6 +78,8 @@
 @media(max-width:860px){
   .wt-form-grid{grid-template-columns:1fr}
   .rc-page{padding:14px}
+  .rc-profile-row{flex-direction:column-reverse;align-items:center}
+  .rc-photo-box{width:110px;height:130px}
   .rc-kpi-grid{grid-template-columns:repeat(2,1fr)}
   .rc-q-cols.c4,.rc-q-cols.c3{grid-template-columns:repeat(2,1fr)}
 }
@@ -93,8 +102,8 @@
 <section style="min-height:64vh">
   <div class="wrap">
     <div class="h noprint">
-      <h2>Weekly Test Result Portal</h2>
-      <p style="margin:6px 0 0;color:var(--mut)">Select a published Weekly Test (recent first) and enter your SATS Number or Register Number to view and download your 2-page Report Card.</p>
+      <h2>Weekly Test Result Portal (Online &amp; Offline)</h2>
+      <p style="margin:6px 0 0;color:var(--mut)">Select a published Weekly Test (recent first) and enter your SATS Number or Register Number to view and download your official Report Card.</p>
     </div>
 
     <div class="wt-search-card noprint">
@@ -116,28 +125,28 @@
         </div>
       </form>
       <div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;font-size:13px;color:var(--mut)">
-        <span id="wtExamMeta">Pulling published tests directly from College Drive folder…</span>
+        <span id="wtExamMeta">Pulling published Online &amp; Offline tests directly from College Drive folder…</span>
         <a href="results.html" style="font-weight:700">← Back to Results Menu</a>
       </div>
     </div>
 
     <div id="wtStatus" class="wt-status noprint"></div>
 
-    <!-- 2-Page Times New Roman Report Card Container -->
+    <!-- Times New Roman Report Card Container -->
     <div id="rcWrap" class="rc-wrap">
       <div class="rc-actions noprint">
-        <span style="font-size:14px;color:var(--navy);font-weight:700">📄 Official 2-Page Report Card (Page 1: Score Card · Page 2: Q.No, Student Answer &amp; Correct Answer)</span>
+        <span id="rcActionLabel" style="font-size:14px;color:var(--navy);font-weight:700">📄 Official Report Card (Times New Roman)</span>
         <div>
           <button type="button" class="btn b3" id="btnDlPdf" style="margin:0 6px 0 0">📥 Download Report Card (PDF)</button>
           <button type="button" class="btn b4" id="btnPrintRc" style="margin:0">🖨️ Print (A4)</button>
         </div>
       </div>
 
-      <!-- PAGE 1: SCORE CARD -->
+      <!-- PAGE 1: SCORE CARD WITH STUDENT PHOTO -->
       <div class="rc-page" id="rcPage1"></div>
 
-      <!-- PAGE 2: QUESTION-BY-QUESTION ANALYSIS -->
-      <div class="rc-page" id="rcPage2"></div>
+      <!-- PAGE 2: QUESTION-BY-QUESTION ANALYSIS (Shown when Q-wise responses exist) -->
+      <div class="rc-page" id="rcPage2" style="display:none"></div>
     </div>
   </div>
 </section>
@@ -146,7 +155,6 @@
 <script src="site.js"></script>
 <script>
 (() => {
-  // Paste your deployed Weekly_Test_OMR_AppsScript.gs Web App URL in site.js (C.weeklyResult)
   const DEFAULT_WEEKLY_API_URL = "https://script.google.com/macros/s/AKfycbwKcUZlSB6Dry2twvmPiT2gXS7dOcd0J3AoqNxU3arFuYECnQEdHj_OMyDQE5ZXXLscYw/exec";
   const getApiUrl = () => (C.weeklyResult || localStorage.getItem("pragathi_weekly_result_api_url") || DEFAULT_WEEKLY_API_URL).trim();
   const $ = s => document.querySelector(s);
@@ -154,6 +162,42 @@
 
   let EXAMS = [];
   let LAST_REPORT = null;
+
+  /* Formats every test cleanly as:
+     "II PU WEEKLY NEET TEST-13 26/11/2026 (ONLINE)"
+     "II PU WEEKLY NEET TEST-13 26/11/2026 (OFFLINE)" */
+  function formatClassShort(cls) {
+    const u = String(cls || "").trim().toUpperCase();
+    if (!u) return "";
+    return u.replace(/\bII\s*PUC\b/g, "II PU").replace(/\bI\s*PUC\b/g, "I PU");
+  }
+
+  function formatExamTitle(ex) {
+    const cls = formatClassShort(ex.examClass || "");
+    let name = String(ex.examName || "WEEKLY TEST").trim().toUpperCase();
+    const typ = String(ex.examType || "").trim().toUpperCase();
+    const dt = String(ex.examDate || "").trim();
+    const mode = String(ex.examMode || "OFFLINE").trim().toUpperCase() === "ONLINE" ? "ONLINE" : "OFFLINE";
+
+    // Include examType (NEET / KCET) inside test name if not already present
+    if (typ && typ !== "WEEKLY-60" && !name.includes(typ)) {
+      if (/^WEEKLY\s+TEST/i.test(name)) {
+        name = name.replace(/^WEEKLY\s+TEST/i, `WEEKLY ${typ} TEST`);
+      } else {
+        name = `${name} ${typ}`;
+      }
+    }
+
+    // Prepend Class first (unless name already begins with I PU / II PU)
+    const parts = [];
+    if (cls && !name.startsWith(cls) && !/^I{1,2}\s*PU/i.test(name)) {
+      parts.push(cls);
+    }
+    parts.push(name);
+    if (dt) parts.push(dt);
+    parts.push(`(${mode})`);
+    return parts.join(" ");
+  }
 
   function jsonp(url, ms = 15000) {
     return new Promise((res, rej) => {
@@ -170,7 +214,7 @@
 
   async function apiGet(params) {
     const base = getApiUrl();
-    if (!base) throw new Error("Weekly Test Result API URL is not configured yet. Please paste your deployed Weekly Test Apps Script URL in site.js (C.weeklyResult).");
+    if (!base) throw new Error("Weekly Test Result API URL is not configured yet.");
     const qs = new URLSearchParams(params).toString();
     const url = `${base}${base.includes("?") ? "&" : "?"}${qs}&_t=${Date.now()}`;
     try {
@@ -195,14 +239,11 @@
       EXAMS = d.exams || [];
       if (!EXAMS.length) {
         sel.innerHTML = `<option value="">No Weekly Test results published yet</option>`;
-        $("#wtExamMeta").textContent = "Published tests will appear here automatically (recent first).";
+        $("#wtExamMeta").textContent = "Published Online & Offline tests will appear here automatically (recent first).";
         return;
       }
-      sel.innerHTML = EXAMS.map(ex => {
-        const dt = ex.examDate ? ` — ${ex.examDate}` : "";
-        return `<option value="${esc(ex.examId)}">${esc(ex.examName)} (${esc(ex.examType)})${esc(dt)}</option>`;
-      }).join("");
-      $("#wtExamMeta").textContent = `${EXAMS.length} published test(s) available · Most recent test selected automatically.`;
+      sel.innerHTML = EXAMS.map(ex => `<option value="${esc(ex.examId)}">${esc(formatExamTitle(ex))}</option>`).join("");
+      $("#wtExamMeta").textContent = `${EXAMS.length} published test(s) available (Online & Offline) · Most recent test selected automatically.`;
     } catch (err) {
       sel.innerHTML = `<option value="">Unable to load tests</option>`;
       showStatus(err.message || String(err), "err");
@@ -212,14 +253,30 @@
   function renderReportCard(data) {
     LAST_REPORT = data;
     const ex = data.exam, st = data.student, qs = data.questions || [];
+    const hasPage2 = qs.length > 0;
+    const totalPages = hasPage2 ? 2 : 1;
+    const mode = String(ex.examMode || "OFFLINE").toUpperCase() === "ONLINE" ? "ONLINE" : "OFFLINE";
+    const fullExamTitle = formatExamTitle(ex);
     const attempted = Number(st.correctCount || 0) + Number(st.wrongCount || 0);
     const acc = attempted > 0 ? ((st.correctCount / attempted) * 100).toFixed(1) : "0.0";
 
-    const subjRows = (ex.subjects || []).map(sub => {
-      const ss = (st.subjectStats && st.subjectStats[sub.name]) || { total: sub.end - sub.start + 1, correct: 0, wrong: 0, unattempted: 0, marks: 0, maxMarks: (sub.end - sub.start + 1) * ex.correctMarks };
+    $("#rcActionLabel").textContent = hasPage2
+      ? "📄 Official 2-Page Report Card (Times New Roman · Page 1: Score Card · Page 2: Q-Wise Analysis)"
+      : "📄 Official Report Card (Times New Roman · Online Weekly Test)";
+
+    const subjList = (ex.subjects && ex.subjects.length)
+      ? ex.subjects
+      : Object.keys(st.subjectStats || {}).map(name => ({ name, start: "", end: "" }));
+
+    const subjRows = subjList.map(sub => {
+      const fallbackTot = (sub.start && sub.end) ? (Number(sub.end) - Number(sub.start) + 1) : 0;
+      const ss = (st.subjectStats && st.subjectStats[sub.name]) || {
+        total: fallbackTot, correct: 0, wrong: 0, unattempted: 0, marks: 0, maxMarks: fallbackTot * ex.correctMarks
+      };
       const sPct = ss.maxMarks ? ((ss.marks / ss.maxMarks) * 100).toFixed(1) : "0.0";
+      const rangeTag = (sub.start && sub.end) ? ` <small>(Q${sub.start}–Q${sub.end})</small>` : "";
       return `<tr>
-        <td class="l">${esc(sub.name)} <small>(Q${sub.start}–Q${sub.end})</small></td>
+        <td class="l">${esc(sub.name)}${rangeTag}</td>
         <td>${ss.total}</td>
         <td>${ss.correct}</td>
         <td>${ss.wrong}</td>
@@ -230,7 +287,19 @@
       </tr>`;
     }).join("");
 
-    // PAGE 1: Official Times New Roman Report Card
+    const photoHtml = st.photoDataUrl
+      ? `<img src="${st.photoDataUrl}" alt="${esc(st.studentName || "Student Photo")}">`
+      : `<div class="rc-photo-placeholder">STUDENT<br>PHOTO</div>`;
+
+    const modeMetaCell = mode === "ONLINE"
+      ? `<td class="lbl">Exam Mode</td><td class="val">ONLINE EXAM</td>`
+      : `<td class="lbl">Paper Version</td><td class="val">Version ${esc(st.paperVersion || "1")} (V${esc(st.paperVersion || "1")}) · OFFLINE</td>`;
+
+    const noteTxt = hasPage2
+      ? `<b>Note to Parents &amp; Students:</b> Please review Page 2 of this Report Card for the complete Question-by-Question Answer Comparison (Question Number, Student Answer vs. Official Correct Answer) to strengthen weak concepts before the next weekly test.`
+      : `<b>Note to Parents &amp; Students:</b> This is an official computer-generated Online Weekly Test Performance Report Card issued by Pragathi P.U. College, Gurumatkal (KY0434).`;
+
+    // PAGE 1: Official Times New Roman Report Card WITH Student Photo
     $("#rcPage1").innerHTML = `
       <div class="rc-hdr">
         <img src="media/logo-pragathi.png" alt="Pragathi P.U. College Logo">
@@ -240,26 +309,29 @@
           <p class="rc-hdr-addr">Near Yashodha Petroleums, Hyderabad Road, Gurumatkal, Dist. Yadgir, Karnataka – 585214 · College Code: KY0434</p>
         </div>
       </div>
-      <div class="rc-title-bar">WEEKLY TEST PERFORMANCE REPORT CARD — ${esc(ex.examName)} (${esc(ex.examType)})</div>
+      <div class="rc-title-bar">WEEKLY TEST REPORT CARD — ${esc(fullExamTitle)}</div>
 
-      <table class="rc-meta">
-        <tr>
-          <td class="lbl">Student Name</td><td class="val">${esc(st.studentName || "—")}</td>
-          <td class="lbl">SATS Number</td><td class="val">${esc(st.satsNo || "—")}</td>
-        </tr>
-        <tr>
-          <td class="lbl">Father's Name</td><td class="val">${esc(st.fatherName || "—")}</td>
-          <td class="lbl">Register / Roll No.</td><td class="val">${esc(st.regNo || "—")}</td>
-        </tr>
-        <tr>
-          <td class="lbl">Class &amp; Section</td><td class="val">${esc(st.className || ex.examClass)}${st.section ? " (" + esc(st.section) + ")" : ""}</td>
-          <td class="lbl">Exam Date</td><td class="val">${esc(ex.examDate || "—")}</td>
-        </tr>
-        <tr>
-          <td class="lbl">Test Name</td><td class="val">${esc(ex.examName)} (${esc(ex.examType)})</td>
-          <td class="lbl">Paper Version</td><td class="val">Version ${esc(st.paperVersion || "1")} (V${esc(st.paperVersion || "1")})</td>
-        </tr>
-      </table>
+      <div class="rc-profile-row">
+        <table class="rc-meta">
+          <tr>
+            <td class="lbl">Student Name</td><td class="val">${esc(st.studentName || "—")}</td>
+            <td class="lbl">SATS Number</td><td class="val">${esc(st.satsNo || "—")}</td>
+          </tr>
+          <tr>
+            <td class="lbl">Father's Name</td><td class="val">${esc(st.fatherName || "—")}</td>
+            <td class="lbl">Register / Roll No.</td><td class="val">${esc(st.regNo || "—")}</td>
+          </tr>
+          <tr>
+            <td class="lbl">Class &amp; Section</td><td class="val">${esc(st.className || ex.examClass)}${st.section ? " (" + esc(st.section) + ")" : ""}</td>
+            <td class="lbl">Exam Date</td><td class="val">${esc(ex.examDate || "—")}</td>
+          </tr>
+          <tr>
+            <td class="lbl">Test Name</td><td class="val">${esc(ex.examName)} (${esc(ex.examType)})</td>
+            ${modeMetaCell}
+          </tr>
+        </table>
+        <div class="rc-photo-box">${photoHtml}</div>
+      </div>
 
       <div class="rc-kpi-grid">
         <div class="rc-kpi maroon"><small>Total Marks Obtained</small><b>${st.totalMarks} / ${st.maxMarks}</b></div>
@@ -289,7 +361,7 @@
       </table>
 
       <div style="border:1px solid #cbd5e1;background:#f8fafc;padding:9px 12px;font-size:10.5pt;line-height:1.5">
-        <b>Note to Parents &amp; Students:</b> Please review Page 2 of this Report Card for the complete Question-by-Question Answer Comparison (Question Number, Student Answer vs. Official Correct Answer) to strengthen weak concepts before the next weekly test.
+        ${noteTxt}
       </div>
 
       <div class="rc-sign-row">
@@ -298,44 +370,51 @@
         <div class="rc-sign">Principal</div>
       </div>
       <div class="rc-foot-note">
-        <span>Pragathi P.U. College, Gurumatkal (KY0434) · Official OMR Evaluation Report</span>
-        <span>Page 1 of 2</span>
+        <span>Pragathi P.U. College, Gurumatkal (KY0434) · Official Weekly Test Report Card (${mode})</span>
+        <span>Page 1 of ${totalPages}</span>
       </div>
     `;
 
-    // PAGE 2: Question-by-Question Analysis (Q.No | Student Answer | Correct Answer | Status)
-    const numCols = qs.length <= 60 ? 3 : 4;
-    const perCol = Math.ceil(qs.length / numCols);
-    let colsHtml = "";
-    for (let c = 0; c < numCols; c++) {
-      const slice = qs.slice(c * perCol, (c + 1) * perCol);
-      colsHtml += `<table class="rc-qtbl">
-        <thead><tr><th>Q.No</th><th>Student</th><th>Correct</th><th>Res</th></tr></thead>
-        <tbody>${slice.map(item => {
-          const cls = item.status === "CORRECT" ? "ok" : (item.status === "WRONG" ? "bad" : "blk");
-          const sym = item.status === "CORRECT" ? "✓" : (item.status === "WRONG" ? "✗" : "—");
-          return `<tr><td><b>${item.qNo}</b></td><td class="${cls}">${esc(item.studentAns)}</td><td><b>${esc(item.correctAns)}</b></td><td class="${cls}">${sym}</td></tr>`;
-        }).join("")}</tbody>
-      </table>`;
+    // PAGE 2: Question-by-Question Analysis (only if question details exist)
+    const p2El = $("#rcPage2");
+    if (hasPage2) {
+      const numCols = qs.length <= 60 ? 3 : 4;
+      const perCol = Math.ceil(qs.length / numCols);
+      let colsHtml = "";
+      for (let c = 0; c < numCols; c++) {
+        const slice = qs.slice(c * perCol, (c + 1) * perCol);
+        colsHtml += `<table class="rc-qtbl">
+          <thead><tr><th>Q.No</th><th>Student</th><th>Correct</th><th>Res</th></tr></thead>
+          <tbody>${slice.map(item => {
+            const cls = item.status === "CORRECT" ? "ok" : (item.status === "WRONG" ? "bad" : "blk");
+            const sym = item.status === "CORRECT" ? "✓" : (item.status === "WRONG" ? "✗" : "—");
+            return `<tr><td><b>${item.qNo}</b></td><td class="${cls}">${esc(item.studentAns)}</td><td><b>${esc(item.correctAns)}</b></td><td class="${cls}">${sym}</td></tr>`;
+          }).join("")}</tbody>
+        </table>`;
+      }
+
+      p2El.innerHTML = `
+        <div class="rc-p2-banner">
+          <div>
+            <b style="font-size:13pt;color:#0b2a5b">PRAGATHI P.U. COLLEGE, GURUMATKAL — QUESTION-WISE RESPONSE ANALYSIS</b><br>
+            <span><b>Student:</b> ${esc(st.studentName || "—")} &nbsp;|&nbsp; <b>SATS:</b> ${esc(st.satsNo || "—")} &nbsp;|&nbsp; <b>Reg No:</b> ${esc(st.regNo || "—")}</span>
+          </div>
+          <div style="text-align:right">
+            <b>${esc(fullExamTitle)}</b><br>
+            <span>Version: <b>V${esc(st.paperVersion || "1")}</b> &nbsp;|&nbsp; Score: <b>${st.totalMarks}/${st.maxMarks}</b></span>
+          </div>
+        </div>
+        <div class="rc-q-cols c${numCols}">${colsHtml}</div>
+        <div class="rc-foot-note">
+          <span>Legend: ✓ Correct (+${ex.correctMarks}) &nbsp;|&nbsp; ✗ Wrong (${ex.wrongMarks}) &nbsp;|&nbsp; — Unattempted / Multiple (0)</span>
+          <span>Page 2 of 2</span>
+        </div>
+      `;
+      p2El.style.display = "block";
+    } else {
+      p2El.innerHTML = "";
+      p2El.style.display = "none";
     }
-
-    $("#rcPage2").innerHTML = `
-      <div class="rc-p2-banner">
-        <div>
-          <b style="font-size:13pt;color:#0b2a5b">PRAGATHI P.U. COLLEGE, GURUMATKAL — QUESTION-WISE RESPONSE ANALYSIS</b><br>
-          <span><b>Student:</b> ${esc(st.studentName || "—")} &nbsp;|&nbsp; <b>SATS:</b> ${esc(st.satsNo || "—")} &nbsp;|&nbsp; <b>Reg No:</b> ${esc(st.regNo || "—")}</span>
-        </div>
-        <div style="text-align:right">
-          <b>${esc(ex.examName)} (${esc(ex.examType)})</b><br>
-          <span>Date: ${esc(ex.examDate || "—")} &nbsp;|&nbsp; Version: <b>V${esc(st.paperVersion || "1")}</b> &nbsp;|&nbsp; Score: <b>${st.totalMarks}/${st.maxMarks}</b></span>
-        </div>
-      </div>
-      <div class="rc-q-cols c${numCols}">${colsHtml}</div>
-      <div class="rc-foot-note">
-        <span>Legend: ✓ Correct (+${ex.correctMarks}) &nbsp;|&nbsp; ✗ Wrong (${ex.wrongMarks}) &nbsp;|&nbsp; — Unattempted / Multiple (0)</span>
-        <span>Page 2 of 2</span>
-      </div>
-    `;
 
     $("#rcWrap").style.display = "block";
     hideStatus();
@@ -343,18 +422,23 @@
   }
 
   /* =========================================================================
-     2-PAGE TIMES NEW ROMAN PDF DOWNLOAD (jsPDF Built-in "times" Font)
+     TIMES NEW ROMAN PDF DOWNLOAD (jsPDF Built-in "times" Font + Student Photo)
      ========================================================================= */
-  async function loadLogoDataUrl() {
+  async function loadImageAsJpegDataUrl(src) {
+    if (!src) return null;
     return new Promise(res => {
       const im = new Image(); im.crossOrigin = "anonymous";
       im.onload = () => {
-        const c = document.createElement("canvas"); c.width = im.naturalWidth; c.height = im.naturalHeight;
-        c.getContext("2d").drawImage(im, 0, 0);
-        try { res(c.toDataURL("image/png")); } catch { res(null); }
+        const c = document.createElement("canvas");
+        c.width = im.naturalWidth; c.height = im.naturalHeight;
+        const ctx = c.getContext("2d");
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, c.width, c.height);
+        ctx.drawImage(im, 0, 0);
+        try { res({ url: c.toDataURL("image/jpeg", 0.90), w: c.width, h: c.height }); } catch { res(null); }
       };
       im.onerror = () => res(null);
-      im.src = "media/logo-pragathi.png";
+      im.src = src;
     });
   }
 
@@ -366,15 +450,24 @@
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
       const ex = LAST_REPORT.exam, st = LAST_REPORT.student, qs = LAST_REPORT.questions || [];
-      const logoUrl = await loadLogoDataUrl();
+      const hasPage2 = qs.length > 0;
+      const totalPages = hasPage2 ? 2 : 1;
+      const mode = String(ex.examMode || "OFFLINE").toUpperCase() === "ONLINE" ? "ONLINE" : "OFFLINE";
+      const fullExamTitle = formatExamTitle(ex);
+
+      const [logoImg, studPhoto] = await Promise.all([
+        loadImageAsJpegDataUrl("media/logo-pragathi.png"),
+        loadImageAsJpegDataUrl(st.photoDataUrl || "")
+      ]);
+
       const attempted = Number(st.correctCount || 0) + Number(st.wrongCount || 0);
       const acc = attempted > 0 ? ((st.correctCount / attempted) * 100).toFixed(1) : "0.0";
 
-      // ---------- PAGE 1: OFFICIAL REPORT CARD (TIMES NEW ROMAN) ----------
+      // ---------- PAGE 1: OFFICIAL REPORT CARD (100% TIMES NEW ROMAN + PHOTO) ----------
       doc.setDrawColor(11, 42, 91); doc.setLineWidth(0.7);
       doc.rect(8, 8, 194, 281);
 
-      if (logoUrl) doc.addImage(logoUrl, "PNG", 13, 12, 22, 20);
+      if (logoImg) doc.addImage(logoImg.url, "JPEG", 13, 12, 22, 20);
       doc.setFont("times", "bold"); doc.setFontSize(11); doc.setTextColor(142, 27, 46);
       doc.text("DECCAN EDUCATION SOCIETY (R.)", 112, 16, { align: "center" });
       doc.setFontSize(19); doc.setTextColor(11, 42, 91);
@@ -384,28 +477,49 @@
 
       doc.setFillColor(11, 42, 91);
       doc.rect(12, 35, 186, 8.5, "F");
-      doc.setFont("times", "bold"); doc.setFontSize(11.5); doc.setTextColor(255, 255, 255);
-      doc.text(`WEEKLY TEST PERFORMANCE REPORT CARD - ${ex.examName} (${ex.examType})`, 105, 40.7, { align: "center" });
+      doc.setFont("times", "bold"); doc.setFontSize(11); doc.setTextColor(255, 255, 255);
+      doc.text(`WEEKLY TEST REPORT CARD - ${fullExamTitle}`, 105, 40.7, { align: "center" });
+
+      // Student Details Table (left 154mm) + Passport Photo Box (right 29mm)
+      const metaStartY = 47;
+      const modeRowLbl = mode === "ONLINE" ? "Exam Mode" : "Paper Version";
+      const modeRowVal = mode === "ONLINE" ? "ONLINE EXAM" : `Version ${st.paperVersion || 1} (V${st.paperVersion || 1})`;
 
       doc.autoTable({
-        startY: 47,
-        margin: { left: 12, right: 12 },
+        startY: metaStartY,
+        margin: { left: 12, right: 44 },
+        tableWidth: 154,
         theme: "grid",
-        styles: { font: "times", fontSize: 10.5, cellPadding: 2.5, lineColor: [60, 75, 95], lineWidth: 0.25, textColor: [0, 0, 0] },
+        styles: { font: "times", fontSize: 10, cellPadding: 2.4, lineColor: [60, 75, 95], lineWidth: 0.25, textColor: [0, 0, 0] },
         body: [
           [{ content: "Student Name", styles: { fillColor: [241, 245, 249], fontStyle: "bold", textColor: [11, 42, 91] } }, { content: st.studentName || "-", styles: { fontStyle: "bold" } },
            { content: "SATS Number", styles: { fillColor: [241, 245, 249], fontStyle: "bold", textColor: [11, 42, 91] } }, { content: st.satsNo || "-", styles: { fontStyle: "bold" } }],
           [{ content: "Father's Name", styles: { fillColor: [241, 245, 249], fontStyle: "bold", textColor: [11, 42, 91] } }, { content: st.fatherName || "-", styles: { fontStyle: "bold" } },
-           { content: "Register / Roll No.", styles: { fillColor: [241, 245, 249], fontStyle: "bold", textColor: [11, 42, 91] } }, { content: st.regNo || "-", styles: { fontStyle: "bold" } }],
+           { content: "Register No.", styles: { fillColor: [241, 245, 249], fontStyle: "bold", textColor: [11, 42, 91] } }, { content: st.regNo || "-", styles: { fontStyle: "bold" } }],
           [{ content: "Class & Section", styles: { fillColor: [241, 245, 249], fontStyle: "bold", textColor: [11, 42, 91] } }, { content: `${st.className || ex.examClass}${st.section ? " (" + st.section + ")" : ""}`, styles: { fontStyle: "bold" } },
            { content: "Exam Date", styles: { fillColor: [241, 245, 249], fontStyle: "bold", textColor: [11, 42, 91] } }, { content: ex.examDate || "-", styles: { fontStyle: "bold" } }],
           [{ content: "Test Name", styles: { fillColor: [241, 245, 249], fontStyle: "bold", textColor: [11, 42, 91] } }, { content: `${ex.examName} (${ex.examType})`, styles: { fontStyle: "bold" } },
-           { content: "Paper Version", styles: { fillColor: [241, 245, 249], fontStyle: "bold", textColor: [11, 42, 91] } }, { content: `Version ${st.paperVersion || 1} (V${st.paperVersion || 1})`, styles: { fontStyle: "bold" } }]
+           { content: modeRowLbl, styles: { fillColor: [241, 245, 249], fontStyle: "bold", textColor: [11, 42, 91] } }, { content: modeRowVal, styles: { fontStyle: "bold" } }]
         ],
-        columnStyles: { 0: { cellWidth: 34 }, 1: { cellWidth: 62 }, 2: { cellWidth: 34 }, 3: { cellWidth: 56 } }
+        columnStyles: { 0: { cellWidth: 28 }, 1: { cellWidth: 53 }, 2: { cellWidth: 27 }, 3: { cellWidth: 46 } }
       });
 
-      const yKpi = doc.lastAutoTable.finalY + 6;
+      const metaEndY = doc.lastAutoTable.finalY;
+      const photoBoxX = 169, photoBoxY = metaStartY, photoBoxW = 29, photoBoxH = Math.max(33, metaEndY - metaStartY);
+      doc.setDrawColor(11, 42, 91); doc.setFillColor(248, 250, 252); doc.setLineWidth(0.45);
+      doc.rect(photoBoxX, photoBoxY, photoBoxW, photoBoxH, "FD");
+      if (studPhoto) {
+        const pad = 1.0, availW = photoBoxW - 2 * pad, availH = photoBoxH - 2 * pad;
+        const r = Math.min(availW / studPhoto.w, availH / studPhoto.h);
+        const dw = studPhoto.w * r, dh = studPhoto.h * r;
+        doc.addImage(studPhoto.url, "JPEG", photoBoxX + (photoBoxW - dw) / 2, photoBoxY + (photoBoxH - dh) / 2, dw, dh);
+      } else {
+        doc.setFont("times", "bold"); doc.setFontSize(8.5); doc.setTextColor(120, 130, 145);
+        doc.text("STUDENT", photoBoxX + photoBoxW / 2, photoBoxY + photoBoxH / 2 - 2, { align: "center" });
+        doc.text("PHOTO", photoBoxX + photoBoxW / 2, photoBoxY + photoBoxH / 2 + 3, { align: "center" });
+      }
+
+      const yKpi = Math.max(metaEndY, photoBoxY + photoBoxH) + 6;
       const kpis = [
         ["TOTAL MARKS", `${st.totalMarks} / ${st.maxMarks}`, [142, 27, 46]],
         ["PERCENTAGE", `${Number(st.percentage || 0).toFixed(2)}%`, [11, 42, 91]],
@@ -426,10 +540,16 @@
       doc.setFont("times", "bold"); doc.setFontSize(11); doc.setTextColor(11, 42, 91);
       doc.text(`SUBJECT-WISE PERFORMANCE BREAKDOWN (Marking: +${ex.correctMarks} Correct, ${ex.wrongMarks} Wrong)`, 12, ySubHdr);
 
-      const subBody = (ex.subjects || []).map(sub => {
-        const ss = (st.subjectStats && st.subjectStats[sub.name]) || { total: sub.end - sub.start + 1, correct: 0, wrong: 0, unattempted: 0, marks: 0, maxMarks: (sub.end - sub.start + 1) * ex.correctMarks };
+      const subjList = (ex.subjects && ex.subjects.length)
+        ? ex.subjects
+        : Object.keys(st.subjectStats || {}).map(name => ({ name, start: "", end: "" }));
+
+      const subBody = subjList.map(sub => {
+        const fallbackTot = (sub.start && sub.end) ? (Number(sub.end) - Number(sub.start) + 1) : 0;
+        const ss = (st.subjectStats && st.subjectStats[sub.name]) || { total: fallbackTot, correct: 0, wrong: 0, unattempted: 0, marks: 0, maxMarks: fallbackTot * ex.correctMarks };
         const sPct = ss.maxMarks ? ((ss.marks / ss.maxMarks) * 100).toFixed(1) + "%" : "0.0%";
-        return [`${sub.name} (Q${sub.start}-Q${sub.end})`, String(ss.total), String(ss.correct), String(ss.wrong), String(ss.unattempted), String(ss.marks), String(ss.maxMarks), sPct];
+        const rangeLbl = (sub.start && sub.end) ? ` (Q${sub.start}-Q${sub.end})` : "";
+        return [`${sub.name}${rangeLbl}`, String(ss.total), String(ss.correct), String(ss.wrong), String(ss.unattempted), String(ss.marks), String(ss.maxMarks), sPct];
       });
       subBody.push([
         { content: "GRAND TOTAL", styles: { fontStyle: "bold", fillColor: [232, 239, 250], textColor: [11, 42, 91] } },
@@ -457,7 +577,10 @@
       doc.setDrawColor(180, 190, 205); doc.setFillColor(248, 250, 252);
       doc.rect(12, yNote, 186, 14, "FD");
       doc.setFont("times", "normal"); doc.setFontSize(9.5); doc.setTextColor(30, 30, 30);
-      doc.text("Note: Refer to Page 2 for the complete Question-by-Question Answer Comparison (Question Number, Student Answer vs. Official Correct Answer).", 15, yNote + 6, { maxWidth: 180 });
+      const pdfNote = hasPage2
+        ? "Note: Refer to Page 2 for the complete Question-by-Question Answer Comparison (Question Number, Student Answer vs. Official Correct Answer)."
+        : "Note: This is an official computer-generated Online Weekly Test Report Card issued by Pragathi P.U. College, Gurumatkal (KY0434).";
+      doc.text(pdfNote, 15, yNote + 6, { maxWidth: 180 });
 
       const ySig = 258;
       doc.setDrawColor(30, 30, 30); doc.setLineWidth(0.3);
@@ -467,53 +590,55 @@
         doc.text(lbl, (x1 + x2) / 2, ySig + 5, { align: "center" });
       });
       doc.setFont("times", "normal"); doc.setFontSize(8.5); doc.setTextColor(90, 90, 90);
-      doc.text("Pragathi P.U. College, Gurumatkal (KY0434) | Official Weekly Test Report Card", 12, 285);
-      doc.text("Page 1 of 2", 198, 285, { align: "right" });
+      doc.text(`Pragathi P.U. College, Gurumatkal (KY0434) | Official Weekly Test Report Card (${mode})`, 12, 285);
+      doc.text(`Page 1 of ${totalPages}`, 198, 285, { align: "right" });
 
-      // ---------- PAGE 2: QUESTION-BY-QUESTION ANALYSIS (TIMES NEW ROMAN) ----------
-      doc.addPage("a4", "portrait");
-      doc.setDrawColor(11, 42, 91); doc.setLineWidth(0.7);
-      doc.rect(8, 8, 194, 281);
+      // ---------- PAGE 2: QUESTION-BY-QUESTION ANALYSIS (if available) ----------
+      if (hasPage2) {
+        doc.addPage("a4", "portrait");
+        doc.setDrawColor(11, 42, 91); doc.setLineWidth(0.7);
+        doc.rect(8, 8, 194, 281);
 
-      doc.setFont("times", "bold"); doc.setFontSize(12); doc.setTextColor(11, 42, 91);
-      doc.text("PRAGATHI P.U. COLLEGE, GURUMATKAL — QUESTION-WISE RESPONSE ANALYSIS", 105, 14.5, { align: "center" });
-      doc.setFont("times", "normal"); doc.setFontSize(9.5); doc.setTextColor(0, 0, 0);
-      doc.text(`Student: ${st.studentName || "-"}  |  SATS: ${st.satsNo || "-"}  |  Reg: ${st.regNo || "-"}  |  ${ex.examName} (${ex.examType})  |  Date: ${ex.examDate || "-"}  |  Ver: V${st.paperVersion || 1}`, 105, 20, { align: "center" });
+        doc.setFont("times", "bold"); doc.setFontSize(12); doc.setTextColor(11, 42, 91);
+        doc.text("PRAGATHI P.U. COLLEGE, GURUMATKAL — QUESTION-WISE RESPONSE ANALYSIS", 105, 14.5, { align: "center" });
+        doc.setFont("times", "normal"); doc.setFontSize(9.2); doc.setTextColor(0, 0, 0);
+        doc.text(`Student: ${st.studentName || "-"}  |  SATS: ${st.satsNo || "-"}  |  Reg: ${st.regNo || "-"}  |  ${fullExamTitle}  |  Ver: V${st.paperVersion || 1}`, 105, 20, { align: "center" });
 
-      const numCols = qs.length <= 60 ? 3 : 4;
-      const perCol = Math.ceil(qs.length / numCols);
-      const colW = (186 - (numCols - 1) * 3) / numCols;
+        const numCols = qs.length <= 60 ? 3 : 4;
+        const perCol = Math.ceil(qs.length / numCols);
+        const colW = (186 - (numCols - 1) * 3) / numCols;
 
-      for (let c = 0; c < numCols; c++) {
-        const slice = qs.slice(c * perCol, (c + 1) * perCol);
-        const startX = 12 + c * (colW + 3);
-        doc.autoTable({
-          startY: 23,
-          margin: { left: startX, right: 210 - (startX + colW), bottom: 14 },
-          tableWidth: colW,
-          theme: "grid",
-          head: [["Q.No", "Stud", "Key", "Res"]],
-          body: slice.map(it => {
-            const sym = it.status === "CORRECT" ? "R" : (it.status === "WRONG" ? "W" : "-");
-            const bg = it.status === "CORRECT" ? [232, 247, 238] : (it.status === "WRONG" ? [253, 236, 238] : [254, 252, 232]);
-            const fg = it.status === "CORRECT" ? [20, 83, 45] : (it.status === "WRONG" ? [153, 27, 27] : [133, 77, 14]);
-            return [
-              { content: String(it.qNo), styles: { fontStyle: "bold" } },
-              { content: it.studentAns, styles: { fillColor: bg, textColor: fg, fontStyle: "bold" } },
-              { content: it.correctAns, styles: { fontStyle: "bold" } },
-              { content: sym, styles: { fillColor: bg, textColor: fg, fontStyle: "bold" } }
-            ];
-          }),
-          styles: { font: "times", fontSize: qs.length > 100 ? 7.6 : 9, cellPadding: qs.length > 100 ? 0.95 : 1.6, halign: "center", lineColor: [90, 105, 125], lineWidth: 0.2, textColor: [0, 0, 0] },
-          headStyles: { fillColor: [11, 42, 91], textColor: [255, 255, 255], fontStyle: "bold", fontSize: qs.length > 100 ? 7.6 : 8.8 }
-        });
+        for (let c = 0; c < numCols; c++) {
+          const slice = qs.slice(c * perCol, (c + 1) * perCol);
+          const startX = 12 + c * (colW + 3);
+          doc.autoTable({
+            startY: 23,
+            margin: { left: startX, right: 210 - (startX + colW), bottom: 14 },
+            tableWidth: colW,
+            theme: "grid",
+            head: [["Q.No", "Stud", "Key", "Res"]],
+            body: slice.map(it => {
+              const sym = it.status === "CORRECT" ? "R" : (it.status === "WRONG" ? "W" : "-");
+              const bg = it.status === "CORRECT" ? [232, 247, 238] : (it.status === "WRONG" ? [253, 236, 238] : [254, 252, 232]);
+              const fg = it.status === "CORRECT" ? [20, 83, 45] : (it.status === "WRONG" ? [153, 27, 27] : [133, 77, 14]);
+              return [
+                { content: String(it.qNo), styles: { fontStyle: "bold" } },
+                { content: it.studentAns, styles: { fillColor: bg, textColor: fg, fontStyle: "bold" } },
+                { content: it.correctAns, styles: { fontStyle: "bold" } },
+                { content: sym, styles: { fillColor: bg, textColor: fg, fontStyle: "bold" } }
+              ];
+            }),
+            styles: { font: "times", fontSize: qs.length > 100 ? 7.6 : 9, cellPadding: qs.length > 100 ? 0.95 : 1.6, halign: "center", lineColor: [90, 105, 125], lineWidth: 0.2, textColor: [0, 0, 0] },
+            headStyles: { fillColor: [11, 42, 91], textColor: [255, 255, 255], fontStyle: "bold", fontSize: qs.length > 100 ? 7.6 : 8.8 }
+          });
+        }
+
+        doc.setFont("times", "normal"); doc.setFontSize(8.5); doc.setTextColor(90, 90, 90);
+        doc.text(`Legend: R = Right (+${ex.correctMarks}) | W = Wrong (${ex.wrongMarks}) | - = Unattempted / Multiple (0)`, 12, 285);
+        doc.text("Page 2 of 2", 198, 285, { align: "right" });
       }
 
-      doc.setFont("times", "normal"); doc.setFontSize(8.5); doc.setTextColor(90, 90, 90);
-      doc.text(`Legend: R = Right (+${ex.correctMarks}) | W = Wrong (${ex.wrongMarks}) | - = Unattempted / Multiple (0)`, 12, 285);
-      doc.text("Page 2 of 2", 198, 285, { align: "right" });
-
-      const fname = `${(st.satsNo || st.regNo || "Student").replace(/[^A-Za-z0-9_-]+/g, "")}_${(ex.examName || "WeeklyTest").replace(/[^A-Za-z0-9_-]+/g, "_")}_ReportCard.pdf`;
+      const fname = `${(st.satsNo || st.regNo || "Student").replace(/[^A-Za-z0-9_-]+/g, "")}_${(ex.examName || "WeeklyTest").replace(/[^A-Za-z0-9_-]+/g, "_")}_${mode}_ReportCard.pdf`;
       doc.save(fname);
     } finally {
       btn.disabled = false; btn.textContent = "📥 Download Report Card (PDF)";
@@ -529,7 +654,7 @@
 
     $("#rcWrap").style.display = "none";
     $("#wtSubmitBtn").disabled = true;
-    showStatus(`⏳ Fetching Report Card for ${query}…`, "info");
+    showStatus(`⏳ Fetching Report Card & Student Photo for ${query}…`, "info");
     try {
       const d = await apiGet({ action: "getStudentReport", examId, query });
       if (d && d.status === "success" && d.student) {
