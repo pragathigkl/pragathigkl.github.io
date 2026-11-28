@@ -1,0 +1,43 @@
+PRAGATHI P.U. COLLEGE, GURUMATKAL
+FIREBASE + GOOGLE DRIVE LECTURER QUESTION SELECTOR — SETUP GUIDE
+================================================================
+
+1. DEPLOY GOOGLE APPS SCRIPT (Target Drive Folder: 1Src_7QIUFVbGAW2AaGyxRexzH5F6mYMp):
+   - Open https://script.google.com signed into the Google account with edit access to:
+     https://drive.google.com/drive/folders/1Src_7QIUFVbGAW2AaGyxRexzH5F6mYMp
+   - Create a new project ("Pragathi Weekly Question Selector").
+   - Paste the complete contents of Question_Selector_AppsScript_Code.gs.
+   - Click Deploy -> New deployment -> Web app:
+     * Execute as: Me
+     * Who has access: Anyone
+   - Copy the deployed Web App URL (https://script.google.com/macros/s/.../exec).
+   - Each time Admin creates an exam, a NEW weekly subfolder is created inside
+     1Src_7QIUFVbGAW2AaGyxRexzH5F6mYMp with the NEET 180Q / KCET 100Q Excel sheet inside it.
+
+2. CONFIGURE FIREBASE LOGIN (Google Sign-In & Email/Password):
+   - Open https://console.firebase.google.com -> Create/select project (e.g., pragathi-pu-college).
+   - Enable Authentication -> Sign-in method -> Enable "Google" and "Email/Password".
+   - Under Authentication -> Settings -> Authorized domains, add: pragathigkl.org
+   - Copy firebaseConfig (apiKey, authDomain, projectId, appId) from Project Settings -> Web App.
+   - Paste firebaseConfig into DEFAULT_FIREBASE_CONFIG and your Apps Script URL into
+     DEFAULT_APPS_SCRIPT_URL at the top of question-selector.html before pushing to pragathigkl.org.
+
+3. SINGLE ADMIN & LOCKED LECTURER SUBJECTS:
+   - Admin access is strictly locked to the single email: laxmandodla97@gmail.com
+   - When any lecturer signs in with Firebase for the first time, the app asks them once to choose
+     their subject (Physics, Chemistry, Botany, Zoology, Maths, or Biology) and permanently locks
+     their account to that subject for all future logins. (Admin can reset a lecturer's subject if needed.)
+   - Every question the lecturer selects is automatically saved directly into Admin's weekly Excel
+     sheet in Google Drive under that subject's tab.
+   - Lecturers cannot copy question text, generate PDFs, or download Excel sheets; they only see
+     the "Push to Admin" button at the bottom to finalize and notify Admin.
+
+4. WEBSITE INTEGRATION ON PRAGATHIGKL.ORG (HOMEPAGE & COLLEGE LOGIN):
+   A) Homepage Top Navigation (index.html / site.js) — add right BEFORE "College Login":
+      <a href="question-selector.html?mode=lecturer">Lecturer Login</a>
+
+   B) Inside college-login.html (under the "Exam" sub-menu alongside Online Exam & Offline OMR):
+      <a href="question-selector.html?mode=admin" class="btn">Question Selector (Admin)</a>
+
+   This ensures lecturers click "Lecturer Login" directly from the homepage, while the
+   Admin Exam Creator stays inside College Login (and is additionally locked to laxmandodla97@gmail.com).
