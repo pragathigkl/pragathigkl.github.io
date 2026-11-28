@@ -185,6 +185,7 @@ function bindPgtseSubTabs(){
 const examSubTabs=sub=>`<div class="subtabs" id="exSubTabs">
  <button data-sub="online" class="${sub==="online"?"on":""}">🖥️ Online Exam (Invigilator)</button>
  <button data-sub="offline" class="${sub==="offline"?"on":""}">📄 Offline Exam (OMR Based)</button>
+ <button data-sub="qselector" class="${sub==="qselector"?"on":""}">📋 Question Selector (Admin)</button>
 </div>`;
 
 function bindExamSubTabs(){
@@ -193,6 +194,7 @@ function bindExamSubTabs(){
   const b=e.target.closest("button[data-sub]");
   if(!b)return;
   if(b.dataset.sub==="online")onlineExamView();
+  else if(b.dataset.sub==="qselector")questionSelectorView();
   else offlineExamView();
  };
 }
@@ -264,7 +266,7 @@ function homeDash(){
   usedCats.map(cat=>`<td class="c"><b><a href="#" class="cell" style="color:#fff" data-y="" data-c="" data-cat="${cat}">${grand[cat]}</a></b></td>`).join("")+
   `<td class="c" style="background:var(--gold);color:#000"><b><a href="#" class="cell" style="color:#000" data-y="" data-c="" data-cat="">${ALL.length}</a></b></td></tr>`;
 
- app.innerHTML=tabs("dash")+hd("College Dashboard & Overview",`<button class="btn b3 sm" style="background:#0e9f48" id="goOnlineExam">🖥️ Online Exam</button> <button class="btn b3 sm" style="background:var(--maroon)" id="goOfflineExam">📄 Offline Exam (OMR)</button> <button class="btn b3 sm" id="goPgtseOmr">📷 Read OMR</button> <button class="btn b3 sm" id="goPgtseRes">🏆 PGTSE-2027 Results</button> <button class="btn b4 sm" id="goReg">📚 Admission Register</button>`)+`
+ app.innerHTML=tabs("dash")+hd("College Dashboard & Overview",`<button class="btn b3 sm" style="background:#0e9f48" id="goOnlineExam">🖥️ Online Exam</button> <button class="btn b3 sm" style="background:var(--maroon)" id="goOfflineExam">📄 Offline Exam (OMR)</button> <button class="btn b3 sm" style="background:#4f46e5" id="goQSelector">📋 Question Selector</button> <button class="btn b3 sm" id="goPgtseOmr">📷 Read OMR</button> <button class="btn b3 sm" id="goPgtseRes">🏆 PGTSE-2027 Results</button> <button class="btn b4 sm" id="goReg">📚 Admission Register</button>`)+`
  <div class="kpi-grid">
   <div class="kpi-card"><small>Total Register Students</small><b>${ALL.length}</b><span>Across ${yrs.length} academic years (${yrs[0]} to ${yrs[yrs.length-1]})</span></div>
   <div class="kpi-card maroon"><small>Boys / Girls Strength</small><b>${boys} / ${girls}</b><span>Boys: ${boys} · Girls: ${girls}</span></div>
@@ -291,6 +293,7 @@ function homeDash(){
 
  bindTabs();
  $("#lo").onclick=out;
+ $("#goQSelector").onclick=questionSelectorView;
  $("#goPgtseOmr").onclick=pgOmrView;
  $("#goPgtseRes").onclick=pgResView;
  $("#dashOpenResBtn").onclick=pgResView;
@@ -1046,6 +1049,18 @@ function offlineExamView(){
  const dock=ensureOfflineOmrDock();
  dock.style.display="block";
  updateParentCornerPill();
+}
+
+function questionSelectorView(){
+ EXAM_ACTIVE_SUB="qselector";
+ hideOmrDock();
+ app.innerHTML=tabs("exam")+examSubTabs("qselector")+hd("Question Selector — Admin Exam & Weekly Drive Builder",`<a class="btn b3 sm" href="question-selector.html?mode=admin" target="_blank" rel="noopener">↗ Open Full Screen</a> <a class="btn b4 sm" href="question-selector.html?mode=lecturer" target="_blank" rel="noopener">👨‍🏫 Lecturer Login Link</a>`)+`
+ <div style="background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.06)">
+  <iframe src="question-selector.html?mode=admin" title="Question Selector Admin Module" style="width:100%;height:88vh;min-height:780px;border:none;display:block"></iframe>
+ </div>`;
+ bindTabs();
+ bindExamSubTabs();
+ $("#lo").onclick=out;
 }
 
 restore().then(ok=>ok?start():gate());
