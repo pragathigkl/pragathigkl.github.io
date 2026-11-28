@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pragathi P.U. College — Firebase Lecturer Question Selector</title>
+  <title>Pragathi P.U. College — Lecturer Question Selector</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -180,7 +180,8 @@
       authMode: 'signin',     // signin | signup
       loadedFullBanks: {},    // { 'I PUC|Physics': true }
       qPage: 1,
-      openSolutions: {}       // { qid: true } for collapsible View Solution button
+      openSolutions: {},      // { qid: true } for collapsible View Solution button
+      adminPickSubject: null  // when Admin clicks "Select Qs" on a subject tile
     };
 
     function loadState() {
@@ -490,7 +491,7 @@
       // 4. Flattened powers of 10 (e.g., 10-12, 10-9, 10-24, 6.022 × 1023, 3.0 × 108, (iv) 106, (v) 109)
       s = s.replace(/\b10(?:-|−)(\d{1,2})\b/g, '10<sup>−$1</sup>');
       s = s.replace(/(×\s*10)(\d{1,2})\b/g, '$1<sup>$2</sup>');
-      s = s.replace(/(\b10)(3|6|8|9|10|12|15|18|19|20|22|23|24)(?=\s*(?:mol|m\b|s\b|g\b|kg|J|W|Hz|eV|Pa|N|C|V|A|,|\)|\.|$))/g, '10<sup>$2</sup>');
+      s = s.replace(/(\b10)(3|6|9|12|15|18|19|20|22|23|24)(?=\s*(?:mol|m\b|s\b|g\b|kg|J|W|Hz|eV|Pa|N|C|V|A|,|\)|\.|$))/g, '10<sup>$2</sup>');
       // 5. Flattened SI unit powers (e.g., mol-1, m-3, cm-3, L-1, s-2, dm3, cm3, m2, m3)
       s = s.replace(/\b(mol|m|cm|mm|dm|km|s|kg|L|K|A|g|J|N|Pa|Hz|rad)(?:-|−)(\d)\b/g, '$1<sup>−$2</sup>');
       s = s.replace(/\b(m|cm|mm|dm|km)(2|3)\b/g, '$1<sup>$2</sup>');
@@ -531,13 +532,14 @@
           const diagSrc = getDiagramSrc(q.img || q.diagram);
           const optLens = [q.a, q.b, q.c, q.d].map(o => String(o || '').trim().length);
           const maxOptLen = Math.max(...optLens);
+          const mkOpt = (ltr, val) => `<div class="opt-cell"><span class="opt-lbl">(${ltr})</span>${renderRichEq(val)}</div>`;
           let optHtml = '';
-          if (maxOptLen <= 18) {
-            optHtml = `<div class="opts-4"><span><b>(A)</b> ${renderRichEq(q.a)}</span><span><b>(B)</b> ${renderRichEq(q.b)}</span><span><b>(C)</b> ${renderRichEq(q.c)}</span><span><b>(D)</b> ${renderRichEq(q.d)}</span></div>`;
-          } else if (maxOptLen <= 52) {
-            optHtml = `<div class="opts-2"><div><b>(A)</b> ${renderRichEq(q.a)}</div><div><b>(B)</b> ${renderRichEq(q.b)}</div><div><b>(C)</b> ${renderRichEq(q.c)}</div><div><b>(D)</b> ${renderRichEq(q.d)}</div></div>`;
+          if (maxOptLen <= 12) {
+            optHtml = `<div class="opts-4">${mkOpt('A', q.a)}${mkOpt('B', q.b)}${mkOpt('C', q.c)}${mkOpt('D', q.d)}</div>`;
+          } else if (maxOptLen <= 32) {
+            optHtml = `<div class="opts-2">${mkOpt('A', q.a)}${mkOpt('B', q.b)}${mkOpt('C', q.c)}${mkOpt('D', q.d)}</div>`;
           } else {
-            optHtml = `<div class="opts-1"><div><b>(A)</b> ${renderRichEq(q.a)}</div><div><b>(B)</b> ${renderRichEq(q.b)}</div><div><b>(C)</b> ${renderRichEq(q.c)}</div><div><b>(D)</b> ${renderRichEq(q.d)}</div></div>`;
+            optHtml = `<div class="opts-1">${mkOpt('A', q.a)}${mkOpt('B', q.b)}${mkOpt('C', q.c)}${mkOpt('D', q.d)}</div>`;
           }
           bodyBlocks.push(`
             <div class="q-item">
@@ -601,9 +603,11 @@
     .q-no { font-weight: bold; display: inline-block; min-width: 22px; text-indent: 0; }
     .q-diag { text-align: center; margin: 3px 0; }
     .q-diag img { max-width: 210px; max-height: 135px; height: auto; border: 0.5pt solid #cbd5e1; padding: 2px; background: #fff; }
-    .opts-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px 8px; margin-top: 1.5px; padding-left: 22px; font-size: 10pt; font-weight: bold; }
-    .opts-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px 12px; margin-top: 1.5px; padding-left: 22px; font-size: 10pt; font-weight: bold; }
-    .opts-1 { display: flex; flex-direction: column; gap: 1px; margin-top: 1.5px; padding-left: 22px; font-size: 10pt; font-weight: bold; }
+    .opts-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px 8px; margin-top: 2px; padding-left: 22px; font-size: 10pt; font-weight: normal; }
+    .opts-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px 14px; margin-top: 2px; padding-left: 22px; font-size: 10pt; font-weight: normal; }
+    .opts-1 { display: flex; flex-direction: column; gap: 2px; margin-top: 2px; padding-left: 22px; font-size: 10pt; font-weight: normal; }
+    .opt-cell { padding-left: 24px; text-indent: -24px; line-height: 1.2; }
+    .opt-lbl { display: inline-block; width: 24px; text-indent: 0; font-weight: bold; }
     sup { font-size: 0.72em; line-height: 0; vertical-align: super; }
     sub { font-size: 0.72em; line-height: 0; vertical-align: sub; }
     .key-page { page-break-before: always; break-before: page; column-count: 1 !important; margin-top: 0; padding-top: 4px; }
@@ -616,7 +620,7 @@
   </style>
 </head>
 <body>
-  ${forWord ? '' : `<div class="no-print-bar"><span><b>${esc(exam.name)}</b> — A3 2-Column Pragathi Paper (v2.5 Exact Format &bull; ${qCounter - 1} Qs &bull; Separate Answer Key Page)</span><button onclick="window.print()">Print / Save as PDF</button></div>`}
+  ${forWord ? '' : `<div class="no-print-bar"><span><b>${esc(exam.name)}</b> — A3 2-Column Pragathi Paper (v2.6 Clean Options &bull; ${qCounter - 1} Qs &bull; Separate Answer Key Page)</span><button onclick="window.print()">Print / Save as PDF</button></div>`}
   <table class="hdr-table">
     <tr>
       <td style="width:70px;text-align:left;"><img class="hdr-logo" src="${LOGO_DATA_URI}" alt="Logo" /></td>
@@ -724,12 +728,12 @@
       return a;
     }
 
-    function openAdminRandomModal(examId) {
+    function openAdminRandomModal(examId, initialSub) {
       if (!state.session || state.session.role !== 'admin') return;
       const ex = state.exams.find(e => e.id === examId);
       if (!ex) return;
       const cfg = TEMPLATE_CONFIG[ex.type] || TEMPLATE_CONFIG.NEET;
-      const firstSub = cfg.subjects[0].name;
+      const firstSub = (initialSub && cfg.subjects.some(s => s.name === initialSub)) ? initialSub : cfg.subjects[0].name;
 
       const buildModalInner = (subName) => {
         const subObj = cfg.subjects.find(s => s.name === subName) || cfg.subjects[0];
@@ -938,7 +942,7 @@
     function renderNav() {
       const el = document.getElementById('navUserArea');
       if (!state.session) {
-        const fbStatus = isFirebaseConfigured() ? 'Firebase Live' : 'Firebase Preview Mode';
+        const fbStatus = 'Online';
         el.innerHTML = `<span class="text-xs px-2.5 py-1 rounded-full bg-slate-800 text-slate-300 border border-slate-700">${fbStatus}</span>`;
         return;
       }
@@ -953,7 +957,7 @@
         if (fbAuth) { try { await fbAuth.signOut(); } catch (e) {} }
         state.session = null;
         state.lecView = 'exams';
-        state.activeExamId = null;
+        state.activeExamId = null; state.adminPickSubject = null;
         saveState();
         render();
       });
@@ -967,9 +971,9 @@
           <div class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
             <div class="bg-slate-900 text-white px-6 py-5">
               <div class="flex items-center justify-between gap-2">
-                <h1 class="text-xl font-extrabold tracking-tight">${PORTAL_MODE === 'lecturer' ? 'Lecturer Login' : (PORTAL_MODE === 'admin' ? 'Admin Question Selector Login' : 'Firebase Portal Login')}</h1>
+                <h1 class="text-xl font-extrabold tracking-tight">${PORTAL_MODE === 'lecturer' ? 'Lecturer Login' : (PORTAL_MODE === 'admin' ? 'Admin Question Selector Login' : 'Portal Login')}</h1>
                 <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full ${fbLive ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'}">
-                  ${fbLive ? 'Firebase Connected' : 'Preview Auth Mode'}
+                  ${fbLive ? 'Secure Login' : 'Preview Mode'}
                 </span>
               </div>
               <p class="text-xs text-slate-300 mt-1">${PORTAL_MODE === 'lecturer' ? 'Sign in with your Google / Gmail account. First-time lecturers select their subject once.' : (PORTAL_MODE === 'admin' ? 'Restricted to Admin (' + ADMIN_EMAIL + ') inside College Login' : 'Single Admin (' + ADMIN_EMAIL + ') &bull; Lecturers choose their subject once on first login')}</p>
@@ -979,7 +983,7 @@
               <!-- GOOGLE SIGN-IN BUTTON -->
               <button id="googleSignInBtn" type="button" class="w-full py-2.5 px-4 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm flex items-center justify-center gap-2.5 shadow-xs transition">
                 <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/></svg>
-                <span>Continue with Google (Firebase Auth)</span>
+                <span>Continue with Google</span>
               </button>
 
               <div class="relative flex items-center py-1">
@@ -998,13 +1002,13 @@
                   <input id="fbPass" type="password" required value="pragathi2027" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900" placeholder="Enter password" />
                 </div>
                 <button type="submit" class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm shadow transition">
-                  ${state.authMode === 'signup' ? 'Create Account & Sign In' : 'Sign In with Firebase'}
+                  ${state.authMode === 'signup' ? 'Create Account & Sign In' : 'Sign In'}
                 </button>
               </form>
 
               <div class="flex items-center justify-between text-xs pt-1">
                 <button id="toggleAuthModeBtn" type="button" class="font-semibold text-slate-600 hover:text-slate-900 underline">
-                  ${state.authMode === 'signup' ? 'Already have an account? Sign In' : 'New Lecturer? Create Firebase Account'}
+                  ${state.authMode === 'signup' ? 'Already have an account? Sign In' : 'New Lecturer? Create Account'}
                 </button>
               </div>
 
@@ -1062,7 +1066,7 @@
               : await fbAuth.signInWithEmailAndPassword(em, pw);
             if (res.user) await completeLogin(res.user.email, res.user.displayName);
           } catch (err) {
-            toast('Firebase Auth error: ' + err.message, 'error');
+            toast('Sign-in error: ' + err.message, 'error');
           }
         } else {
           await completeLogin(em, em.split('@')[0]);
@@ -1142,7 +1146,7 @@
       const tabs = [
         { id: 'exams', label: `Weekly Exams (${state.exams.length})` },
         { id: 'lecturers', label: `Locked Lecturers (${Object.keys(state.lecturerProfiles).length})` },
-        { id: 'settings', label: 'Firebase, Drive & .xlsx Banks' }
+        { id: 'settings', label: 'Drive & .xlsx Banks' }
       ];
 
       let bodyHtml = '';
@@ -1228,8 +1232,14 @@
                             <div class="w-full h-1.5 bg-slate-200 rounded-full mt-1.5 overflow-hidden">
                               <div class="h-full ${pushed ? 'bg-emerald-600' : 'bg-slate-800'}" style="width:${spct}%"></div>
                             </div>
-                            <div class="text-[11px] mt-1 font-semibold ${pushed ? 'text-emerald-700' : 'text-slate-400'}">
-                              ${pushed ? '&#10003; Pushed to Admin' : 'Selecting...'}
+                            <div class="flex items-center justify-between gap-1 mt-2">
+                              <span class="text-[11px] font-semibold ${pushed ? 'text-emerald-700' : 'text-slate-400'}">
+                                ${pushed ? '&#10003; Pushed' : 'Selecting...'}
+                              </span>
+                              <div class="flex items-center gap-1">
+                                <button type="button" data-pick-sub-exam="${esc(ex.id)}" data-pick-sub-name="${esc(sub.name)}" class="px-2 py-0.5 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold transition">Select Qs</button>
+                                <button type="button" data-rnd-sub-exam="${esc(ex.id)}" data-rnd-sub-name="${esc(sub.name)}" class="px-2 py-0.5 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-bold transition">&#9889; Auto</button>
+                              </div>
                             </div>
                           </div>
                         `;
@@ -1247,7 +1257,7 @@
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             <div class="lg:col-span-4 bg-white rounded-2xl shadow-sm border border-slate-200 p-5 h-fit">
               <h2 class="font-bold text-base text-slate-900 mb-1">Pre-Assign Lecturer Gmail (Optional)</h2>
-              <p class="text-xs text-slate-500 mb-4">Each subject allows <strong>2 lecturer logins</strong>. Pre-assign a lecturer's Gmail here or let them claim an open slot on first Firebase login.</p>
+              <p class="text-xs text-slate-500 mb-4">Each subject allows <strong>2 lecturer logins</strong>. Pre-assign a lecturer's Gmail here or let them claim an open slot on first login.</p>
               <form id="preAssignLecForm" class="space-y-3">
                 <div>
                   <label class="block text-xs font-semibold text-slate-700 mb-1">Lecturer Name</label>
@@ -1317,16 +1327,7 @@
                 <button id="pullDriveBtn" type="button" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold">Sync Now</button>
               </div>
 
-              <div class="pt-4 border-t border-slate-200 space-y-2.5">
-                <h3 class="font-bold text-sm text-slate-900">Firebase Web App Config</h3>
-                <div class="grid grid-cols-2 gap-2">
-                  <input id="fbApiKey" type="text" value="${esc(state.firebaseConfig.apiKey || '')}" placeholder="apiKey" class="px-3 py-2 rounded-xl border border-slate-300 text-xs font-mono" />
-                  <input id="fbAuthDomain" type="text" value="${esc(state.firebaseConfig.authDomain || '')}" placeholder="authDomain" class="px-3 py-2 rounded-xl border border-slate-300 text-xs font-mono" />
-                  <input id="fbProjectId" type="text" value="${esc(state.firebaseConfig.projectId || '')}" placeholder="projectId" class="px-3 py-2 rounded-xl border border-slate-300 text-xs font-mono" />
-                  <input id="fbAppId" type="text" value="${esc(state.firebaseConfig.appId || '')}" placeholder="appId" class="px-3 py-2 rounded-xl border border-slate-300 text-xs font-mono" />
-                </div>
-                <button id="saveFbBtn" type="button" class="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold">Save Firebase Config</button>
-              </div>
+
             </div>
 
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 space-y-4">
@@ -1420,6 +1421,19 @@
 
         document.querySelectorAll('[data-rnd-exam]').forEach(btn => {
           btn.addEventListener('click', () => openAdminRandomModal(btn.getAttribute('data-rnd-exam')));
+        });
+        document.querySelectorAll('[data-rnd-sub-exam]').forEach(btn => {
+          btn.addEventListener('click', () => openAdminRandomModal(btn.getAttribute('data-rnd-sub-exam'), btn.getAttribute('data-rnd-sub-name')));
+        });
+        document.querySelectorAll('[data-pick-sub-exam]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            state.activeExamId = btn.getAttribute('data-pick-sub-exam');
+            state.adminPickSubject = btn.getAttribute('data-pick-sub-name');
+            state.lecView = 'chapters';
+            const exObj = state.exams.find(e => e.id === state.activeExamId);
+            if (exObj) ensureFullBankLoaded(exObj.examClass, state.adminPickSubject);
+            render();
+          });
         });
         document.querySelectorAll('[data-dl-exam]').forEach(btn => {
           btn.addEventListener('click', () => downloadExamExcelAdminOnly(btn.getAttribute('data-dl-exam')));
@@ -1518,18 +1532,7 @@
             toast('Could not sync from Drive.', 'error');
           }
         });
-        document.getElementById('saveFbBtn').addEventListener('click', () => {
-          state.firebaseConfig = {
-            apiKey: document.getElementById('fbApiKey').value.trim(),
-            authDomain: document.getElementById('fbAuthDomain').value.trim(),
-            projectId: document.getElementById('fbProjectId').value.trim(),
-            appId: document.getElementById('fbAppId').value.trim()
-          };
-          saveState();
-          initFirebaseIfReady();
-          toast('Firebase configuration saved.', 'success');
-          render();
-        });
+
         document.getElementById('upBankFile').addEventListener('change', (e) => {
           handleUploadBankXlsx(e.target.files[0], document.getElementById('upBankClass').value, document.getElementById('upBankSubj').value);
         });
@@ -1650,13 +1653,15 @@
     }
 
     function renderLecturer() {
-      if (!state.session.subject) {
+      const isAdminPick = (state.session && state.session.role === 'admin' && !!state.adminPickSubject);
+      if (!isAdminPick && !state.session.subject) {
         renderLecturerSubjectOnboarding();
         return;
       }
 
       const root = document.getElementById('appRoot');
-      const subject = state.session.subject;
+      const subject = isAdminPick ? state.adminPickSubject : state.session.subject;
+      const protectCls = isAdminPick ? '' : 'no-copy-zone no-print-lecturer';
 
       // VIEW 1: EXAMS FOR THIS LECTURER'S LOCKED SUBJECT ONLY
       if (state.lecView === 'exams') {
@@ -1727,10 +1732,10 @@
       // VIEW 2: CHAPTER NAMES (NO DOWNLOAD / NO PDF — PUSH TO ADMIN AT BOTTOM)
       if (state.lecView === 'chapters') {
         root.innerHTML = `
-          <div class="space-y-5 pb-24 fade-in no-copy-zone no-print-lecturer">
+          <div class="space-y-5 pb-24 fade-in ${protectCls}">
             <div class="flex flex-wrap items-center justify-between gap-3 bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
               <div class="flex items-center gap-3">
-                <button id="backToExamsBtn" type="button" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-800">&larr; All Exams</button>
+                <button id="backToExamsBtn" type="button" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-800">${isAdminPick ? '&larr; Back to Admin Panel' : '&larr; All Exams'}</button>
                 <div>
                   <div class="font-extrabold text-base text-slate-900">${esc(exam.name)} — ${esc(subject)} (${esc(exam.examClass)})</div>
                   <div class="text-xs text-slate-500">Click any chapter to select questions (auto-saved directly into Admin's Excel sheet)</div>
@@ -1769,7 +1774,7 @@
           </div>
         `;
 
-        document.getElementById('backToExamsBtn').addEventListener('click', () => { state.lecView = 'exams'; render(); });
+        document.getElementById('backToExamsBtn').addEventListener('click', () => { if (isAdminPick) { state.adminPickSubject = null; } else { state.lecView = 'exams'; } render(); });
         document.getElementById('pushAdminBottomBtn').addEventListener('click', () => pushSelectionToAdmin(exam, subject));
         document.querySelectorAll('[data-open-ch]').forEach(btn => {
           btn.addEventListener('click', () => {
@@ -1795,7 +1800,7 @@
       });
 
       root.innerHTML = `
-        <div class="space-y-4 pb-24 fade-in no-copy-zone no-print-lecturer">
+        <div class="space-y-4 pb-24 fade-in ${protectCls}">
           <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs flex flex-wrap items-center justify-between gap-3">
             <div class="flex items-center gap-2.5 min-w-0">
               <button id="backToChBtn" type="button" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-800 shrink-0">&larr; Chapters</button>
@@ -1951,7 +1956,7 @@
       notifyAndroidRole();
       renderNav();
       if (!state.session) renderLogin();
-      else if (state.session.role === 'admin') renderAdmin();
+      else if (state.session.role === 'admin' && !state.adminPickSubject) renderAdmin();
       else renderLecturer();
     }
 

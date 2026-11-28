@@ -47,7 +47,7 @@ const cleanFileLabel=name=>String(name||"").replace(/\.(pdf|html?)$/i,"").replac
 
 $("#hdr").innerHTML=`<div class="top"><div class="wrap"><span>📞 ${C.phones.map(p=>`<a href="tel:+${p[1]}">${p[0]}</a>`).join(" &nbsp;|&nbsp; ")}</span><span>✉ <a href="mailto:${C.email}">${C.email}</a> &nbsp; <a href="${C.fb}">Facebook</a> &nbsp; <a href="${C.ig}">Instagram</a></span></div></div>
 <div class="brand"><div class="wrap"><img src="media/logo-deccan.png" alt="Deccan Education Society logo"><div class="t"><p class="soc">${C.socKn} · ${C.soc}</p><h1>PRAGATHI P.U. COLLEGE</h1><div class="kn">${C.kn}</div><div class="sub">Gurumatkal, Dist. Yadgir, Karnataka · College Code KY0434</div></div><img src="media/logo-pragathi.png" alt="Pragathi P.U. College logo"></div></div>
-<nav><div class="wrap"><button id="burger" aria-label="Menu" aria-expanded="false">☰</button><ul id="menu">
+<style>@media(min-width:980px){nav #menu{flex-wrap:nowrap!important;justify-content:center;gap:2px}nav #menu>li>a{padding:9px 8px!important;font-size:12.5px!important;white-space:nowrap}}</style><nav><div class="wrap"><button id="burger" aria-label="Menu" aria-expanded="false">☰</button><ul id="menu">
 <li><a href="${H||"index.html"}#top" class="${pg==="home"?"on":""}">Home</a></li>
 <li><a href="${H}#information">Information</a></li>
 <li><a href="${H}#faculty">Faculty</a></li>
@@ -59,7 +59,7 @@ $("#hdr").innerHTML=`<div class="top"><div class="wrap"><span>📞 ${C.phones.ma
 <li class="exm"><a href="online-exam.html" class="${pg==="exam"?"on":""}">📝 Online Exam</a></li>
 <li><a href="study-material.html" class="${pg==="study"?"on":""}">Study Material</a></li>
 <li><a href="${H}#contact">Contact</a></li>
-<li class="lec"><a href="question-selector.html?mode=lecturer" style="background:#059669;color:#fff;font-weight:700;border-radius:4px">Lecturer Login</a></li>
+<li class="lec"><a href="question-selector.html?mode=lecturer" style="background:#059669;color:#fff;font-weight:700;border-radius:4px;padding:7px 10px">Lecturer Login</a></li>
 <li class="login"><a href="college-login.html">College Login</a></li></ul></div></nav>`;
 
 $("#ftr").innerHTML=`<footer><div class="wrap"><div><h4>${C.name}, Gurumatkal</h4><p>${C.soc}<br>Near Yashodha Petroleums, Hyderabad Road, Gurumatkal, Dist. Yadgir, Karnataka — 585214</p><p><a href="${C.maps}">Open in Google Maps</a></p></div>
