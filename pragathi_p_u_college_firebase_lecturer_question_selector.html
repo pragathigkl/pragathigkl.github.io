@@ -532,9 +532,9 @@
           const optLens = [q.a, q.b, q.c, q.d].map(o => String(o || '').trim().length);
           const maxOptLen = Math.max(...optLens);
           let optHtml = '';
-          if (maxOptLen <= 11) {
+          if (maxOptLen <= 18) {
             optHtml = `<div class="opts-4"><span><b>(A)</b> ${renderRichEq(q.a)}</span><span><b>(B)</b> ${renderRichEq(q.b)}</span><span><b>(C)</b> ${renderRichEq(q.c)}</span><span><b>(D)</b> ${renderRichEq(q.d)}</span></div>`;
-          } else if (maxOptLen <= 38) {
+          } else if (maxOptLen <= 52) {
             optHtml = `<div class="opts-2"><div><b>(A)</b> ${renderRichEq(q.a)}</div><div><b>(B)</b> ${renderRichEq(q.b)}</div><div><b>(C)</b> ${renderRichEq(q.c)}</div><div><b>(D)</b> ${renderRichEq(q.d)}</div></div>`;
           } else {
             optHtml = `<div class="opts-1"><div><b>(A)</b> ${renderRichEq(q.a)}</div><div><b>(B)</b> ${renderRichEq(q.b)}</div><div><b>(C)</b> ${renderRichEq(q.c)}</div><div><b>(D)</b> ${renderRichEq(q.d)}</div></div>`;
@@ -581,41 +581,42 @@
   <meta charset="UTF-8" />
   <title>${esc(exam.name)} — Pragathi P.U. College</title>
   <style>
-    @page { size: A4 portrait; margin: 10mm 10mm 10mm 10mm; }
-    @page WordSection1 { size: 595.3pt 841.9pt; margin: 28pt 28pt 28pt 28pt; mso-columns: 2 even 14pt; }
-    body { font-family: "Times New Roman", "Cambria Math", Georgia, serif; font-size: 9.5pt; line-height: 1.25; color: #000; margin: 0; padding: ${forWord ? '0' : '12px'}; background: #fff; }
-    .hdr-table { width: 100%; border-collapse: collapse; margin-bottom: 4px; }
+    /* Exact WEEKLY TEST - 13.docx A3 Portrait (11.69in x 16.53in = 297mm x 420mm) */
+    @page { size: 297mm 420mm; margin: 9mm 10mm 9mm 10mm; }
+    @page WordSection1 { size: 841.9pt 1190.55pt; margin: 25.2pt 28.8pt 25.2pt 28.8pt; mso-columns: 2 even 18pt; }
+    body { font-family: "Times New Roman", "Cambria Math", Georgia, serif; font-size: 10.5pt; line-height: 1.18; color: #000; margin: 0; padding: ${forWord ? '0' : '12px'}; background: #fff; }
+    .hdr-table { width: 100%; border-collapse: collapse; margin-bottom: 3px; }
     .hdr-table td { vertical-align: middle; }
-    .hdr-logo { width: 64px; height: 64px; object-fit: contain; }
-    .soc-line { font-size: 9.5pt; font-weight: bold; text-align: center; }
-    .col-name { font-size: 15.5pt; font-weight: 900; text-align: center; letter-spacing: 0.2px; white-space: nowrap; }
-    .test-sub { font-size: 11.5pt; font-weight: bold; font-style: italic; text-align: center; margin-top: 1px; }
-    .meta-strip { width: 100%; border-collapse: collapse; font-size: 9pt; font-weight: bold; border-bottom: 1.5pt solid #000; padding-bottom: 3px; margin-bottom: 6px; }
-    .meta-strip td { padding: 2px 4px 4px 0; }
-    .two-col { column-count: 2; column-gap: 14pt; column-rule: 0.75pt solid #000; }
+    .hdr-logo { width: 76px; height: 76px; object-fit: contain; }
+    .soc-line { font-size: 11pt; font-weight: bold; text-align: center; }
+    .col-name { font-size: 24pt; font-weight: 900; text-align: center; letter-spacing: 0.3px; white-space: nowrap; }
+    .test-sub { font-size: 14pt; font-weight: bold; font-style: italic; text-align: center; margin-top: 1px; }
+    .meta-strip { width: 100%; border-collapse: collapse; font-size: 10.5pt; font-weight: bold; border-bottom: 1.8pt solid #000; margin-bottom: 6px; }
+    .meta-strip td { padding: 2px 4px 5px 0; }
+    .two-col { column-count: 2; column-gap: 18pt; column-rule: 1pt solid #000; }
     div.WordSection1 { page: WordSection1; }
-    .part-hdr { background: #e8edf5; border: 1pt solid #000; text-align: center; font-weight: bold; font-size: 9.5pt; padding: 2.5px 4px; margin: 6px 0 5px 0; break-after: avoid; }
-    .q-item { margin-bottom: 6px; break-inside: avoid; page-break-inside: avoid; }
-    .q-stem { text-align: justify; }
-    .q-no { font-weight: bold; margin-right: 3px; }
-    .q-diag { text-align: center; margin: 4px 0; }
-    .q-diag img { max-width: 175px; max-height: 120px; height: auto; border: 0.5pt solid #cbd5e1; padding: 2px; background: #fff; }
-    .opts-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px 6px; margin-top: 2px; padding-left: 12px; font-size: 9pt; }
-    .opts-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px 10px; margin-top: 2px; padding-left: 12px; font-size: 9pt; }
-    .opts-1 { display: flex; flex-direction: column; gap: 1.5px; margin-top: 2px; padding-left: 12px; font-size: 9pt; }
-    sup { font-size: 0.72em; line-height: 0; }
-    sub { font-size: 0.72em; line-height: 0; }
+    .part-hdr { background: #e8edf5; border: 1.2pt solid #000; text-align: center; font-weight: bold; font-size: 10.5pt; padding: 3px 6px; margin: 5px 0 4px 0; break-after: avoid; }
+    .q-item { margin-bottom: 5px; break-inside: avoid; page-break-inside: avoid; }
+    .q-stem { text-align: justify; padding-left: 22px; text-indent: -22px; }
+    .q-no { font-weight: bold; display: inline-block; min-width: 22px; text-indent: 0; }
+    .q-diag { text-align: center; margin: 3px 0; }
+    .q-diag img { max-width: 210px; max-height: 135px; height: auto; border: 0.5pt solid #cbd5e1; padding: 2px; background: #fff; }
+    .opts-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px 8px; margin-top: 1.5px; padding-left: 22px; font-size: 10pt; font-weight: bold; }
+    .opts-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px 12px; margin-top: 1.5px; padding-left: 22px; font-size: 10pt; font-weight: bold; }
+    .opts-1 { display: flex; flex-direction: column; gap: 1px; margin-top: 1.5px; padding-left: 22px; font-size: 10pt; font-weight: bold; }
+    sup { font-size: 0.72em; line-height: 0; vertical-align: super; }
+    sub { font-size: 0.72em; line-height: 0; vertical-align: sub; }
     .key-page { page-break-before: always; break-before: page; column-count: 1 !important; margin-top: 0; padding-top: 4px; }
-    .key-tbl { width: 100%; border-collapse: collapse; font-size: 9pt; text-align: center; }
-    .key-tbl th, .key-tbl td { border: 0.75pt solid #000; padding: 3px 5px; }
+    .key-tbl { width: 100%; border-collapse: collapse; font-size: 10.5pt; text-align: center; }
+    .key-tbl th, .key-tbl td { border: 0.9pt solid #000; padding: 4px 6px; }
     .key-tbl th { background: #e8edf5; }
-    .no-print-bar { background: #0f172a; color: #fff; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-radius: 8px; font-family: Inter, sans-serif; }
+    .no-print-bar { background: #0f172a; color: #fff; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-radius: 8px; font-family: Inter, sans-serif; font-size: 13px; }
     .no-print-bar button { background: #059669; color: #fff; border: none; padding: 7px 14px; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 13px; }
     @media print { .no-print-bar { display: none !important; } body { padding: 0; } }
   </style>
 </head>
 <body>
-  ${forWord ? '' : `<div class="no-print-bar"><span><b>${esc(exam.name)}</b> — A4 2-Column Pragathi Question Paper (${qCounter - 1} Qs)</span><button onclick="window.print()">Print / Save as PDF</button></div>`}
+  ${forWord ? '' : `<div class="no-print-bar"><span><b>${esc(exam.name)}</b> — A3 2-Column Pragathi Paper (v2.5 Exact Format &bull; ${qCounter - 1} Qs &bull; Separate Answer Key Page)</span><button onclick="window.print()">Print / Save as PDF</button></div>`}
   <table class="hdr-table">
     <tr>
       <td style="width:70px;text-align:left;"><img class="hdr-logo" src="${LOGO_DATA_URI}" alt="Logo" /></td>
